@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -137,19 +138,30 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
     <TableHead
       ref={setNodeRef}
       style={style}
+      scope="col"
       className={`${column.sortable ? 'cursor-pointer hover:bg-muted/50' : ''} ${isDragging ? 'bg-muted' : ''}`}
+      aria-sort={sortBy === column.id ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
     >
       <div className="flex items-center gap-1">
         <span
           {...attributes}
           {...listeners}
           className="cursor-grab hover:text-foreground text-muted-foreground"
+          aria-label={`${t(column.labelKey)} - Drag to reorder`}
         >
-          <GripVertical className="h-4 w-4" />
+          <GripVertical className="h-4 w-4" aria-hidden="true" />
         </span>
         <span
           className={column.sortable ? 'cursor-pointer flex-1' : 'flex-1'}
           onClick={() => column.sortable && onSort(column.id)}
+          role={column.sortable ? 'button' : undefined}
+          tabIndex={column.sortable ? 0 : undefined}
+          onKeyDown={(e) => {
+            if (column.sortable && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault()
+              onSort(column.id)
+            }
+          }}
         >
           {t(column.labelKey)}
           {column.sortable && <SortIcon />}
@@ -170,6 +182,7 @@ export function InsuredPersonsTable({
   sortDirection,
 }: InsuredPersonsTableProps) {
   const t = useTranslations('insured')
+  const tA11y = useTranslations('accessibility')
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -460,8 +473,9 @@ export function InsuredPersonsTable({
                 size="sm"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
                 onClick={handleClearSearch}
+                aria-label={tA11y('clearSearch')}
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
           </div>
@@ -532,6 +546,7 @@ export function InsuredPersonsTable({
             onDragEnd={handleDragEnd}
           >
             <Table>
+              <TableCaption className="sr-only">{tA11y('tableCaption')}</TableCaption>
               <TableHeader>
                 <TableRow>
                   <SortableContext
@@ -596,6 +611,7 @@ export function InsuredPersonsTable({
                     onDragEnd={handleDragEnd}
                   >
                     <Table>
+                      <TableCaption className="sr-only">{tA11y('tableCaption')} - {getGroupLabel(groupKey)}</TableCaption>
                       <TableHeader>
                         <TableRow>
                           <SortableContext
@@ -662,43 +678,49 @@ export function InsuredPersonsTable({
             </span>
           </div>
 
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1 || isPending}
-            >
-              <ChevronsLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1 || isPending}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm px-2">
-              {t('pagination.page', { page: currentPage, totalPages })}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || isPending}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(totalPages)}
-              disabled={currentPage === totalPages || isPending}
-            >
-              <ChevronsRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <nav aria-label={tA11y('pageOf', { current: currentPage, total: totalPages })}>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1 || isPending}
+                aria-label={tA11y('firstPage')}
+              >
+                <ChevronsLeft className="h-4 w-4" aria-hidden="true" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1 || isPending}
+                aria-label={tA11y('previousPage')}
+              >
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              </Button>
+              <span className="text-sm px-2" aria-current="page">
+                {t('pagination.page', { page: currentPage, totalPages })}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages || isPending}
+                aria-label={tA11y('nextPage')}
+              >
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages || isPending}
+                aria-label={tA11y('lastPage')}
+              >
+                <ChevronsRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </div>
+          </nav>
         </div>
       )}
     </div>

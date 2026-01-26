@@ -1,4 +1,27 @@
 {
+  "accessibility": {
+    "skipToMain": "Aller au contenu principal",
+    "skipToNav": "Aller a la navigation",
+    "loading": "Chargement",
+    "closeDialog": "Fermer le dialogue",
+    "requiredField": "Champ obligatoire",
+    "errorSummary": "Veuillez corriger les erreurs suivantes:",
+    "searchResults": "{count} resultats trouves",
+    "pageOf": "Page {current} sur {total}",
+    "sortAscending": "Tri croissant",
+    "sortDescending": "Tri decroissant",
+    "expandGroup": "Deployer le groupe",
+    "collapseGroup": "Replier le groupe",
+    "menuOpen": "Menu ouvert",
+    "menuClosed": "Menu ferme",
+    "firstPage": "Premiere page",
+    "lastPage": "Derniere page",
+    "previousPage": "Page precedente",
+    "nextPage": "Page suivante",
+    "exportExcel": "Exporter en Excel",
+    "clearSearch": "Effacer la recherche",
+    "tableCaption": "Liste des personnes assurees"
+  },
   "common": {
     "appName": "peka.next",
     "appDescription": "Gestion de caisse de pension",

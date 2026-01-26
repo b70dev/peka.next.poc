@@ -48,6 +48,7 @@ interface ExcelExportButtonProps {
 
 export function ExcelExportButton({ data, disabled = false }: ExcelExportButtonProps) {
   const t = useTranslations('insured')
+  const tA11y = useTranslations('accessibility')
   const [selectedColumns, setSelectedColumns] = useState<Set<ColumnId>>(
     new Set(EXPORT_COLUMNS.map(c => c.id))
   )
@@ -192,8 +193,9 @@ export function ExcelExportButton({ data, disabled = false }: ExcelExportButtonP
                 size="sm"
                 disabled={isDisabled}
                 className="gap-2"
+                aria-label={tA11y('exportExcel')}
               >
-                <FileSpreadsheet className="h-4 w-4" />
+                <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>

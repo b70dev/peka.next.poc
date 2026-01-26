@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Locale } from '@/i18n/config';
+import { SkipLink } from '@/components/ui/skip-link';
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale}>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
+          <SkipLink />
           {children}
         </NextIntlClientProvider>
       </body>

@@ -64,25 +64,36 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="space-y-2">
-        <Label htmlFor="email">E-Mail</Label>
+        <Label htmlFor="email">
+          E-Mail <span aria-hidden="true" className="text-destructive">*</span>
+          <span className="sr-only">(Pflichtfeld)</span>
+        </Label>
         <Input
           id="email"
           type="email"
           placeholder="name@beispiel.ch"
           autoComplete="email"
           disabled={isLoading}
+          aria-required="true"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? 'email-error' : undefined}
           {...register('email')}
         />
         {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
+          <p id="email-error" className="text-sm text-destructive" role="alert">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Passwort</Label>
+          <Label htmlFor="password">
+            Passwort <span aria-hidden="true" className="text-destructive">*</span>
+            <span className="sr-only">(Pflichtfeld)</span>
+          </Label>
           <Link
             href="/auth/forgot-password"
             className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
@@ -96,15 +107,20 @@ export function LoginForm() {
           placeholder="••••••••"
           autoComplete="current-password"
           disabled={isLoading}
+          aria-required="true"
+          aria-invalid={!!errors.password}
+          aria-describedby={errors.password ? 'password-error' : undefined}
           {...register('password')}
         />
         {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
+          <p id="password-error" className="text-sm text-destructive" role="alert">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
       {error && (
-        <div className="rounded-md bg-destructive/10 p-3">
+        <div className="rounded-md bg-destructive/10 p-3" role="alert" aria-live="polite">
           <p className="text-sm text-destructive">{error}</p>
         </div>
       )}

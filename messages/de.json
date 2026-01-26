@@ -1,4 +1,27 @@
 {
+  "accessibility": {
+    "skipToMain": "Zum Hauptinhalt springen",
+    "skipToNav": "Zur Navigation springen",
+    "loading": "Wird geladen",
+    "closeDialog": "Dialog schliessen",
+    "requiredField": "Pflichtfeld",
+    "errorSummary": "Bitte korrigieren Sie folgende Fehler:",
+    "searchResults": "{count} Ergebnisse gefunden",
+    "pageOf": "Seite {current} von {total}",
+    "sortAscending": "Aufsteigend sortiert",
+    "sortDescending": "Absteigend sortiert",
+    "expandGroup": "Gruppe aufklappen",
+    "collapseGroup": "Gruppe zuklappen",
+    "menuOpen": "Menu geoeffnet",
+    "menuClosed": "Menu geschlossen",
+    "firstPage": "Erste Seite",
+    "lastPage": "Letzte Seite",
+    "previousPage": "Vorherige Seite",
+    "nextPage": "Naechste Seite",
+    "exportExcel": "Als Excel exportieren",
+    "clearSearch": "Suche loeschen",
+    "tableCaption": "Liste der versicherten Personen"
+  },
   "common": {
     "appName": "peka.next",
     "appDescription": "Pensionskassen-Verwaltung",

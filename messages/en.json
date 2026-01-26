@@ -1,4 +1,27 @@
 {
+  "accessibility": {
+    "skipToMain": "Skip to main content",
+    "skipToNav": "Skip to navigation",
+    "loading": "Loading",
+    "closeDialog": "Close dialog",
+    "requiredField": "Required field",
+    "errorSummary": "Please correct the following errors:",
+    "searchResults": "{count} results found",
+    "pageOf": "Page {current} of {total}",
+    "sortAscending": "Sorted ascending",
+    "sortDescending": "Sorted descending",
+    "expandGroup": "Expand group",
+    "collapseGroup": "Collapse group",
+    "menuOpen": "Menu opened",
+    "menuClosed": "Menu closed",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "exportExcel": "Export as Excel",
+    "clearSearch": "Clear search",
+    "tableCaption": "List of insured persons"
+  },
   "common": {
     "appName": "peka.next",
     "appDescription": "Pension Fund Management",

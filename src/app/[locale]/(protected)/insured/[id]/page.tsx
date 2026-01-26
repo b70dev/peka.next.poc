@@ -74,7 +74,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-8">
+        <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold mb-2">{t('detail.notFound')}</h1>
             <p className="text-muted-foreground mb-6">{t('detail.notFoundDescription')}</p>
@@ -125,7 +125,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
         <InsuredPersonDetail
           insuredPerson={insuredPerson}
           employments={employments || []}

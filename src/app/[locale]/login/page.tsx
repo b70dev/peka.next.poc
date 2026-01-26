@@ -13,7 +13,7 @@ export default function LoginPage() {
   const tCommon = useTranslations('common');
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">
+    <main id="main-content" tabIndex={-1} className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12 outline-none">
       <div className="w-full max-w-md">
         {/* Language Switcher */}
         <div className="flex justify-end mb-4">
@@ -78,6 +78,6 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
