@@ -201,6 +201,15 @@
         "description": "Edit the master data of the insured person."
       }
     },
+    "export": {
+      "tooltip": "Export list as Excel",
+      "tooltipEmpty": "No data to export",
+      "selectColumns": "Select columns",
+      "selectAll": "All",
+      "selectNone": "None",
+      "export": "Export",
+      "minOneColumn": "Select at least one column"
+    },
     "create": {
       "button": "New Person",
       "title": "Register New Insured Person",

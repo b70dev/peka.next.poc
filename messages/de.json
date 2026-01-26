@@ -201,6 +201,15 @@
         "description": "Bearbeiten Sie die Stammdaten der versicherten Person."
       }
     },
+    "export": {
+      "tooltip": "Liste als Excel exportieren",
+      "tooltipEmpty": "Keine Daten zum Exportieren",
+      "selectColumns": "Spalten auswählen",
+      "selectAll": "Alle",
+      "selectNone": "Keine",
+      "export": "Exportieren",
+      "minOneColumn": "Mindestens eine Spalte auswählen"
+    },
     "create": {
       "button": "Neue Person",
       "title": "Neue versicherte Person erfassen",

@@ -201,6 +201,15 @@
         "description": "Modifiez les données de base de la personne assurée."
       }
     },
+    "export": {
+      "tooltip": "Exporter la liste en Excel",
+      "tooltipEmpty": "Aucune donnée à exporter",
+      "selectColumns": "Sélectionner les colonnes",
+      "selectAll": "Toutes",
+      "selectNone": "Aucune",
+      "export": "Exporter",
+      "minOneColumn": "Sélectionnez au moins une colonne"
+    },
     "create": {
       "button": "Nouvelle personne",
       "title": "Enregistrer une nouvelle personne assurée",

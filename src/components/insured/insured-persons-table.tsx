@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/collapsible'
 import { Badge } from '@/components/ui/badge'
 import { Search, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, GripVertical, RotateCcw, ChevronRight as ChevronRightIcon, Layers } from 'lucide-react'
+import { ExcelExportButton } from '@/components/insured/excel-export-button'
 import { InsuredPerson, Employer, InsuredPersonStatus } from '@/lib/database.types'
 import { useDebouncedCallback } from 'use-debounce'
 import { Link } from '@/i18n/routing'
@@ -500,6 +501,7 @@ export function InsuredPersonsTable({
             )}
           </div>
 
+          <ExcelExportButton data={insuredPersons} disabled={insuredPersons.length === 0} />
           <Button variant="ghost" size="sm" onClick={handleResetColumns}>
             <RotateCcw className="h-4 w-4 mr-2" />
             {t('columns.reset')}
