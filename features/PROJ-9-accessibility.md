@@ -1,6 +1,9 @@
 # PROJ-9: Barrierefreiheit (Accessibility)
 
-## Status: Planned
+## Status: Deployed (2026-01-26)
+
+**Production URL:** https://peka-next-poc.vercel.app
+**Git Tag:** v1.9.0-PROJ-9
 
 ## Uebersicht
 
