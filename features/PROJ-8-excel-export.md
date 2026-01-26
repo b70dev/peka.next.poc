@@ -1,6 +1,8 @@
 # PROJ-8: Excel-Export für Personenliste
 
-## Status: ✅ Tested (Production-Ready)
+## Status: ✅ Deployed (2026-01-26)
+
+**Production URL:** https://peka-next-poc.vercel.app/de/insured
 
 ## Abhängigkeiten
 - Benötigt: PROJ-6 (Insured Persons List) - für die Datenquelle und Filterung
