@@ -1,0 +1,263 @@
+{
+  "common": {
+    "appName": "peka.next",
+    "appDescription": "Gestion de caisse de pension",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "close": "Fermer"
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif",
+    "pending": "En attente"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié?",
+    "noAccount": "Pas encore de compte?",
+    "hasAccount": "Déjà un compte?",
+    "loginTitle": "Connexion",
+    "loginDescription": "Choisissez votre méthode de connexion préférée",
+    "loginWithMicrosoft": "Se connecter avec Microsoft",
+    "loginWithGoogle": "Se connecter avec Google",
+    "or": "ou",
+    "privacy": "Confidentialité",
+    "imprint": "Mentions légales"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue dans la gestion de caisse de pension",
+    "insuredPersons": "Personnes assurées",
+    "insuredPersonsDescription": "Aperçu des personnes assurées",
+    "personsRegistered": "Personnes enregistrées",
+    "employers": "Employeurs",
+    "employersDescription": "Entreprises affiliées",
+    "employersActive": "Employeurs actifs",
+    "yourAccount": "Votre compte",
+    "yourAccountDescription": "Informations du compte",
+    "emailLabel": "E-mail",
+    "loggedInVia": "Connecté via"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "insuredPersons": "Assurés",
+    "employers": "Employeurs",
+    "settings": "Paramètres",
+    "admin": "Administration"
+  },
+  "language": {
+    "title": "Langue",
+    "changed": "Langue modifiée"
+  },
+  "validation": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Adresse e-mail invalide",
+    "minLength": "Au moins {min} caractères requis",
+    "maxLength": "Maximum {max} caractères autorisés"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite",
+    "notFound": "Non trouvé",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Accès refusé",
+    "networkError": "Erreur réseau"
+  },
+  "insured": {
+    "title": "Personnes assurées",
+    "description": "Aperçu de toutes les personnes assurées",
+    "searchPlaceholder": "Rechercher nom, numéro AVS...",
+    "found": "{count} personnes assurées trouvées",
+    "noResults": "Aucune personne assurée trouvée",
+    "noResultsForSearch": "Aucune personne assurée trouvée pour '{search}'",
+    "emptyState": "Aucune personne assurée enregistrée",
+    "emptyStateHint": "Enregistrez la première personne assurée.",
+    "columns": {
+      "lastName": "Nom",
+      "firstName": "Prénom",
+      "dateOfBirth": "Date de naissance",
+      "ahvNumber": "N° AVS",
+      "employer": "Employeur",
+      "status": "Statut",
+      "entryDate": "Date d'entrée",
+      "reset": "Réinitialiser les colonnes"
+    },
+    "grouping": {
+      "label": "Grouper par",
+      "none": "Pas de groupement",
+      "byStatus": "Par statut",
+      "byEmployer": "Par employeur",
+      "byEntryYear": "Par année d'entrée",
+      "expandAll": "Tout déplier",
+      "collapseAll": "Tout replier",
+      "noEmployer": "Sans employeur",
+      "entryYear": "Année d'entrée {year}"
+    },
+    "status": {
+      "active": "Actif",
+      "exited": "Sorti",
+      "retired": "Retraité",
+      "deceased": "Décédé"
+    },
+    "pagination": {
+      "showing": "{from}-{to} sur {total}",
+      "page": "Page {page} sur {totalPages}",
+      "perPage": "Par page",
+      "first": "Première",
+      "last": "Dernière",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "detail": {
+      "backToList": "Retour à la liste",
+      "tabs": {
+        "masterData": "Données de base",
+        "insurance": "Assurance",
+        "documents": "Documents",
+        "history": "Historique"
+      },
+      "sections": {
+        "personalData": "Données personnelles",
+        "contactData": "Coordonnées",
+        "address": "Adresse",
+        "emergencyContact": "Contact d'urgence",
+        "employments": "Emplois",
+        "notes": "Notes"
+      },
+      "fields": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "dateOfBirth": "Date de naissance",
+        "gender": "Genre",
+        "nationality": "Nationalité",
+        "maritalStatus": "État civil",
+        "ahvNumber": "Numéro AVS",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "mobile": "Mobile",
+        "street": "Rue",
+        "postalCode": "Code postal",
+        "city": "Ville",
+        "country": "Pays",
+        "emergencyName": "Nom",
+        "emergencyPhone": "Téléphone",
+        "notes": "Remarques"
+      },
+      "gender": {
+        "m": "Masculin",
+        "f": "Féminin",
+        "d": "Divers"
+      },
+      "maritalStatus": {
+        "single": "Célibataire",
+        "married": "Marié(e)",
+        "divorced": "Divorcé(e)",
+        "widowed": "Veuf/Veuve",
+        "registered_partnership": "Partenariat enregistré"
+      },
+      "employments": {
+        "title": "Emplois",
+        "employer": "Employeur",
+        "entryDate": "Date d'entrée",
+        "exitDate": "Date de sortie",
+        "employmentRate": "Taux d'occupation",
+        "status": "Statut",
+        "active": "Actif",
+        "ended": "Terminé",
+        "addEmployment": "Ajouter un emploi",
+        "editEmployment": "Modifier l'emploi",
+        "totalRate": "Taux total",
+        "noEmployments": "Aucun emploi enregistré"
+      },
+      "statusChange": {
+        "title": "Changer le statut",
+        "currentStatus": "Statut actuel",
+        "newStatus": "Nouveau statut",
+        "effectiveDate": "Date d'effet",
+        "reason": "Motif",
+        "reasonPlaceholder": "Optionnel: Motif du changement de statut"
+      },
+      "notFound": "Personne assurée non trouvée",
+      "notFoundDescription": "La personne demandée n'existe pas ou a été supprimée.",
+      "comingSoon": "Cette fonctionnalité sera bientôt disponible.",
+      "edit": {
+        "title": "Modifier les données de base",
+        "description": "Modifiez les données de base de la personne assurée."
+      }
+    },
+    "create": {
+      "button": "Nouvelle personne",
+      "title": "Enregistrer une nouvelle personne assurée",
+      "description": "Saisissez les données de la nouvelle personne assurée.",
+      "sections": {
+        "personalData": "Données personnelles",
+        "employment": "Premier emploi",
+        "contact": "Contact (optionnel)",
+        "address": "Adresse (optionnel)",
+        "emergencyContact": "Contact d'urgence (optionnel)",
+        "notes": "Notes (optionnel)"
+      },
+      "employment": {
+        "title": "Premier emploi",
+        "selectEmployer": "Sélectionner un employeur"
+      },
+      "fields": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "dateOfBirth": "Date de naissance",
+        "ahvNumber": "Numéro AVS",
+        "gender": "Genre",
+        "nationality": "Nationalité",
+        "maritalStatus": "État civil",
+        "employer": "Employeur",
+        "entryDate": "Date d'entrée",
+        "employmentRate": "Taux d'occupation",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "mobile": "Mobile",
+        "street": "Rue",
+        "postalCode": "Code postal",
+        "city": "Ville",
+        "country": "Pays",
+        "emergencyName": "Nom",
+        "emergencyPhone": "Téléphone",
+        "notes": "Remarques"
+      },
+      "placeholders": {
+        "ahvNumber": "756.1234.5678.97",
+        "selectEmployer": "Sélectionner un employeur",
+        "selectGender": "Sélectionner le genre",
+        "selectMaritalStatus": "Sélectionner l'état civil"
+      },
+      "validation": {
+        "ahvInvalidLength": "Le numéro AVS doit avoir 13 chiffres",
+        "ahvInvalidFormat": "Le numéro AVS ne doit contenir que des chiffres",
+        "ahvInvalidCountry": "Le numéro AVS doit commencer par 756",
+        "ahvInvalidCheckDigit": "Chiffre de contrôle invalide",
+        "ahvDuplicate": "Ce numéro AVS est déjà enregistré",
+        "ahvAlreadyExists": "Ce numéro AVS est déjà enregistré",
+        "employerRequired": "Veuillez sélectionner un employeur",
+        "entryDateRequired": "Veuillez saisir la date d'entrée",
+        "employmentRateRequired": "Veuillez saisir le taux d'occupation"
+      },
+      "success": "La personne assurée a été enregistrée avec succès",
+      "error": "Erreur lors de l'enregistrement de la personne assurée"
+    }
+  }
+}

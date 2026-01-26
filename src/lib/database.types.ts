@@ -7,13 +7,233 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
+      employments: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          employer_id: string
+          employment_rate: number
+          entry_date: string
+          exit_date: string | null
+          id: string
+          insured_person_id: string
+          is_primary: boolean | null
+          notes: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          employer_id: string
+          employment_rate: number
+          entry_date: string
+          exit_date?: string | null
+          id?: string
+          insured_person_id: string
+          is_primary?: boolean | null
+          notes?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          employer_id?: string
+          employment_rate?: number
+          entry_date?: string
+          exit_date?: string | null
+          id?: string
+          insured_person_id?: string
+          is_primary?: boolean | null
+          notes?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      employers: {
+        Row: {
+          city: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          country: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          postal_code: string | null
+          street: string | null
+          uid: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          postal_code?: string | null
+          street?: string | null
+          uid?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          postal_code?: string | null
+          street?: string | null
+          uid?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      insured_person_status_history: {
+        Row: {
+          changed_at: string | null
+          changed_by: string | null
+          id: string
+          insured_person_id: string
+          new_status: Database["public"]["Enums"]["insured_person_status"]
+          old_status:
+            | Database["public"]["Enums"]["insured_person_status"]
+            | null
+          reason: string | null
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          insured_person_id: string
+          new_status: Database["public"]["Enums"]["insured_person_status"]
+          old_status?:
+            | Database["public"]["Enums"]["insured_person_status"]
+            | null
+          reason?: string | null
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          insured_person_id?: string
+          new_status?: Database["public"]["Enums"]["insured_person_status"]
+          old_status?:
+            | Database["public"]["Enums"]["insured_person_status"]
+            | null
+          reason?: string | null
+        }
+        Relationships: []
+      }
+      insured_persons: {
+        Row: {
+          ahv_number: string
+          city: string | null
+          country: string | null
+          created_at: string | null
+          created_by: string | null
+          date_of_birth: string
+          email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          employer_id: string | null
+          entry_date: string
+          exit_date: string | null
+          first_name: string
+          gender: Database["public"]["Enums"]["gender_type"] | null
+          id: string
+          last_name: string
+          marital_status:
+            | Database["public"]["Enums"]["marital_status_type"]
+            | null
+          mobile: string | null
+          nationality: string | null
+          notes: string | null
+          phone: string | null
+          postal_code: string | null
+          status: Database["public"]["Enums"]["insured_person_status"] | null
+          street: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          ahv_number: string
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date_of_birth: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employer_id?: string | null
+          entry_date: string
+          exit_date?: string | null
+          first_name: string
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          id?: string
+          last_name: string
+          marital_status?:
+            | Database["public"]["Enums"]["marital_status_type"]
+            | null
+          mobile?: string | null
+          nationality?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          status?: Database["public"]["Enums"]["insured_person_status"] | null
+          street?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          ahv_number?: string
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date_of_birth?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employer_id?: string | null
+          entry_date?: string
+          exit_date?: string | null
+          first_name?: string
+          gender?: Database["public"]["Enums"]["gender_type"] | null
+          id?: string
+          last_name?: string
+          marital_status?:
+            | Database["public"]["Enums"]["marital_status_type"]
+            | null
+          mobile?: string | null
+          nationality?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          status?: Database["public"]["Enums"]["insured_person_status"] | null
+          street?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null
@@ -22,6 +242,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_active: boolean
+          language: string
           role: string
           updated_at: string
         }
@@ -32,6 +253,7 @@ export type Database = {
           full_name?: string | null
           id: string
           is_active?: boolean
+          language?: string
           role?: string
           updated_at?: string
         }
@@ -42,8 +264,48 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_active?: boolean
+          language?: string
           role?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_table_preferences: {
+        Row: {
+          column_order: Json | null
+          created_at: string | null
+          group_by: string | null
+          id: string
+          page_size: number | null
+          sort_by: string | null
+          sort_direction: Database["public"]["Enums"]["sort_direction"] | null
+          table_name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          column_order?: Json | null
+          created_at?: string | null
+          group_by?: string | null
+          id?: string
+          page_size?: number | null
+          sort_by?: string | null
+          sort_direction?: Database["public"]["Enums"]["sort_direction"] | null
+          table_name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          column_order?: Json | null
+          created_at?: string | null
+          group_by?: string | null
+          id?: string
+          page_size?: number | null
+          sort_by?: string | null
+          sort_direction?: Database["public"]["Enums"]["sort_direction"] | null
+          table_name?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -55,7 +317,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      gender_type: "m" | "f" | "d"
+      insured_person_status: "active" | "exited" | "retired" | "deceased"
+      marital_status_type:
+        | "single"
+        | "married"
+        | "divorced"
+        | "widowed"
+        | "registered_partnership"
+      sort_direction: "asc" | "desc"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -180,8 +450,47 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
-// Helper type for user_profiles table
+// Helper types
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
 export type UserProfileInsert = Database['public']['Tables']['user_profiles']['Insert']
 export type UserProfileUpdate = Database['public']['Tables']['user_profiles']['Update']
 export type UserRole = 'super_admin' | 'admin' | 'viewer'
+export type Language = 'de' | 'en' | 'fr'
+
+export type InsuredPerson = Database['public']['Tables']['insured_persons']['Row']
+export type InsuredPersonInsert = Database['public']['Tables']['insured_persons']['Insert']
+export type InsuredPersonUpdate = Database['public']['Tables']['insured_persons']['Update']
+export type InsuredPersonStatus = Database['public']['Enums']['insured_person_status']
+export type GenderType = Database['public']['Enums']['gender_type']
+export type MaritalStatusType = Database['public']['Enums']['marital_status_type']
+
+export type Employer = Database['public']['Tables']['employers']['Row']
+export type EmployerInsert = Database['public']['Tables']['employers']['Insert']
+export type EmployerUpdate = Database['public']['Tables']['employers']['Update']
+
+export type UserTablePreferences = Database['public']['Tables']['user_table_preferences']['Row']
+export type SortDirection = Database['public']['Enums']['sort_direction']
+
+export type Employment = Database['public']['Tables']['employments']['Row']
+export type EmploymentInsert = Database['public']['Tables']['employments']['Insert']
+export type EmploymentUpdate = Database['public']['Tables']['employments']['Update']
+
+export type InsuredPersonStatusType = {
+  id: string
+  name: string
+  name_en: string
+  name_fr: string
+  color: string
+  sort_order: number
+  is_final: boolean | null
+  requires_date: boolean | null
+  is_active: boolean | null
+  created_at: string | null
+  updated_at: string | null
+}
+
+export type StatusTransition = {
+  id: string
+  from_status_id: string
+  to_status_id: string
+}

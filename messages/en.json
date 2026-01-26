@@ -1,0 +1,263 @@
+{
+  "common": {
+    "appName": "peka.next",
+    "appDescription": "Pension Fund Management",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginTitle": "Login",
+    "loginDescription": "Choose your preferred login method",
+    "loginWithMicrosoft": "Login with Microsoft",
+    "loginWithGoogle": "Login with Google",
+    "or": "or",
+    "privacy": "Privacy",
+    "imprint": "Imprint"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to the Pension Fund Management",
+    "insuredPersons": "Insured Persons",
+    "insuredPersonsDescription": "Overview of insured persons",
+    "personsRegistered": "Persons registered",
+    "employers": "Employers",
+    "employersDescription": "Connected companies",
+    "employersActive": "Employers active",
+    "yourAccount": "Your Account",
+    "yourAccountDescription": "Account information",
+    "emailLabel": "Email",
+    "loggedInVia": "Logged in via"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "insuredPersons": "Insured Persons",
+    "employers": "Employers",
+    "settings": "Settings",
+    "admin": "Administration"
+  },
+  "language": {
+    "title": "Language",
+    "changed": "Language changed"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "minLength": "At least {min} characters required",
+    "maxLength": "Maximum {max} characters allowed"
+  },
+  "errors": {
+    "generic": "An error occurred",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Access denied",
+    "networkError": "Network error"
+  },
+  "insured": {
+    "title": "Insured Persons",
+    "description": "Overview of all insured persons",
+    "searchPlaceholder": "Search name, AHV number...",
+    "found": "{count} insured persons found",
+    "noResults": "No insured persons found",
+    "noResultsForSearch": "No insured persons found for '{search}'",
+    "emptyState": "No insured persons registered yet",
+    "emptyStateHint": "Register the first insured person.",
+    "columns": {
+      "lastName": "Last Name",
+      "firstName": "First Name",
+      "dateOfBirth": "Date of Birth",
+      "ahvNumber": "AHV No.",
+      "employer": "Employer",
+      "status": "Status",
+      "entryDate": "Entry Date",
+      "reset": "Reset columns"
+    },
+    "grouping": {
+      "label": "Group by",
+      "none": "No grouping",
+      "byStatus": "By status",
+      "byEmployer": "By employer",
+      "byEntryYear": "By entry year",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all",
+      "noEmployer": "No employer",
+      "entryYear": "Entry year {year}"
+    },
+    "status": {
+      "active": "Active",
+      "exited": "Exited",
+      "retired": "Retired",
+      "deceased": "Deceased"
+    },
+    "pagination": {
+      "showing": "{from}-{to} of {total}",
+      "page": "Page {page} of {totalPages}",
+      "perPage": "Per page",
+      "first": "First",
+      "last": "Last",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "backToList": "Back to list",
+      "tabs": {
+        "masterData": "Master Data",
+        "insurance": "Insurance",
+        "documents": "Documents",
+        "history": "History"
+      },
+      "sections": {
+        "personalData": "Personal Data",
+        "contactData": "Contact Data",
+        "address": "Address",
+        "emergencyContact": "Emergency Contact",
+        "employments": "Employments",
+        "notes": "Notes"
+      },
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "dateOfBirth": "Date of Birth",
+        "gender": "Gender",
+        "nationality": "Nationality",
+        "maritalStatus": "Marital Status",
+        "ahvNumber": "AHV Number",
+        "email": "Email",
+        "phone": "Phone",
+        "mobile": "Mobile",
+        "street": "Street",
+        "postalCode": "Postal Code",
+        "city": "City",
+        "country": "Country",
+        "emergencyName": "Name",
+        "emergencyPhone": "Phone",
+        "notes": "Notes"
+      },
+      "gender": {
+        "m": "Male",
+        "f": "Female",
+        "d": "Diverse"
+      },
+      "maritalStatus": {
+        "single": "Single",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "registered_partnership": "Registered Partnership"
+      },
+      "employments": {
+        "title": "Employments",
+        "employer": "Employer",
+        "entryDate": "Entry Date",
+        "exitDate": "Exit Date",
+        "employmentRate": "Employment Rate",
+        "status": "Status",
+        "active": "Active",
+        "ended": "Ended",
+        "addEmployment": "Add Employment",
+        "editEmployment": "Edit Employment",
+        "totalRate": "Total Rate",
+        "noEmployments": "No employments registered"
+      },
+      "statusChange": {
+        "title": "Change Status",
+        "currentStatus": "Current Status",
+        "newStatus": "New Status",
+        "effectiveDate": "Effective Date",
+        "reason": "Reason",
+        "reasonPlaceholder": "Optional: Reason for status change"
+      },
+      "notFound": "Insured person not found",
+      "notFoundDescription": "The requested person does not exist or has been deleted.",
+      "comingSoon": "This feature will be available soon.",
+      "edit": {
+        "title": "Edit Master Data",
+        "description": "Edit the master data of the insured person."
+      }
+    },
+    "create": {
+      "button": "New Person",
+      "title": "Register New Insured Person",
+      "description": "Enter the data for the new insured person.",
+      "sections": {
+        "personalData": "Personal Data",
+        "employment": "First Employment",
+        "contact": "Contact (optional)",
+        "address": "Address (optional)",
+        "emergencyContact": "Emergency Contact (optional)",
+        "notes": "Notes (optional)"
+      },
+      "employment": {
+        "title": "First Employment",
+        "selectEmployer": "Select employer"
+      },
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "dateOfBirth": "Date of Birth",
+        "ahvNumber": "AHV Number",
+        "gender": "Gender",
+        "nationality": "Nationality",
+        "maritalStatus": "Marital Status",
+        "employer": "Employer",
+        "entryDate": "Entry Date",
+        "employmentRate": "Employment Rate",
+        "email": "Email",
+        "phone": "Phone",
+        "mobile": "Mobile",
+        "street": "Street",
+        "postalCode": "Postal Code",
+        "city": "City",
+        "country": "Country",
+        "emergencyName": "Name",
+        "emergencyPhone": "Phone",
+        "notes": "Notes"
+      },
+      "placeholders": {
+        "ahvNumber": "756.1234.5678.97",
+        "selectEmployer": "Select employer",
+        "selectGender": "Select gender",
+        "selectMaritalStatus": "Select marital status"
+      },
+      "validation": {
+        "ahvInvalidLength": "AHV number must have 13 digits",
+        "ahvInvalidFormat": "AHV number must contain only digits",
+        "ahvInvalidCountry": "AHV number must start with 756",
+        "ahvInvalidCheckDigit": "Invalid check digit",
+        "ahvDuplicate": "This AHV number is already registered",
+        "ahvAlreadyExists": "This AHV number is already registered",
+        "employerRequired": "Please select an employer",
+        "entryDateRequired": "Please enter the entry date",
+        "employmentRateRequired": "Please enter the employment rate"
+      },
+      "success": "Insured person has been successfully registered",
+      "error": "Error registering insured person"
+    }
+  }
+}

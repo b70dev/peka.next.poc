@@ -1,29 +1,41 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { OAuthButtons } from '@/components/auth/oauth-buttons'
 import { LoginForm } from '@/components/auth/login-form'
-import Link from 'next/link'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { Link } from '@/i18n/routing'
+import { useTranslations } from 'next-intl'
 
 export default function LoginPage() {
+  const t = useTranslations('auth');
+  const tCommon = useTranslations('common');
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">
       <div className="w-full max-w-md">
+        {/* Language Switcher */}
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher />
+        </div>
+
         {/* Logo & Branding */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            peka.next
+            {tCommon('appName')}
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Pensionskassen-Verwaltung
+            {tCommon('appDescription')}
           </p>
         </div>
 
         {/* Login Card */}
         <Card className="border-0 shadow-lg">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl text-center">Anmelden</CardTitle>
+            <CardTitle className="text-2xl text-center">{t('loginTitle')}</CardTitle>
             <CardDescription className="text-center">
-              Wählen Sie Ihre bevorzugte Anmeldemethode
+              {t('loginDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -37,7 +49,7 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card px-2 text-muted-foreground">
-                  oder
+                  {t('or')}
                 </span>
               </div>
             </div>
@@ -50,18 +62,18 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            Noch kein Account?{' '}
+            {t('noAccount')}{' '}
             <Link href="/auth/register" className="text-primary hover:underline underline-offset-4">
-              Registrieren
+              {t('register')}
             </Link>
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
             <Link href="/datenschutz" className="hover:underline underline-offset-4">
-              Datenschutz
+              {t('privacy')}
             </Link>
             {' · '}
             <Link href="/impressum" className="hover:underline underline-offset-4">
-              Impressum
+              {t('imprint')}
             </Link>
           </p>
         </div>

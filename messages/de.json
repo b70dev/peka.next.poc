@@ -1,0 +1,263 @@
+{
+  "common": {
+    "appName": "peka.next",
+    "appDescription": "Pensionskassen-Verwaltung",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolgreich"
+  },
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "reset": "Zurücksetzen",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "close": "Schliessen"
+  },
+  "status": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "pending": "Ausstehend"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Noch kein Account?",
+    "hasAccount": "Bereits ein Account?",
+    "loginTitle": "Anmelden",
+    "loginDescription": "Wählen Sie Ihre bevorzugte Anmeldemethode",
+    "loginWithMicrosoft": "Mit Microsoft anmelden",
+    "loginWithGoogle": "Mit Google anmelden",
+    "or": "oder",
+    "privacy": "Datenschutz",
+    "imprint": "Impressum"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen in der Pensionskassen-Verwaltung",
+    "insuredPersons": "Versicherte Personen",
+    "insuredPersonsDescription": "Übersicht der versicherten Personen",
+    "personsRegistered": "Personen registriert",
+    "employers": "Arbeitgeber",
+    "employersDescription": "Angeschlossene Unternehmen",
+    "employersActive": "Arbeitgeber aktiv",
+    "yourAccount": "Ihr Account",
+    "yourAccountDescription": "Account-Informationen",
+    "emailLabel": "E-Mail",
+    "loggedInVia": "Angemeldet über"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "insuredPersons": "Versicherte",
+    "employers": "Arbeitgeber",
+    "settings": "Einstellungen",
+    "admin": "Administration"
+  },
+  "language": {
+    "title": "Sprache",
+    "changed": "Sprache geändert"
+  },
+  "validation": {
+    "required": "Dieses Feld ist erforderlich",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "minLength": "Mindestens {min} Zeichen erforderlich",
+    "maxLength": "Maximal {max} Zeichen erlaubt"
+  },
+  "errors": {
+    "generic": "Ein Fehler ist aufgetreten",
+    "notFound": "Nicht gefunden",
+    "unauthorized": "Nicht autorisiert",
+    "forbidden": "Zugriff verweigert",
+    "networkError": "Netzwerkfehler"
+  },
+  "insured": {
+    "title": "Versicherte Personen",
+    "description": "Übersicht aller versicherten Personen",
+    "searchPlaceholder": "Name, AHV-Nummer suchen...",
+    "found": "{count} Versicherte gefunden",
+    "noResults": "Keine Versicherten gefunden",
+    "noResultsForSearch": "Keine Versicherten für '{search}' gefunden",
+    "emptyState": "Noch keine Versicherten erfasst",
+    "emptyStateHint": "Erfassen Sie den ersten Versicherten.",
+    "columns": {
+      "lastName": "Name",
+      "firstName": "Vorname",
+      "dateOfBirth": "Geburtsdatum",
+      "ahvNumber": "AHV-Nr",
+      "employer": "Arbeitgeber",
+      "status": "Status",
+      "entryDate": "Eintrittsdatum",
+      "reset": "Spalten zurücksetzen"
+    },
+    "grouping": {
+      "label": "Gruppieren",
+      "none": "Keine Gruppierung",
+      "byStatus": "Nach Status",
+      "byEmployer": "Nach Arbeitgeber",
+      "byEntryYear": "Nach Eintrittsjahr",
+      "expandAll": "Alle aufklappen",
+      "collapseAll": "Alle zuklappen",
+      "noEmployer": "Ohne Arbeitgeber",
+      "entryYear": "Eintrittsjahr {year}"
+    },
+    "status": {
+      "active": "Aktiv",
+      "exited": "Austritt",
+      "retired": "Pensioniert",
+      "deceased": "Verstorben"
+    },
+    "pagination": {
+      "showing": "{from}-{to} von {total}",
+      "page": "Seite {page} von {totalPages}",
+      "perPage": "Pro Seite",
+      "first": "Erste",
+      "last": "Letzte",
+      "previous": "Zurück",
+      "next": "Weiter"
+    },
+    "detail": {
+      "backToList": "Zurück zur Liste",
+      "tabs": {
+        "masterData": "Stammdaten",
+        "insurance": "Versicherung",
+        "documents": "Dokumente",
+        "history": "Historie"
+      },
+      "sections": {
+        "personalData": "Persönliche Daten",
+        "contactData": "Kontaktdaten",
+        "address": "Adresse",
+        "emergencyContact": "Notfallkontakt",
+        "employments": "Anstellungen",
+        "notes": "Notizen"
+      },
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "dateOfBirth": "Geburtsdatum",
+        "gender": "Geschlecht",
+        "nationality": "Nationalität",
+        "maritalStatus": "Zivilstand",
+        "ahvNumber": "AHV-Nummer",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "mobile": "Mobile",
+        "street": "Strasse",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "country": "Land",
+        "emergencyName": "Name",
+        "emergencyPhone": "Telefon",
+        "notes": "Bemerkungen"
+      },
+      "gender": {
+        "m": "Männlich",
+        "f": "Weiblich",
+        "d": "Divers"
+      },
+      "maritalStatus": {
+        "single": "Ledig",
+        "married": "Verheiratet",
+        "divorced": "Geschieden",
+        "widowed": "Verwitwet",
+        "registered_partnership": "Eingetragene Partnerschaft"
+      },
+      "employments": {
+        "title": "Anstellungen",
+        "employer": "Arbeitgeber",
+        "entryDate": "Eintritt",
+        "exitDate": "Austritt",
+        "employmentRate": "Stellenprozent",
+        "status": "Status",
+        "active": "Aktiv",
+        "ended": "Beendet",
+        "addEmployment": "Anstellung hinzufügen",
+        "editEmployment": "Anstellung bearbeiten",
+        "totalRate": "Gesamtpensum",
+        "noEmployments": "Keine Anstellungen erfasst"
+      },
+      "statusChange": {
+        "title": "Status ändern",
+        "currentStatus": "Aktueller Status",
+        "newStatus": "Neuer Status",
+        "effectiveDate": "Gültig ab",
+        "reason": "Begründung",
+        "reasonPlaceholder": "Optional: Grund für Statusänderung"
+      },
+      "notFound": "Versicherte Person nicht gefunden",
+      "notFoundDescription": "Die angeforderte Person existiert nicht oder wurde gelöscht.",
+      "comingSoon": "Diese Funktion wird bald verfügbar sein.",
+      "edit": {
+        "title": "Stammdaten bearbeiten",
+        "description": "Bearbeiten Sie die Stammdaten der versicherten Person."
+      }
+    },
+    "create": {
+      "button": "Neue Person",
+      "title": "Neue versicherte Person erfassen",
+      "description": "Erfassen Sie die Daten der neuen versicherten Person.",
+      "sections": {
+        "personalData": "Persönliche Daten",
+        "employment": "Erste Anstellung",
+        "contact": "Kontakt (optional)",
+        "address": "Adresse (optional)",
+        "emergencyContact": "Notfallkontakt (optional)",
+        "notes": "Notizen (optional)"
+      },
+      "employment": {
+        "title": "Erste Anstellung",
+        "selectEmployer": "Arbeitgeber auswählen"
+      },
+      "fields": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "dateOfBirth": "Geburtsdatum",
+        "ahvNumber": "AHV-Nummer",
+        "gender": "Geschlecht",
+        "nationality": "Nationalität",
+        "maritalStatus": "Zivilstand",
+        "employer": "Arbeitgeber",
+        "entryDate": "Eintrittsdatum",
+        "employmentRate": "Stellenprozent",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "mobile": "Mobile",
+        "street": "Strasse",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "country": "Land",
+        "emergencyName": "Name",
+        "emergencyPhone": "Telefon",
+        "notes": "Bemerkungen"
+      },
+      "placeholders": {
+        "ahvNumber": "756.1234.5678.97",
+        "selectEmployer": "Arbeitgeber auswählen",
+        "selectGender": "Geschlecht auswählen",
+        "selectMaritalStatus": "Zivilstand auswählen"
+      },
+      "validation": {
+        "ahvInvalidLength": "AHV-Nummer muss 13 Ziffern haben",
+        "ahvInvalidFormat": "AHV-Nummer darf nur Ziffern enthalten",
+        "ahvInvalidCountry": "AHV-Nummer muss mit 756 beginnen",
+        "ahvInvalidCheckDigit": "Ungültige Prüfziffer",
+        "ahvDuplicate": "Diese AHV-Nummer ist bereits registriert",
+        "ahvAlreadyExists": "Diese AHV-Nummer ist bereits registriert",
+        "employerRequired": "Bitte wählen Sie einen Arbeitgeber",
+        "entryDateRequired": "Bitte geben Sie das Eintrittsdatum ein",
+        "employmentRateRequired": "Bitte geben Sie das Stellenprozent ein"
+      },
+      "success": "Versicherte Person wurde erfolgreich erfasst",
+      "error": "Fehler beim Erfassen der versicherten Person"
+    }
+  }
+}
