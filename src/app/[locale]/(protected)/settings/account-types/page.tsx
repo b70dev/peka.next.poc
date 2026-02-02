@@ -1,31 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { InsuredPersonsTable } from '@/components/insured/insured-persons-table'
-import { CreateInsuredPersonDialog } from '@/components/insured/create-insured-person-dialog'
+import { Link } from '@/i18n/routing'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
-import { Link } from '@/i18n/routing'
-import { InsuredPerson, Employer } from '@/lib/database.types'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft } from 'lucide-react'
+import { AccountTypesTable } from '@/components/settings/account-types-table'
+import { CreateAccountTypeDialog } from '@/components/settings/create-account-type-dialog'
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{
-    search?: string;
-    page?: string;
-    pageSize?: string;
-    sortBy?: string;
-    sortDirection?: string;
-  }>;
 };
 
-type InsuredPersonWithEmployer = InsuredPerson & {
-  employer: Employer | null;
-};
-
-export default async function InsuredPersonsPage({ params, searchParams }: Props) {
+export default async function AccountTypesPage({ params }: Props) {
   const { locale } = await params;
-  const search = await searchParams;
   setRequestLocale(locale);
 
   const supabase = await createClient()
@@ -35,43 +24,32 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
     redirect(`/${locale}/login`)
   }
 
-  const t = await getTranslations('insured');
+  const t = await getTranslations('settings.accountTypes');
   const tNav = await getTranslations('navigation');
 
-  // Parse search params
-  const searchTerm = search.search || '';
-  const page = parseInt(search.page || '1', 10);
-  const pageSize = parseInt(search.pageSize || '25', 10);
-  const sortBy = search.sortBy || 'last_name';
-  const sortDirection = (search.sortDirection || 'asc') as 'asc' | 'desc';
+  // Fetch account types with usage count
+  const { data: accountTypes } = await supabase
+    .from('account_types')
+    .select('*')
+    .order('sort_order')
 
-  // Build query
-  let query = supabase
-    .from('insured_persons')
-    .select('*, employer:employers(*)', { count: 'exact' });
+  // Get usage counts for each account type
+  const { data: usageCounts } = await supabase
+    .from('accounts')
+    .select('account_type_id')
 
-  // Apply search filter
-  if (searchTerm) {
-    const normalizedSearch = searchTerm.replace(/\./g, '');
-    query = query.or(`last_name.ilike.%${searchTerm}%,first_name.ilike.%${searchTerm}%,ahv_number.ilike.%${normalizedSearch}%`);
-  }
+  // Calculate usage map
+  const usageMap = new Map<string, number>()
+  usageCounts?.forEach(account => {
+    const count = usageMap.get(account.account_type_id) || 0
+    usageMap.set(account.account_type_id, count + 1)
+  })
 
-  // Apply sorting
-  query = query.order(sortBy, { ascending: sortDirection === 'asc' });
-
-  // Apply pagination
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-  query = query.range(from, to);
-
-  const { data: insuredPersons, count, error } = await query;
-
-  if (error) {
-    console.error('Error fetching insured persons:', error);
-  }
-
-  const totalCount = count || 0;
-  const totalPages = Math.ceil(totalCount / pageSize);
+  // Enhance account types with usage count
+  const accountTypesWithUsage = accountTypes?.map(type => ({
+    ...type,
+    usage_count: usageMap.get(type.id) || 0
+  })) || []
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -91,7 +69,7 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
               </Link>
               <Link
                 href="/insured"
-                className="text-sm font-medium"
+                className="text-sm text-muted-foreground hover:text-foreground"
               >
                 {tNav('insuredPersons')}
               </Link>
@@ -103,7 +81,7 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
               </Link>
               <Link
                 href="/settings"
-                className="text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm font-medium"
               >
                 {tNav('settings')}
               </Link>
@@ -121,26 +99,25 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
-        <div className="mb-6 flex items-start justify-between">
+        {/* Back link */}
+        <Button variant="ghost" size="sm" asChild className="mb-4">
+          <Link href="/settings">
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            {t('backToSettings')}
+          </Link>
+        </Button>
+
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
             <p className="text-muted-foreground mt-2">
               {t('description')}
             </p>
           </div>
-          <CreateInsuredPersonDialog />
+          <CreateAccountTypeDialog />
         </div>
 
-        <InsuredPersonsTable
-          insuredPersons={(insuredPersons || []) as InsuredPersonWithEmployer[]}
-          totalCount={totalCount}
-          currentPage={page}
-          pageSize={pageSize}
-          totalPages={totalPages}
-          searchTerm={searchTerm}
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-        />
+        <AccountTypesTable accountTypes={accountTypesWithUsage} />
       </main>
     </div>
   )

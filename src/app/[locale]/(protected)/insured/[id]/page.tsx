@@ -62,6 +62,12 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
                 >
                   {tNav('insuredPersons')}
                 </Link>
+                <Link
+                  href="/accounts"
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {tNav('accounts')}
+                </Link>
               </nav>
             </div>
             <div className="flex items-center gap-4">
@@ -111,6 +117,12 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
                 className="text-sm text-muted-foreground hover:text-foreground"
               >
                 {tNav('insuredPersons')}
+              </Link>
+              <Link
+                href="/accounts"
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
+                {tNav('accounts')}
               </Link>
             </nav>
           </div>

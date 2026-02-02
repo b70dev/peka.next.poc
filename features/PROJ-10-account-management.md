@@ -678,17 +678,151 @@ Neue Übersetzungsschlüssel benötigt:
 
 ---
 
+### Epic 6: Versicherten-Portal (Read-Only)
+
+#### US-10.18: Eigene Konten einsehen (Versicherter)
+**Als** versicherte Person
+**möchte ich** meine BVG-Konten und Salden im Portal einsehen
+**damit** ich meine Vorsorgesituation verstehe.
+
+**Acceptance Criteria:**
+- [ ] Read-only Ansicht der eigenen Konten im Versicherten-Portal
+- [ ] Kontozusammenzug (Gesamtsaldo) prominent angezeigt
+- [ ] Aufschlüsselung nach Kontotypen sichtbar
+- [ ] Transaktionshistorie einsehbar (ohne Buchungsfunktion)
+- [ ] Keine Möglichkeit zur Buchung oder Bearbeitung
+- [ ] Mobile-optimierte Darstellung
+
+**Edge Cases:**
+- Kein Portal-Account: Versicherter muss erst Onboarding durchführen (PROJ-12)
+- Mehrere Anstellungen: Versicherter sieht alle seine Anstellungen
+
+---
+
+## Tech-Design (Solution Architect)
+
+### Gesamtarchitektur (Zwei-Zugänge)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ADMIN-PORTAL                                 │
+│  /[locale]/(protected)/                                         │
+│  ├── insured/         ← Versichertenverwaltung                 │
+│  ├── accounts/        ← Kontenverwaltung (Vollzugriff)         │
+│  │   ├── Konten anlegen/bearbeiten                             │
+│  │   ├── Transaktionen buchen                                   │
+│  │   └── Umbuchungen, Stornos                                  │
+│  └── settings/        ← Admin-Konfiguration                     │
+│      ├── account-types/  ← Kontotypen verwalten                │
+│      └── transaction-types/ ← Transaktionstypen verwalten      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                 VERSICHERTEN-PORTAL                             │
+│  /portal/                                                       │
+│  ├── dashboard/       ← Übersicht mit Kontozusammenzug         │
+│  ├── my-data/         ← Stammdaten (PROJ-13)                   │
+│  ├── accounts/        ← Konten-Ansicht (READ-ONLY)             │
+│  │   ├── Kontenliste anzeigen                                  │
+│  │   ├── Kontodetail mit Transaktionen                         │
+│  │   └── Kontozusammenzug                                       │
+│  ├── projections/     ← Hochrechnungen (PROJ-11)               │
+│  └── documents/       ← Dokumente (PROJ-15)                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Wiederverwendbare Komponenten
+
+Die folgenden UI-Bausteine werden so gebaut, dass sie in **beiden Portalen** funktionieren:
+
+| Komponente | Admin-Portal | Versicherten-Portal |
+|------------|--------------|---------------------|
+| Kontozusammenzug-Karte | Vollzugriff | Read-only |
+| Konten-Liste | Alle Anstellungen | Nur eigene |
+| Konten-Karten | Mit Edit-Button | Ohne Edit-Button |
+| Transaktions-Tabelle | Mit Buchungs-Button | Ohne Buchungs-Button |
+| Saldo-Trend-Indikator | Ja | Ja |
+| Kontotyp-Auswahl | Editierbar | Nur Anzeige |
+
+### Berechtigungskonzept
+
+```
+Benutzerrollen:
+├── Admin (Pensionskasse)
+│   ├── Alle Konten aller Versicherten lesen/schreiben
+│   ├── Kontotypen/Transaktionstypen konfigurieren
+│   └── System-Typen anzeigen (nicht löschen)
+│
+├── Sachbearbeiter
+│   ├── Konten zugewiesener Versicherter lesen/schreiben
+│   ├── Transaktionen buchen
+│   └── Keine Konfiguration von Typen
+│
+└── Versicherter (Portal)
+    ├── Nur eigene Konten lesen (via portal_users.insured_person_id)
+    └── Keine Schreibrechte
+```
+
+### Datenfluss
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                       DATENBANK                                 │
+│                                                                 │
+│  accounts ──────┬────→ Kontenübersicht (beide Portale)         │
+│                 │                                               │
+│  transactions ──┴────→ Transaktionsliste (beide Portale)       │
+│                 │                                               │
+│                 └────→ projections (PROJ-11, beide Portale)    │
+│                                                                 │
+│  account_types ─────→ Dropdown (Admin) / Anzeige (Versicherter)│
+│  transaction_types ─→ Dropdown (Admin) / Anzeige (Versicherter)│
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Abhängigkeiten (erweitert)
+
+**PROJ-10 benötigt:**
+- PROJ-6 (Versichertenliste) - für Personensuche
+- PROJ-7 (Versichertendetail) - für Link zu Anstellung
+- Employments-Tabelle - bereits vorhanden
+
+**PROJ-10 wird benötigt von:**
+- PROJ-11 (BVG-Hochrechnungen) - für aktuelle Kontostände
+- PROJ-12 (Versicherten-Onboarding) - Portal-Account für Konten-Zugriff
+- Versicherten-Portal Kontenansicht (US-10.18)
+
+### Tech-Entscheidungen
+
+| Entscheidung | Begründung |
+|--------------|------------|
+| Supabase für Datenbank | Bereits im Projekt verwendet, RLS für Berechtigungen |
+| React Server Components | Schnelles Laden, SEO (Admin-Bereich weniger relevant) |
+| Shared Components | Komponenten einmal bauen, Props steuern Read-Only |
+| Optimistic Updates | Schnelle UX bei Transaktionsbuchung |
+
+### Benötigte Packages
+
+Keine neuen Packages erforderlich - bestehende Infrastruktur nutzen:
+- shadcn/ui (UI-Komponenten)
+- Supabase Client (Datenbank)
+- react-hook-form (Formulare)
+- zod (Validierung)
+
+---
+
 ## Schätzung
 
 | Phase | Aufwand |
 |-------|---------|
 | Datenbankschema | M |
 | API/Backend | L |
-| Konten-UI | L |
-| Transaktions-UI | L |
+| Konten-UI (Admin) | L |
+| Transaktions-UI (Admin) | L |
 | Kontozusammenzug | M |
 | Navigation/Suche | M |
-| **Admin-Konfiguration** | **M** |
+| Admin-Konfiguration | M |
+| **Versicherten-Portal (Read-Only)** | **M** |
 | Tests | M |
 | **Gesamt** | **XL** |
 
@@ -704,3 +838,5 @@ Neue Übersetzungsschlüssel benötigt:
 6. ~~Freigabe-Workflow für hohe Beträge?~~ → Nein, Out of Scope für Phase 1 (kann später ergänzt werden)
 7. ~~PDF-Export Kontoauszüge?~~ → Separates Feature (PROJ-11)
 8. ~~Wer verwaltet Konto-/Transaktionstypen?~~ → Nur Admins (neue Admin-Berechtigung erforderlich)
+9. ~~Sollen Versicherte ihre Konten einsehen können?~~ → Ja, read-only Zugang im Versicherten-Portal (US-10.18)
+10. ~~Wiederverwendbare Komponenten für beide Portale?~~ → Ja, von Anfang an so gebaut (siehe Tech-Design)
