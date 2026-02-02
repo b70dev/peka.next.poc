@@ -1,5 +1,8 @@
 # PROJ-10: Kontenverwaltung pro Anstellung
 
+**Status:** ✅ Deployed (2026-02-02)
+**Production URL:** https://peka-next-poc.vercel.app/de/accounts
+
 ## Übersicht
 
 Dieses Feature ermöglicht die Verwaltung von BVG-Konten pro Anstellung (Employment). Jede Anstellung kann mehrere Konten haben, auf denen Transaktionen gebucht werden. Der Kontozusammenzug zeigt den aggregierten Saldo aller Konten einer Anstellung.
