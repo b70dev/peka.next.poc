@@ -8,6 +8,7 @@ Dieses Feature ermöglicht die Verwaltung von BVG-Konten pro Anstellung (Employm
 
 ### In Scope
 - Anlage und Verwaltung von BVG-Konten pro Anstellung
+- **Automatische Erstellung von Standardkonten bei neuer Anstellung**
 - Buchung von BVG-relevanten Transaktionen auf Konten
 - Automatische Berechnung des Kontozusammenzugs (Saldo)
 - Eigener Navigationsbereich "Konten"
@@ -188,6 +189,27 @@ Dieses Feature ermöglicht die Verwaltung von BVG-Konten pro Anstellung (Employm
 - [ ] Nur der Anzeigename kann geändert werden
 - [ ] Kontotyp kann nicht geändert werden (anzeigen, aber disabled)
 - [ ] Änderungen werden gespeichert
+
+---
+
+#### US-10.3b: Automatische Kontoerstellung bei neuer Anstellung
+**Als** System
+**möchte ich** bei einer neuen Anstellung automatisch Standardkonten anlegen
+**damit** der Sachbearbeiter sofort Transaktionen buchen kann.
+
+**Acceptance Criteria:**
+- [ ] Bei Erstellung einer neuen Anstellung werden automatisch folgende Konten angelegt:
+  - Altersguthaben (obligatorisch)
+  - Altersguthaben überobligatorisch
+  - Sparbeiträge Arbeitnehmer
+  - Sparbeiträge Arbeitgeber
+- [ ] Die Konten werden mit Status "aktiv" erstellt
+- [ ] Nur Kontotypen mit `is_system=true` werden automatisch erstellt
+- [ ] Der Sachbearbeiter kann weitere Konten manuell hinzufügen
+
+**Edge Cases:**
+- Anstellung wird gelöscht: Konten mit Saldo > 0 verhindern Löschung
+- Kontotyp deaktiviert: Trotzdem anlegen, da is_system=true
 
 ---
 
@@ -678,7 +700,7 @@ Neue Übersetzungsschlüssel benötigt:
 2. ~~Welche Transaktionstypen?~~ → Vollständig BVG (konfigurierbar)
 3. ~~Multi-Währung?~~ → Nein, nur CHF
 4. ~~Kontotypen/Transaktionstypen konfigurierbar?~~ → Ja, über Admin-Bereich
-5. Sollen Konten automatisch bei Anstellungsbeginn angelegt werden?
-6. Gibt es einen Freigabe-Workflow für Transaktionen ab einem bestimmten Betrag?
-7. Sollen Kontoauszüge als PDF exportiert werden können? (→ separates Feature)
-8. Wer darf Konto-/Transaktionstypen verwalten? (Admin-Rolle erforderlich?)
+5. ~~Automatische Kontoerstellung bei Anstellung?~~ → Ja, Standardkonten (Altersguthaben obl./üob., Sparbeiträge AN/AG) werden automatisch bei neuer Anstellung angelegt
+6. ~~Freigabe-Workflow für hohe Beträge?~~ → Nein, Out of Scope für Phase 1 (kann später ergänzt werden)
+7. ~~PDF-Export Kontoauszüge?~~ → Separates Feature (PROJ-11)
+8. ~~Wer verwaltet Konto-/Transaktionstypen?~~ → Nur Admins (neue Admin-Berechtigung erforderlich)
