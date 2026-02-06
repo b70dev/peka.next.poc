@@ -623,6 +623,157 @@
         "success": "Transaction type was successfully updated",
         "error": "Error updating transaction type"
       }
+    },
+    "contributionRates": {
+      "title": "Contribution Rates",
+      "description": "Manage savings contribution rates for employers.",
+      "count": "Contribution rates configured",
+      "backToSettings": "Back to Settings",
+      "selectEmployer": "Select Employer",
+      "selectEmployerDescription": "Select an employer to manage their contribution rates.",
+      "noEmployers": "No employers found",
+      "noRatesConfigured": "No contribution rates configured",
+      "noRatesDescription": "No contribution rates have been defined for this employer yet.",
+      "createFirstVersion": "Create first version",
+      "useBvgMinimum": "Use BVG minimum",
+      "sameForAllGenders": "Same rates for all genders",
+      "table": {
+        "age": "Age",
+        "gender": "Gender",
+        "employeeRate": "EE Rate %",
+        "employerRate": "ER Rate %",
+        "totalRate": "Total %",
+        "male": "Male",
+        "female": "Female",
+        "all": "All",
+        "noRates": "No contribution rates available",
+        "filter": {
+          "gender": "Filter by gender",
+          "allGenders": "All genders",
+          "maleOnly": "Male (M)",
+          "femaleOnly": "Female (W)"
+        },
+        "sort": {
+          "ageAsc": "Age ascending",
+          "ageDesc": "Age descending"
+        }
+      },
+      "version": {
+        "title": "Version",
+        "current": "Current Version",
+        "validFrom": "Valid from",
+        "validTo": "Valid to",
+        "selectVersion": "Select version",
+        "newVersion": "New Version",
+        "createVersion": "Create Version",
+        "readOnly": "This version is read-only (historical)",
+        "deleteVersion": "Delete Version",
+        "cannotDeleteOnly": "The last version cannot be deleted",
+        "deleteConfirm": "Do you really want to delete this version?"
+      },
+      "create": {
+        "title": "Create New Version",
+        "description": "Create a new version of the contribution rates.",
+        "validFrom": "Valid from",
+        "validFromHint": "Date from which this version is valid",
+        "copyFromCurrent": "Copy values from current version",
+        "useBvgMinimum": "Use BVG minimum as template",
+        "success": "Version was successfully created",
+        "error": "Error creating version"
+      },
+      "bvgMinimum": {
+        "title": "Load BVG Minimum",
+        "description": "The statutory BVG minimum rates will be loaded.",
+        "confirmOverwrite": "Existing values will be overwritten. Continue?",
+        "rates": {
+          "18-24": "0% (below savings age)",
+          "25-34": "7% (3.5% + 3.5%)",
+          "35-44": "10% (5% + 5%)",
+          "45-54": "15% (7.5% + 7.5%)",
+          "55-70": "18% (9% + 9%)"
+        },
+        "success": "BVG minimum rates were loaded",
+        "error": "Error loading BVG minimum rates"
+      },
+      "save": {
+        "button": "Save",
+        "saving": "Saving...",
+        "success": "Contribution rates were saved",
+        "error": "Error saving contribution rates",
+        "noChanges": "No changes to save"
+      },
+      "validation": {
+        "required": "Value required",
+        "invalidRate": "Invalid value: Must be between 0% and 100%",
+        "maxDecimals": "Maximum 2 decimal places allowed",
+        "unusuallyHigh": "Unusually high value - please verify",
+        "validFromRequired": "Valid from date is required",
+        "validFromFuture": "Valid from date must be today or in the future"
+      },
+      "warnings": {
+        "unsavedChanges": "There are unsaved changes",
+        "confirmLeave": "Do you really want to leave? Unsaved changes will be lost."
+      },
+      "viewMode": {
+        "label": "View",
+        "individual": "Individual ages",
+        "ageGroups": "Age groups"
+      },
+      "ageGroups": {
+        "title": "Age Groups",
+        "fromAge": "From",
+        "toAge": "To",
+        "addGroup": "Add age group",
+        "deleteGroup": "Delete age group",
+        "validation": {
+          "overlap": "Age groups must not overlap",
+          "gap": "Gap between age groups detected",
+          "invalidRange": "Invalid age range: From age must be less than To age",
+          "outOfBounds": "Age must be between 18 and 70",
+          "minOneGroup": "At least one age group required"
+        },
+        "defaultGroups": "Load default groups",
+        "defaultGroupsHint": "BVG standard: 18-24, 25-34, 35-44, 45-54, 55-70"
+      },
+      "import": {
+        "button": "Import",
+        "title": "Import Contribution Rates",
+        "description": "Import contribution rates from an Excel or CSV file.",
+        "dropzone": "Drag file here or click to select",
+        "formats": "Supported formats: .xlsx, .xls, .csv",
+        "downloadTemplate": "Download template",
+        "preview": "Preview",
+        "columns": {
+          "age": "Age",
+          "gender": "Gender",
+          "employeeRate": "EE Rate",
+          "employerRate": "ER Rate",
+          "total": "Total"
+        },
+        "errors": "Errors",
+        "warnings": "Warnings",
+        "warningCount": "{count} rows with warnings",
+        "errorCount": "{count} errors",
+        "validCount": "{count} valid rows",
+        "overwriteExisting": "Overwrite existing values",
+        "importButton": "Import",
+        "invalidFormat": "Unsupported file format. Please use .xlsx, .xls or .csv.",
+        "success": "Contribution rates were successfully imported",
+        "error": "Error importing contribution rates"
+      },
+      "genderToggle": {
+        "enableTitle": "Use uniform rates",
+        "enableDescription": "Do you want to use uniform rates for all genders? The male values will be kept, female values will be deleted.",
+        "disableTitle": "Use different rates",
+        "disableDescription": "Do you want to enter different rates for men and women? The current values will be copied for both genders.",
+        "success": "Gender setting was updated",
+        "error": "Error updating gender setting",
+        "updating": "Updating..."
+      },
+      "audit": {
+        "lastModified": "Last modified on {date} at {time}",
+        "by": "by"
+      }
     }
   },
   "projections": {
@@ -712,6 +863,11 @@
       "title": "Projection not possible",
       "noBalance": "No retirement savings available",
       "noEmployment": "No active employment"
+    },
+    "contributionRates": {
+      "usingBvgMinimum": "Using BVG minimum rates (no employer configuration available)",
+      "usingEmployerRates": "Using employer-specific contribution rates",
+      "configure": "Configure rates"
     }
   }
 }

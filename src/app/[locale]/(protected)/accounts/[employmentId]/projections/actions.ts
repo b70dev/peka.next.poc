@@ -2,7 +2,8 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { calculateProjection, calculateAge, ProjectionInput, ProjectionResult } from '@/lib/projections'
+import { calculateProjection, calculateAge, ProjectionInput, ProjectionResult, ContributionRateByAge, getBvgMinimumRatesLocal } from '@/lib/projections'
+import { getCurrentContributionRates } from '@/app/[locale]/(protected)/settings/contribution-rates/actions'
 
 export interface ScenarioInput {
   name: string
@@ -125,6 +126,31 @@ export async function getEmploymentForProjection(employmentId: string) {
       ?.reduce((sum, t) => sum + Number(t.amount), 0) || 0
   }
 
+  // Load contribution rates for the employer (PROJ-17 integration)
+  let contributionRates: ContributionRateByAge[] = []
+  let usedBvgMinimumRates = true
+
+  const ratesResult = await getCurrentContributionRates(employment.employer.id)
+
+  if (!('error' in ratesResult) && ratesResult.rates && ratesResult.rates.length > 0) {
+    // Convert from database format to projection format
+    contributionRates = ratesResult.rates.map(rate => ({
+      age: rate.age,
+      employeeRate: Number(rate.employee_rate),
+      employerRate: Number(rate.employer_rate),
+      totalRate: Number(rate.total_rate),
+    }))
+    usedBvgMinimumRates = false
+  } else {
+    // Fallback to BVG minimum rates
+    contributionRates = getBvgMinimumRatesLocal()
+    usedBvgMinimumRates = true
+  }
+
+  // Extract birth year for BVG age calculation
+  const birthDate = new Date(employment.insured_person.date_of_birth)
+  const birthYear = birthDate.getFullYear()
+
   return {
     employment: {
       id: employment.id,
@@ -143,6 +169,10 @@ export async function getEmploymentForProjection(employmentId: string) {
     annualContribution,
     conversionRateUeob: employerSettings?.conversion_rate_ueob || params.bvg_conversion_rate_obl || 5.4,
     systemParams: params,
+    // PROJ-17: Contribution rates
+    contributionRates,
+    usedBvgMinimumRates,
+    birthYear,
   }
 }
 
@@ -180,6 +210,9 @@ export async function calculateScenarios(
       salaryGrowthRate: scenario.salaryGrowthRate,
       purchaseAmount: scenario.purchaseAmount,
       capitalRatio: scenario.capitalRatio,
+      // PROJ-17: Pass contribution rates
+      contributionRates: employmentData.contributionRates,
+      birthYear: employmentData.birthYear,
     }
 
     return {
@@ -188,7 +221,7 @@ export async function calculateScenarios(
     }
   })
 
-  return { results }
+  return { results, usedBvgMinimumRates: employmentData.usedBvgMinimumRates }
 }
 
 /**
@@ -247,6 +280,9 @@ export async function saveProjection(
       salaryGrowthRate: scenario.salaryGrowthRate,
       purchaseAmount: scenario.purchaseAmount,
       capitalRatio: scenario.capitalRatio,
+      // PROJ-17: Pass contribution rates
+      contributionRates: employmentData.contributionRates,
+      birthYear: employmentData.birthYear,
     }
 
     const result = calculateProjection(input)

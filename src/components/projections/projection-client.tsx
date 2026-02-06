@@ -10,8 +10,9 @@ import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { Plus, Copy, Trash2, Save, FolderOpen, AlertTriangle, TrendingUp } from 'lucide-react'
-import { calculateProjection, ProjectionInput, ProjectionResult, formatCurrency, formatPercentage } from '@/lib/projections'
+import { Plus, Copy, Trash2, Save, FolderOpen, AlertTriangle, TrendingUp, Info, Settings } from 'lucide-react'
+import { calculateProjection, ProjectionInput, ProjectionResult, formatCurrency, formatPercentage, ContributionRateByAge } from '@/lib/projections'
+import { Link } from '@/i18n/routing'
 import { saveProjection, deleteProjection, ScenarioInput } from '@/app/[locale]/(protected)/accounts/[employmentId]/projections/actions'
 import { useToast } from '@/hooks/use-toast'
 import { ScenarioComparisonChart } from './scenario-comparison-chart'
@@ -60,6 +61,11 @@ interface ProjectionClientProps {
   conversionRateUeob: number
   systemParams: Record<string, number>
   savedProjections: SavedProjection[]
+  // PROJ-17: Contribution rates integration
+  contributionRates?: ContributionRateByAge[]
+  usedBvgMinimumRates?: boolean
+  birthYear?: number
+  employerId?: string
 }
 
 export function ProjectionClient({
@@ -70,6 +76,10 @@ export function ProjectionClient({
   conversionRateUeob,
   systemParams,
   savedProjections: initialSavedProjections,
+  contributionRates,
+  usedBvgMinimumRates = true,
+  birthYear,
+  employerId,
 }: ProjectionClientProps) {
   const t = useTranslations('projections')
   const tActions = useTranslations('actions')
@@ -116,13 +126,16 @@ export function ProjectionClient({
         salaryGrowthRate: scenario.salaryGrowthRate,
         purchaseAmount: scenario.purchaseAmount,
         capitalRatio: scenario.capitalRatio,
+        // PROJ-17: Pass contribution rates for age-based calculations
+        contributionRates,
+        birthYear,
       }
       return {
         ...scenario,
         result: calculateProjection(input),
       }
     }))
-  }, [currentAge, balances, annualContribution])
+  }, [currentAge, balances, annualContribution, contributionRates, birthYear])
 
   // Calculate on mount and when scenarios change
   useEffect(() => {
@@ -255,6 +268,30 @@ export function ProjectionClient({
 
   return (
     <div className="space-y-6">
+      {/* PROJ-17: Contribution rates indicator */}
+      <Card className={usedBvgMinimumRates ? 'border-amber-200 bg-amber-50' : 'border-green-200 bg-green-50'}>
+        <CardContent className="py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Info className={`h-4 w-4 ${usedBvgMinimumRates ? 'text-amber-600' : 'text-green-600'}`} />
+              <span className={`text-sm ${usedBvgMinimumRates ? 'text-amber-700' : 'text-green-700'}`}>
+                {usedBvgMinimumRates
+                  ? t('contributionRates.usingBvgMinimum')
+                  : t('contributionRates.usingEmployerRates')}
+              </span>
+            </div>
+            {employerId && (
+              <Button variant="ghost" size="sm" asChild className="text-xs">
+                <Link href={`/settings/contribution-rates/${employerId}`}>
+                  <Settings className="h-3 w-3 mr-1" />
+                  {t('contributionRates.configure')}
+                </Link>
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Scenario tabs */}
       <Card>
         <CardHeader className="pb-3">

@@ -104,6 +104,89 @@ export type Database = {
           },
         ]
       }
+      employer_contribution_rate_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          employer_id: string
+          id: string
+          same_for_all_genders: boolean
+          updated_at: string
+          valid_from: string
+          valid_to: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          employer_id: string
+          id?: string
+          same_for_all_genders?: boolean
+          updated_at?: string
+          valid_from: string
+          valid_to?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          employer_id?: string
+          id?: string
+          same_for_all_genders?: boolean
+          updated_at?: string
+          valid_from?: string
+          valid_to?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employer_contribution_rate_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employer_contribution_rate_versions_employer_id_fkey"
+            columns: ["employer_id"]
+            isOneToOne: false
+            referencedRelation: "employers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employer_contribution_rates: {
+        Row: {
+          age: number
+          employee_rate: number
+          employer_rate: number
+          gender: string | null
+          id: string
+          version_id: string
+        }
+        Insert: {
+          age: number
+          employee_rate?: number
+          employer_rate?: number
+          gender?: string | null
+          id?: string
+          version_id: string
+        }
+        Update: {
+          age?: number
+          employee_rate?: number
+          employer_rate?: number
+          gender?: string | null
+          id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employer_contribution_rates_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "employer_contribution_rate_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employer_settings: {
         Row: {
           conversion_rate_ueob: number
@@ -976,6 +1059,28 @@ export type Database = {
         Returns: number
       }
       get_auto_create_account_types: { Args: never; Returns: string[] }
+      get_bvg_minimum_rates: {
+        Args: never
+        Returns: {
+          age: number
+          employee_rate: number
+          employer_rate: number
+          total_rate: number
+        }[]
+      }
+      get_contribution_rate_for_age: {
+        Args: {
+          p_age: number
+          p_employer_id: string
+          p_gender?: string
+          p_reference_date?: string
+        }
+        Returns: {
+          employee_rate: number
+          employer_rate: number
+          total_rate: number
+        }[]
+      }
       get_projection_parameter: {
         Args: { p_date?: string; p_key: string }
         Returns: number
@@ -1207,3 +1312,21 @@ export type TransactionEffect = Database["public"]["Enums"]["transaction_effect"
 
 // For the transactions with running balance function result
 export type TransactionWithRunningBalance = Database["public"]["Functions"]["get_transactions_with_running_balance"]["Returns"][number]
+
+// Contribution Rate Versions
+export type ContributionRateVersion = Database["public"]["Tables"]["employer_contribution_rate_versions"]["Row"]
+export type ContributionRateVersionRow = Database["public"]["Tables"]["employer_contribution_rate_versions"]["Row"]
+export type ContributionRateVersionInsert = Database["public"]["Tables"]["employer_contribution_rate_versions"]["Insert"]
+export type ContributionRateVersionUpdate = Database["public"]["Tables"]["employer_contribution_rate_versions"]["Update"]
+
+// Contribution Rates
+export type ContributionRate = Database["public"]["Tables"]["employer_contribution_rates"]["Row"]
+export type ContributionRateRow = Database["public"]["Tables"]["employer_contribution_rates"]["Row"]
+export type ContributionRateInsert = Database["public"]["Tables"]["employer_contribution_rates"]["Insert"]
+export type ContributionRateUpdate = Database["public"]["Tables"]["employer_contribution_rates"]["Update"]
+
+// BVG Minimum Rates (from function)
+export type BvgMinimumRate = Database["public"]["Functions"]["get_bvg_minimum_rates"]["Returns"][number]
+
+// Contribution Rate for Age (from function)
+export type ContributionRateForAge = Database["public"]["Functions"]["get_contribution_rate_for_age"]["Returns"][number]

@@ -623,6 +623,157 @@
         "success": "Le type de transaction a été mis à jour avec succès",
         "error": "Erreur lors de la mise à jour du type de transaction"
       }
+    },
+    "contributionRates": {
+      "title": "Taux de cotisation",
+      "description": "Gerez les taux de cotisation d'epargne pour les employeurs.",
+      "count": "Taux de cotisation configures",
+      "backToSettings": "Retour aux Parametres",
+      "selectEmployer": "Selectionner un employeur",
+      "selectEmployerDescription": "Selectionnez un employeur pour gerer ses taux de cotisation.",
+      "noEmployers": "Aucun employeur trouve",
+      "noRatesConfigured": "Aucun taux de cotisation configure",
+      "noRatesDescription": "Aucun taux de cotisation n'a encore ete defini pour cet employeur.",
+      "createFirstVersion": "Creer la premiere version",
+      "useBvgMinimum": "Utiliser le minimum LPP",
+      "sameForAllGenders": "Memes taux pour tous les genres",
+      "table": {
+        "age": "Age",
+        "gender": "Genre",
+        "employeeRate": "Taux employe %",
+        "employerRate": "Taux employeur %",
+        "totalRate": "Total %",
+        "male": "Masculin",
+        "female": "Feminin",
+        "all": "Tous",
+        "noRates": "Aucun taux de cotisation disponible",
+        "filter": {
+          "gender": "Filtrer par genre",
+          "allGenders": "Tous les genres",
+          "maleOnly": "Masculin (M)",
+          "femaleOnly": "Feminin (W)"
+        },
+        "sort": {
+          "ageAsc": "Age croissant",
+          "ageDesc": "Age decroissant"
+        }
+      },
+      "version": {
+        "title": "Version",
+        "current": "Version actuelle",
+        "validFrom": "Valable des",
+        "validTo": "Valable jusqu'au",
+        "selectVersion": "Selectionner la version",
+        "newVersion": "Nouvelle version",
+        "createVersion": "Creer la version",
+        "readOnly": "Cette version est en lecture seule (historique)",
+        "deleteVersion": "Supprimer la version",
+        "cannotDeleteOnly": "La derniere version ne peut pas etre supprimee",
+        "deleteConfirm": "Voulez-vous vraiment supprimer cette version?"
+      },
+      "create": {
+        "title": "Creer une nouvelle version",
+        "description": "Creez une nouvelle version des taux de cotisation.",
+        "validFrom": "Valable des",
+        "validFromHint": "Date a partir de laquelle cette version est valable",
+        "copyFromCurrent": "Copier les valeurs de la version actuelle",
+        "useBvgMinimum": "Utiliser le minimum LPP comme modele",
+        "success": "La version a ete creee avec succes",
+        "error": "Erreur lors de la creation de la version"
+      },
+      "bvgMinimum": {
+        "title": "Charger le minimum LPP",
+        "description": "Les taux minimum LPP legaux seront charges.",
+        "confirmOverwrite": "Les valeurs existantes seront ecrasees. Continuer?",
+        "rates": {
+          "18-24": "0% (sous l'age d'epargne)",
+          "25-34": "7% (3.5% + 3.5%)",
+          "35-44": "10% (5% + 5%)",
+          "45-54": "15% (7.5% + 7.5%)",
+          "55-70": "18% (9% + 9%)"
+        },
+        "success": "Les taux minimum LPP ont ete charges",
+        "error": "Erreur lors du chargement des taux minimum LPP"
+      },
+      "save": {
+        "button": "Enregistrer",
+        "saving": "Enregistrement...",
+        "success": "Les taux de cotisation ont ete enregistres",
+        "error": "Erreur lors de l'enregistrement des taux de cotisation",
+        "noChanges": "Aucune modification a enregistrer"
+      },
+      "validation": {
+        "required": "Valeur requise",
+        "invalidRate": "Valeur invalide: Doit etre entre 0% et 100%",
+        "maxDecimals": "Maximum 2 decimales autorisees",
+        "unusuallyHigh": "Valeur inhabituellement elevee - veuillez verifier",
+        "validFromRequired": "La date de validite est requise",
+        "validFromFuture": "La date de validite doit etre aujourd'hui ou dans le futur"
+      },
+      "warnings": {
+        "unsavedChanges": "Il y a des modifications non enregistrees",
+        "confirmLeave": "Voulez-vous vraiment quitter? Les modifications non enregistrees seront perdues."
+      },
+      "viewMode": {
+        "label": "Vue",
+        "individual": "Ages individuels",
+        "ageGroups": "Groupes d'age"
+      },
+      "ageGroups": {
+        "title": "Groupes d'age",
+        "fromAge": "De",
+        "toAge": "A",
+        "addGroup": "Ajouter un groupe d'age",
+        "deleteGroup": "Supprimer le groupe d'age",
+        "validation": {
+          "overlap": "Les groupes d'age ne doivent pas se chevaucher",
+          "gap": "Ecart entre les groupes d'age detecte",
+          "invalidRange": "Plage d'age invalide: L'age de debut doit etre inferieur a l'age de fin",
+          "outOfBounds": "L'age doit etre entre 18 et 70",
+          "minOneGroup": "Au moins un groupe d'age requis"
+        },
+        "defaultGroups": "Charger les groupes par defaut",
+        "defaultGroupsHint": "Standard LPP: 18-24, 25-34, 35-44, 45-54, 55-70"
+      },
+      "import": {
+        "button": "Importer",
+        "title": "Importer les taux de cotisation",
+        "description": "Importez les taux de cotisation a partir d'un fichier Excel ou CSV.",
+        "dropzone": "Faites glisser le fichier ici ou cliquez pour selectionner",
+        "formats": "Formats supportes: .xlsx, .xls, .csv",
+        "downloadTemplate": "Telecharger le modele",
+        "preview": "Apercu",
+        "columns": {
+          "age": "Age",
+          "gender": "Genre",
+          "employeeRate": "Taux employe",
+          "employerRate": "Taux employeur",
+          "total": "Total"
+        },
+        "errors": "Erreurs",
+        "warnings": "Avertissements",
+        "warningCount": "{count} lignes avec avertissements",
+        "errorCount": "{count} erreurs",
+        "validCount": "{count} lignes valides",
+        "overwriteExisting": "Ecraser les valeurs existantes",
+        "importButton": "Importer",
+        "invalidFormat": "Format de fichier non supporte. Veuillez utiliser .xlsx, .xls ou .csv.",
+        "success": "Les taux de cotisation ont ete importes avec succes",
+        "error": "Erreur lors de l'importation des taux de cotisation"
+      },
+      "genderToggle": {
+        "enableTitle": "Utiliser des taux uniformes",
+        "enableDescription": "Voulez-vous utiliser des taux uniformes pour tous les genres? Les valeurs masculines seront conservees, les valeurs feminines seront supprimees.",
+        "disableTitle": "Utiliser des taux differents",
+        "disableDescription": "Voulez-vous saisir des taux differents pour les hommes et les femmes? Les valeurs actuelles seront copiees pour les deux genres.",
+        "success": "Le parametre de genre a ete mis a jour",
+        "error": "Erreur lors de la mise a jour du parametre de genre",
+        "updating": "Mise a jour..."
+      },
+      "audit": {
+        "lastModified": "Derniere modification le {date} a {time}",
+        "by": "par"
+      }
     }
   },
   "projections": {
@@ -712,6 +863,11 @@
       "title": "Projection impossible",
       "noBalance": "Aucun avoir de vieillesse disponible",
       "noEmployment": "Aucun emploi actif"
+    },
+    "contributionRates": {
+      "usingBvgMinimum": "Taux minimaux LPP utilisés (aucune configuration employeur disponible)",
+      "usingEmployerRates": "Taux de cotisation spécifiques à l'employeur utilisés",
+      "configure": "Configurer les taux"
     }
   }
 }

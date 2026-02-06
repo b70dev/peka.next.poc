@@ -37,7 +37,7 @@ export default async function ProjectionsPage({ params }: Props) {
     notFound()
   }
 
-  const { insuredPerson, employer, balances, annualContribution, conversionRateUeob, systemParams } = employmentData
+  const { insuredPerson, employer, balances, annualContribution, conversionRateUeob, systemParams, contributionRates, usedBvgMinimumRates, birthYear } = employmentData
 
   // Calculate age
   const currentAge = calculateAge(insuredPerson.date_of_birth)
@@ -186,6 +186,10 @@ export default async function ProjectionsPage({ params }: Props) {
             conversionRateUeob={conversionRateUeob}
             systemParams={systemParams}
             savedProjections={savedProjections}
+            contributionRates={contributionRates}
+            usedBvgMinimumRates={usedBvgMinimumRates}
+            birthYear={birthYear}
+            employerId={employer.id}
           />
         )}
       </main>

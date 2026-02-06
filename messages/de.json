@@ -623,6 +623,157 @@
         "success": "Transaktionstyp wurde erfolgreich aktualisiert",
         "error": "Fehler beim Aktualisieren des Transaktionstyps"
       }
+    },
+    "contributionRates": {
+      "title": "Sparbeitragssätze",
+      "description": "Verwalten Sie die Sparbeitragssätze für Arbeitgeber.",
+      "count": "Sparbeitragssätze konfiguriert",
+      "backToSettings": "Zurück zu Einstellungen",
+      "selectEmployer": "Arbeitgeber auswählen",
+      "selectEmployerDescription": "Wählen Sie einen Arbeitgeber, um dessen Sparbeitragssätze zu verwalten.",
+      "noEmployers": "Keine Arbeitgeber gefunden",
+      "noRatesConfigured": "Keine Sparbeitragssätze konfiguriert",
+      "noRatesDescription": "Für diesen Arbeitgeber wurden noch keine Sparbeitragssätze definiert.",
+      "createFirstVersion": "Erste Version erstellen",
+      "useBvgMinimum": "BVG-Minimum verwenden",
+      "sameForAllGenders": "Gleiche Sätze für alle Geschlechter",
+      "table": {
+        "age": "Alter",
+        "gender": "Geschlecht",
+        "employeeRate": "AN-Satz %",
+        "employerRate": "AG-Satz %",
+        "totalRate": "Gesamt %",
+        "male": "Männlich",
+        "female": "Weiblich",
+        "all": "Alle",
+        "noRates": "Keine Beitragssätze vorhanden",
+        "filter": {
+          "gender": "Nach Geschlecht filtern",
+          "allGenders": "Alle Geschlechter",
+          "maleOnly": "Männlich (M)",
+          "femaleOnly": "Weiblich (W)"
+        },
+        "sort": {
+          "ageAsc": "Alter aufsteigend",
+          "ageDesc": "Alter absteigend"
+        }
+      },
+      "version": {
+        "title": "Version",
+        "current": "Aktuelle Version",
+        "validFrom": "Gültig ab",
+        "validTo": "Gültig bis",
+        "selectVersion": "Version auswählen",
+        "newVersion": "Neue Version",
+        "createVersion": "Version erstellen",
+        "readOnly": "Diese Version ist schreibgeschützt (historisch)",
+        "deleteVersion": "Version löschen",
+        "cannotDeleteOnly": "Die letzte Version kann nicht gelöscht werden",
+        "deleteConfirm": "Möchten Sie diese Version wirklich löschen?"
+      },
+      "create": {
+        "title": "Neue Version erstellen",
+        "description": "Erstellen Sie eine neue Version der Sparbeitragssätze.",
+        "validFrom": "Gültig ab",
+        "validFromHint": "Datum, ab dem diese Version gilt",
+        "copyFromCurrent": "Werte von aktueller Version übernehmen",
+        "useBvgMinimum": "BVG-Minimum als Vorlage",
+        "success": "Version wurde erfolgreich erstellt",
+        "error": "Fehler beim Erstellen der Version"
+      },
+      "bvgMinimum": {
+        "title": "BVG-Minimum laden",
+        "description": "Die gesetzlichen BVG-Minimum-Sätze werden geladen.",
+        "confirmOverwrite": "Bestehende Werte werden überschrieben. Fortfahren?",
+        "rates": {
+          "18-24": "0% (unter Sparalter)",
+          "25-34": "7% (3.5% + 3.5%)",
+          "35-44": "10% (5% + 5%)",
+          "45-54": "15% (7.5% + 7.5%)",
+          "55-70": "18% (9% + 9%)"
+        },
+        "success": "BVG-Minimum-Sätze wurden geladen",
+        "error": "Fehler beim Laden der BVG-Minimum-Sätze"
+      },
+      "save": {
+        "button": "Speichern",
+        "saving": "Speichert...",
+        "success": "Sparbeitragssätze wurden gespeichert",
+        "error": "Fehler beim Speichern der Sparbeitragssätze",
+        "noChanges": "Keine Änderungen vorhanden"
+      },
+      "validation": {
+        "required": "Wert erforderlich",
+        "invalidRate": "Ungültiger Wert: Muss zwischen 0% und 100% liegen",
+        "maxDecimals": "Maximal 2 Dezimalstellen erlaubt",
+        "unusuallyHigh": "Ungewöhnlich hoher Wert - bitte prüfen",
+        "validFromRequired": "Gültig-ab-Datum ist erforderlich",
+        "validFromFuture": "Gültig-ab-Datum muss heute oder in der Zukunft liegen"
+      },
+      "warnings": {
+        "unsavedChanges": "Es gibt ungespeicherte Änderungen",
+        "confirmLeave": "Möchten Sie die Seite wirklich verlassen? Ungespeicherte Änderungen gehen verloren."
+      },
+      "viewMode": {
+        "label": "Ansicht",
+        "individual": "Einzelalter",
+        "ageGroups": "Altersgruppen"
+      },
+      "ageGroups": {
+        "title": "Altersgruppen",
+        "fromAge": "Von",
+        "toAge": "Bis",
+        "addGroup": "Altersgruppe hinzufügen",
+        "deleteGroup": "Altersgruppe löschen",
+        "validation": {
+          "overlap": "Altersgruppen dürfen sich nicht überlappen",
+          "gap": "Lücke zwischen Altersgruppen erkannt",
+          "invalidRange": "Ungültiger Altersbereich: Von-Alter muss kleiner als Bis-Alter sein",
+          "outOfBounds": "Alter muss zwischen 18 und 70 liegen",
+          "minOneGroup": "Mindestens eine Altersgruppe erforderlich"
+        },
+        "defaultGroups": "Standard-Gruppen laden",
+        "defaultGroupsHint": "BVG-Standard: 18-24, 25-34, 35-44, 45-54, 55-70"
+      },
+      "import": {
+        "button": "Importieren",
+        "title": "Sparbeitragssätze importieren",
+        "description": "Importieren Sie Sparbeitragssätze aus einer Excel- oder CSV-Datei.",
+        "dropzone": "Datei hierher ziehen oder klicken zum Auswählen",
+        "formats": "Unterstützte Formate: .xlsx, .xls, .csv",
+        "downloadTemplate": "Vorlage herunterladen",
+        "preview": "Vorschau",
+        "columns": {
+          "age": "Alter",
+          "gender": "Geschl.",
+          "employeeRate": "AN-Satz",
+          "employerRate": "AG-Satz",
+          "total": "Gesamt"
+        },
+        "errors": "Fehler",
+        "warnings": "Warnungen",
+        "warningCount": "{count} Zeilen mit Warnungen",
+        "errorCount": "{count} Fehler",
+        "validCount": "{count} gültige Zeilen",
+        "overwriteExisting": "Bestehende Werte überschreiben",
+        "importButton": "Importieren",
+        "invalidFormat": "Nicht unterstütztes Dateiformat. Bitte .xlsx, .xls oder .csv verwenden.",
+        "success": "Sparbeitragssätze wurden erfolgreich importiert",
+        "error": "Fehler beim Importieren der Sparbeitragssätze"
+      },
+      "genderToggle": {
+        "enableTitle": "Einheitliche Sätze verwenden",
+        "enableDescription": "Möchten Sie einheitliche Sätze für alle Geschlechter verwenden? Die männlichen Werte werden übernommen, weibliche werden gelöscht.",
+        "disableTitle": "Unterschiedliche Sätze erfassen",
+        "disableDescription": "Möchten Sie unterschiedliche Sätze für Männer und Frauen erfassen? Die aktuellen Werte werden für beide Geschlechter kopiert.",
+        "success": "Geschlechtseinstellung wurde aktualisiert",
+        "error": "Fehler beim Aktualisieren der Geschlechtseinstellung",
+        "updating": "Wird aktualisiert..."
+      },
+      "audit": {
+        "lastModified": "Zuletzt geändert am {date} um {time}",
+        "by": "von"
+      }
     }
   },
   "projections": {
@@ -712,6 +863,11 @@
       "title": "Hochrechnung nicht möglich",
       "noBalance": "Kein Altersguthaben vorhanden",
       "noEmployment": "Keine aktive Anstellung"
+    },
+    "contributionRates": {
+      "usingBvgMinimum": "BVG-Minimum-Sätze werden verwendet (keine Arbeitgeber-Konfiguration vorhanden)",
+      "usingEmployerRates": "Arbeitgeber-spezifische Sparbeitragssätze werden verwendet",
+      "configure": "Sätze konfigurieren"
     }
   }
 }

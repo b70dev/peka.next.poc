@@ -7,6 +7,13 @@
  * - Purchase potential
  */
 
+export interface ContributionRateByAge {
+  age: number
+  employeeRate: number // AN-Satz in %
+  employerRate: number // AG-Satz in %
+  totalRate: number // Gesamt in %
+}
+
 export interface ProjectionInput {
   // Current state
   currentAge: number
@@ -26,6 +33,10 @@ export interface ProjectionInput {
   // For purchase potential calculation
   insuredSalary?: number
   contributionYears?: number
+
+  // Contribution rates from PROJ-17
+  contributionRates?: ContributionRateByAge[]
+  birthYear?: number // For BVG age calculation
 }
 
 export interface ProjectionResult {
@@ -51,14 +62,80 @@ export interface ProjectionResult {
 
   // Yearly progression for charts
   yearlyProgression: YearlyBalance[]
+
+  // Info about contribution rates used
+  usedBvgMinimumRates: boolean
 }
 
 export interface YearlyBalance {
   year: number
   age: number
+  bvgAge: number // BVG insurance age (calendar year - birth year)
   balanceObl: number
   balanceUeob: number
   balanceTotal: number
+  contributionRate?: number // Applied contribution rate for this year
+  annualContribution?: number // Contribution amount for this year
+}
+
+/**
+ * Get BVG insurance age for a given calendar year
+ * BVG age = calendar year - birth year
+ * This age applies for the entire calendar year regardless of actual birthday
+ */
+export function getBvgAge(birthYear: number, referenceYear: number): number {
+  return referenceYear - birthYear
+}
+
+/**
+ * Get contribution rate for a specific BVG age from the rates table
+ * Returns undefined if no rate is found
+ */
+export function getContributionRateForBvgAge(
+  rates: ContributionRateByAge[],
+  bvgAge: number
+): ContributionRateByAge | undefined {
+  return rates.find(r => r.age === bvgAge)
+}
+
+/**
+ * Get BVG minimum rates as fallback
+ * Standard BVG contribution rates by age group
+ */
+export function getBvgMinimumRatesLocal(): ContributionRateByAge[] {
+  const rates: ContributionRateByAge[] = []
+
+  for (let age = 18; age <= 70; age++) {
+    let employeeRate = 0
+    let employerRate = 0
+
+    if (age >= 18 && age <= 24) {
+      // Under BVG saving threshold
+      employeeRate = 0
+      employerRate = 0
+    } else if (age >= 25 && age <= 34) {
+      employeeRate = 3.5
+      employerRate = 3.5
+    } else if (age >= 35 && age <= 44) {
+      employeeRate = 5
+      employerRate = 5
+    } else if (age >= 45 && age <= 54) {
+      employeeRate = 7.5
+      employerRate = 7.5
+    } else if (age >= 55 && age <= 70) {
+      employeeRate = 9
+      employerRate = 9
+    }
+
+    rates.push({
+      age,
+      employeeRate,
+      employerRate,
+      totalRate: employeeRate + employerRate
+    })
+  }
+
+  return rates
 }
 
 /**
@@ -79,9 +156,19 @@ export function calculateProjection(input: ProjectionInput): ProjectionResult {
     capitalRatio,
     insuredSalary = 0,
     contributionYears = 0,
+    contributionRates,
+    birthYear,
   } = input
 
   const yearsToRetirement = Math.max(0, retirementAge - currentAge)
+  const currentYear = new Date().getFullYear()
+
+  // Determine which contribution rates to use
+  // Use provided rates if available, otherwise fall back to BVG minimum
+  const effectiveRates = contributionRates && contributionRates.length > 0
+    ? contributionRates
+    : getBvgMinimumRatesLocal()
+  const usedBvgMinimumRates = !contributionRates || contributionRates.length === 0
 
   // Convert percentages to decimals
   const interestRateDecimal = interestRate / 100
@@ -96,12 +183,19 @@ export function calculateProjection(input: ProjectionInput): ProjectionResult {
   let projectedBalanceObl = currentBalanceObl
   let projectedBalanceUeob = currentBalanceUeob
 
+  // Calculate initial BVG age
+  const effectiveBirthYear = birthYear || (currentYear - currentAge)
+  const initialBvgAge = getBvgAge(effectiveBirthYear, currentYear)
+
   const yearlyProgression: YearlyBalance[] = [{
     year: 0,
     age: currentAge,
+    bvgAge: initialBvgAge,
     balanceObl: projectedBalanceObl,
     balanceUeob: projectedBalanceUeob,
     balanceTotal: projectedBalanceObl + projectedBalanceUeob,
+    contributionRate: undefined,
+    annualContribution: undefined,
   }]
 
   for (let year = 1; year <= yearsToRetirement; year++) {
@@ -109,19 +203,47 @@ export function calculateProjection(input: ProjectionInput): ProjectionResult {
     projectedBalanceObl *= (1 + interestRateDecimal)
     projectedBalanceUeob *= (1 + interestRateDecimal)
 
-    // Calculate contribution with salary growth
-    const adjustedContribution = annualContribution * Math.pow(1 + salaryGrowthDecimal, year)
+    // Calculate BVG age for this projection year
+    const projectionYear = currentYear + year
+    const bvgAge = getBvgAge(effectiveBirthYear, projectionYear)
 
-    // Add contributions
-    projectedBalanceObl += adjustedContribution * oblContributionRatio
-    projectedBalanceUeob += adjustedContribution * ueobContributionRatio
+    // Get contribution rate for this age
+    const rateForAge = getContributionRateForBvgAge(effectiveRates, bvgAge)
+    const totalContributionRate = rateForAge?.totalRate || 0
+
+    // Calculate contribution based on:
+    // 1. Salary with growth adjustment
+    // 2. Contribution rate for the BVG age
+    let yearlyContribution: number
+
+    if (insuredSalary > 0 && totalContributionRate > 0) {
+      // Use insured salary with contribution rate
+      const adjustedSalary = insuredSalary * Math.pow(1 + salaryGrowthDecimal, year)
+      yearlyContribution = adjustedSalary * (totalContributionRate / 100)
+    } else if (annualContribution > 0 && totalContributionRate > 0) {
+      // Scale the base annual contribution by the ratio of current rate to initial rate
+      const initialRate = getContributionRateForBvgAge(effectiveRates, initialBvgAge)?.totalRate || 1
+      const rateMultiplier = totalContributionRate / (initialRate || 1)
+      const adjustedContribution = annualContribution * Math.pow(1 + salaryGrowthDecimal, year) * rateMultiplier
+      yearlyContribution = adjustedContribution
+    } else {
+      // Fallback: use base annual contribution with salary growth only
+      yearlyContribution = annualContribution * Math.pow(1 + salaryGrowthDecimal, year)
+    }
+
+    // Add contributions split between obl and ueob
+    projectedBalanceObl += yearlyContribution * oblContributionRatio
+    projectedBalanceUeob += yearlyContribution * ueobContributionRatio
 
     yearlyProgression.push({
       year,
       age: currentAge + year,
+      bvgAge,
       balanceObl: Math.round(projectedBalanceObl * 100) / 100,
       balanceUeob: Math.round(projectedBalanceUeob * 100) / 100,
       balanceTotal: Math.round((projectedBalanceObl + projectedBalanceUeob) * 100) / 100,
+      contributionRate: totalContributionRate,
+      annualContribution: Math.round(yearlyContribution * 100) / 100,
     })
   }
 
@@ -179,6 +301,7 @@ export function calculateProjection(input: ProjectionInput): ProjectionResult {
     purchasePotential: Math.round(purchasePotential * 100) / 100,
     yearsToRetirement,
     yearlyProgression,
+    usedBvgMinimumRates,
   }
 }
 

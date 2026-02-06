@@ -5,7 +5,7 @@ import { Link } from '@/i18n/routing'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreditCard, Receipt, Settings as SettingsIcon } from 'lucide-react'
+import { CreditCard, Receipt, Settings as SettingsIcon, Percent } from 'lucide-react'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -33,6 +33,11 @@ export default async function SettingsPage({ params }: Props) {
   const { count: transactionTypesCount } = await supabase
     .from('transaction_types')
     .select('*', { count: 'exact', head: true })
+
+  // Count employers with contribution rates configured
+  const { count: contributionRatesCount } = await supabase
+    .from('employer_contribution_rate_versions')
+    .select('employer_id', { count: 'exact', head: true })
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -123,6 +128,23 @@ export default async function SettingsPage({ params }: Props) {
               <CardContent>
                 <p className="text-3xl font-bold">{transactionTypesCount ?? 0}</p>
                 <p className="text-sm text-muted-foreground">{t('transactionTypes.count')}</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* Contribution Rates Card */}
+          <Link href="/settings/contribution-rates">
+            <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <Percent className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg">{t('contributionRates.title')}</CardTitle>
+                </div>
+                <CardDescription>{t('contributionRates.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold">{contributionRatesCount ?? 0}</p>
+                <p className="text-sm text-muted-foreground">{t('contributionRates.count')}</p>
               </CardContent>
             </Card>
           </Link>
