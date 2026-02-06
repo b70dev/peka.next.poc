@@ -450,5 +450,5 @@ Neue Übersetzungsschlüssel:
 5. ~~obl./überob. getrennt?~~ → Ja
 6. ~~Speicherung?~~ → Ja, Szenarien können gespeichert werden
 7. ~~PDF-Export?~~ → Nicht im MVP, kann als separates Feature ergänzt werden
-8. **Woher kommt der überobligatorische Umwandlungssatz?** → Aus Kassenkonfiguration?
-9. **Sollen Arbeitnehmer-/Arbeitgeberbeiträge separat projiziert werden?**
+8. ~~Woher kommt der überobligatorische Umwandlungssatz?~~ → Aus Kassenkonfiguration (pro Arbeitgeber/Pensionskasse konfigurierbar)
+9. ~~Sollen Arbeitnehmer-/Arbeitgeberbeiträge separat projiziert werden?~~ → Nein, Beiträge werden als Gesamtsumme projiziert

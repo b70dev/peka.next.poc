@@ -337,7 +337,8 @@
       "employment": "Anstellung",
       "employmentEnded": "Anstellung beendet",
       "transfer": "Umbuchung",
-      "allTransactions": "Alle Transaktionen"
+      "allTransactions": "Alle Transaktionen",
+      "projection": "Hochrechnung"
     },
     "accountTypes": {
       "altersguthaben": "Altersguthaben (obligatorisch)",
@@ -622,6 +623,95 @@
         "success": "Transaktionstyp wurde erfolgreich aktualisiert",
         "error": "Fehler beim Aktualisieren des Transaktionstyps"
       }
+    }
+  },
+  "projections": {
+    "title": "BVG-Hochrechnung",
+    "description": "Simulieren Sie verschiedene Pensionierungsszenarien",
+    "backToAccounts": "Zurück zu Konten",
+    "currentBalances": "Aktuelle Kontostände",
+    "balanceDate": "per {date}",
+    "balanceObl": "Altersguthaben obligatorisch",
+    "balanceUeob": "Altersguthaben überobligatorisch",
+    "balanceTotal": "Total Altersguthaben",
+    "annualContribution": "Jährliche Beiträge",
+    "purchasePotential": "Einkaufspotenzial",
+    "age": "Alter",
+    "yearsToRetirement": "Jahre bis Pensionierung",
+    "scenarios": {
+      "title": "Szenarien",
+      "add": "Neues Szenario",
+      "maxReached": "Maximum 5 Szenarien erreicht",
+      "duplicate": "Duplizieren",
+      "delete": "Löschen",
+      "deleteConfirm": "Szenario wirklich löschen?",
+      "minOne": "Mindestens ein Szenario erforderlich",
+      "defaultName": "Szenario {number}",
+      "standard": "Standard",
+      "earlyRetirement": "Frühpensionierung",
+      "withPurchase": "Mit Einkauf"
+    },
+    "parameters": {
+      "title": "Parameter",
+      "name": "Name",
+      "namePlaceholder": "z.B. Frühpensionierung 63",
+      "retirementAge": "Pensionierungsalter",
+      "years": "Jahre",
+      "interestRate": "Projizierter Zinssatz",
+      "conversionRateObl": "Umwandlungssatz obligatorisch",
+      "conversionRateUeob": "Umwandlungssatz überobligatorisch",
+      "salaryGrowth": "Lohnentwicklung p.a.",
+      "purchaseAmount": "Simulierter Einkauf",
+      "capitalRatio": "Kapitalanteil",
+      "pension": "Rente",
+      "capital": "Kapital",
+      "useMaxPurchase": "Max. Einkauf übernehmen"
+    },
+    "results": {
+      "title": "Ergebnisse",
+      "projectedCapital": "Projiziertes Kapital",
+      "monthlyPension": "Monatliche Rente",
+      "totalPension": "Total Rente",
+      "totalCapital": "Total Kapital",
+      "obl": "Obligatorisch",
+      "ueob": "Überobligatorisch",
+      "mixed": "Mischform",
+      "mixedCapital": "Kapitalbezug",
+      "mixedPension": "Monatliche Rente"
+    },
+    "comparison": {
+      "title": "Szenario-Vergleich",
+      "chart": "Grafik",
+      "table": "Tabelle"
+    },
+    "warnings": {
+      "retirementInPast": "Pensionierungsalter liegt vor aktuellem Alter",
+      "purchaseExceedsPotential": "Einkauf übersteigt Potenzial von CHF {max}",
+      "unrealisticInterest": "Unrealistischer Zinssatz",
+      "unrealisticSalaryGrowth": "Unrealistische Lohnentwicklung",
+      "negativeInterest": "Negativer Zinssatz eingestellt"
+    },
+    "save": {
+      "title": "Hochrechnung speichern",
+      "name": "Name der Hochrechnung",
+      "namePlaceholder": "z.B. Beratung vom {date}",
+      "success": "Hochrechnung wurde gespeichert",
+      "error": "Fehler beim Speichern"
+    },
+    "saved": {
+      "title": "Gespeicherte Hochrechnungen",
+      "empty": "Noch keine Hochrechnungen gespeichert",
+      "load": "Laden",
+      "delete": "Löschen",
+      "deleteConfirm": "Hochrechnung wirklich löschen?",
+      "scenarioCount": "{count} Szenarien",
+      "createdAt": "Erstellt am {date}",
+      "outdatedWarning": "Basiert auf Daten vom {date}"
+    },
+    "noData": {
+      "title": "Hochrechnung nicht möglich",
+      "noBalance": "Kein Altersguthaben vorhanden",
+      "noEmployment": "Keine aktive Anstellung"
     }
   }
 }

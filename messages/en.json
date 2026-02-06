@@ -337,7 +337,8 @@
       "employment": "Employment",
       "employmentEnded": "Employment ended",
       "transfer": "Transfer",
-      "allTransactions": "All Transactions"
+      "allTransactions": "All Transactions",
+      "projection": "Projection"
     },
     "accountTypes": {
       "altersguthaben": "Retirement Assets (mandatory)",
@@ -622,6 +623,95 @@
         "success": "Transaction type was successfully updated",
         "error": "Error updating transaction type"
       }
+    }
+  },
+  "projections": {
+    "title": "BVG Projection",
+    "description": "Simulate different retirement scenarios",
+    "backToAccounts": "Back to Accounts",
+    "currentBalances": "Current Account Balances",
+    "balanceDate": "as of {date}",
+    "balanceObl": "Retirement savings (mandatory)",
+    "balanceUeob": "Retirement savings (non-mandatory)",
+    "balanceTotal": "Total retirement savings",
+    "annualContribution": "Annual contributions",
+    "purchasePotential": "Purchase potential",
+    "age": "Age",
+    "yearsToRetirement": "Years to retirement",
+    "scenarios": {
+      "title": "Scenarios",
+      "add": "New Scenario",
+      "maxReached": "Maximum 5 scenarios reached",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "deleteConfirm": "Really delete scenario?",
+      "minOne": "At least one scenario required",
+      "defaultName": "Scenario {number}",
+      "standard": "Standard",
+      "earlyRetirement": "Early retirement",
+      "withPurchase": "With purchase"
+    },
+    "parameters": {
+      "title": "Parameters",
+      "name": "Name",
+      "namePlaceholder": "e.g. Early retirement 63",
+      "retirementAge": "Retirement age",
+      "years": "years",
+      "interestRate": "Projected interest rate",
+      "conversionRateObl": "Conversion rate (mandatory)",
+      "conversionRateUeob": "Conversion rate (non-mandatory)",
+      "salaryGrowth": "Salary growth p.a.",
+      "purchaseAmount": "Simulated purchase",
+      "capitalRatio": "Capital ratio",
+      "pension": "Pension",
+      "capital": "Capital",
+      "useMaxPurchase": "Use max. purchase"
+    },
+    "results": {
+      "title": "Results",
+      "projectedCapital": "Projected Capital",
+      "monthlyPension": "Monthly Pension",
+      "totalPension": "Total Pension",
+      "totalCapital": "Total Capital",
+      "obl": "Mandatory",
+      "ueob": "Non-mandatory",
+      "mixed": "Mixed form",
+      "mixedCapital": "Capital withdrawal",
+      "mixedPension": "Monthly pension"
+    },
+    "comparison": {
+      "title": "Scenario Comparison",
+      "chart": "Chart",
+      "table": "Table"
+    },
+    "warnings": {
+      "retirementInPast": "Retirement age is before current age",
+      "purchaseExceedsPotential": "Purchase exceeds potential of CHF {max}",
+      "unrealisticInterest": "Unrealistic interest rate",
+      "unrealisticSalaryGrowth": "Unrealistic salary growth",
+      "negativeInterest": "Negative interest rate set"
+    },
+    "save": {
+      "title": "Save Projection",
+      "name": "Projection name",
+      "namePlaceholder": "e.g. Consultation from {date}",
+      "success": "Projection was saved",
+      "error": "Error saving"
+    },
+    "saved": {
+      "title": "Saved Projections",
+      "empty": "No projections saved yet",
+      "load": "Load",
+      "delete": "Delete",
+      "deleteConfirm": "Really delete projection?",
+      "scenarioCount": "{count} scenarios",
+      "createdAt": "Created on {date}",
+      "outdatedWarning": "Based on data from {date}"
+    },
+    "noData": {
+      "title": "Projection not possible",
+      "noBalance": "No retirement savings available",
+      "noEmployment": "No active employment"
     }
   }
 }

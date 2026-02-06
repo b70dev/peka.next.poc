@@ -5,7 +5,7 @@ import { Link } from '@/i18n/routing'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Calculator } from 'lucide-react'
 import { AccountSummaryCard } from '@/components/accounts/account-summary-card'
 import { AccountsList } from '@/components/accounts/accounts-list'
 import { CreateAccountDialog } from '@/components/accounts/create-account-dialog'
@@ -163,6 +163,12 @@ export default async function EmploymentAccountsPage({ params, searchParams }: P
 
         {/* Actions */}
         <div className="flex flex-wrap gap-2 mb-6">
+          <Button variant="outline" asChild>
+            <Link href={`/accounts/${employmentId}/projections`}>
+              <Calculator className="h-4 w-4 mr-2" />
+              {t('detail.projection')}
+            </Link>
+          </Button>
           <CreateAccountDialog
             employmentId={employmentId}
             accountTypes={accountTypes || []}

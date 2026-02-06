@@ -104,6 +104,56 @@ export type Database = {
           },
         ]
       }
+      employer_settings: {
+        Row: {
+          conversion_rate_ueob: number
+          created_at: string
+          employee_contribution_rate: number | null
+          employer_contribution_rate: number | null
+          employer_id: string
+          id: string
+          interest_rate_override: number | null
+          notes: string | null
+          updated_at: string
+          valid_from: string
+          valid_to: string | null
+        }
+        Insert: {
+          conversion_rate_ueob?: number
+          created_at?: string
+          employee_contribution_rate?: number | null
+          employer_contribution_rate?: number | null
+          employer_id: string
+          id?: string
+          interest_rate_override?: number | null
+          notes?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_to?: string | null
+        }
+        Update: {
+          conversion_rate_ueob?: number
+          created_at?: string
+          employee_contribution_rate?: number | null
+          employer_contribution_rate?: number | null
+          employer_id?: string
+          id?: string
+          interest_rate_override?: number | null
+          notes?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_to?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employer_settings_employer_id_fkey"
+            columns: ["employer_id"]
+            isOneToOne: false
+            referencedRelation: "employers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employers: {
         Row: {
           city: string | null
@@ -500,6 +550,161 @@ export type Database = {
           },
         ]
       }
+      projection_parameters: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          valid_from: string
+          valid_to: string | null
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          valid_from?: string
+          valid_to?: string | null
+          value: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          valid_from?: string
+          valid_to?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
+      projection_scenarios: {
+        Row: {
+          capital_ratio: number
+          conversion_rate_obl: number
+          conversion_rate_ueob: number
+          created_at: string
+          id: string
+          interest_rate: number
+          name: string
+          projection_id: string
+          purchase_amount: number
+          result_capital_obl: number | null
+          result_capital_ueob: number | null
+          result_pension_obl: number | null
+          result_pension_ueob: number | null
+          result_purchase_potential: number | null
+          retirement_age: number
+          salary_growth_rate: number
+          sort_order: number
+        }
+        Insert: {
+          capital_ratio?: number
+          conversion_rate_obl?: number
+          conversion_rate_ueob?: number
+          created_at?: string
+          id?: string
+          interest_rate?: number
+          name?: string
+          projection_id: string
+          purchase_amount?: number
+          result_capital_obl?: number | null
+          result_capital_ueob?: number | null
+          result_pension_obl?: number | null
+          result_pension_ueob?: number | null
+          result_purchase_potential?: number | null
+          retirement_age?: number
+          salary_growth_rate?: number
+          sort_order?: number
+        }
+        Update: {
+          capital_ratio?: number
+          conversion_rate_obl?: number
+          conversion_rate_ueob?: number
+          created_at?: string
+          id?: string
+          interest_rate?: number
+          name?: string
+          projection_id?: string
+          purchase_amount?: number
+          result_capital_obl?: number | null
+          result_capital_ueob?: number | null
+          result_pension_obl?: number | null
+          result_pension_ueob?: number | null
+          result_purchase_potential?: number | null
+          retirement_age?: number
+          salary_growth_rate?: number
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projection_scenarios_projection_id_fkey"
+            columns: ["projection_id"]
+            isOneToOne: false
+            referencedRelation: "projections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projections: {
+        Row: {
+          annual_contribution: number
+          base_balance_date: string
+          base_balance_obl: number
+          base_balance_ueob: number
+          created_at: string
+          created_by: string | null
+          employment_id: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          annual_contribution?: number
+          base_balance_date?: string
+          base_balance_obl?: number
+          base_balance_ueob?: number
+          created_at?: string
+          created_by?: string | null
+          employment_id: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          annual_contribution?: number
+          base_balance_date?: string
+          base_balance_obl?: number
+          base_balance_ueob?: number
+          created_at?: string
+          created_by?: string | null
+          employment_id?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projections_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projections_employment_id_fkey"
+            columns: ["employment_id"]
+            isOneToOne: false
+            referencedRelation: "employments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transaction_types: {
         Row: {
           code: string
@@ -770,7 +975,11 @@ export type Database = {
         Args: { p_account_id: string; p_date: string }
         Returns: number
       }
-      get_auto_create_account_types: { Args: Record<PropertyKey, never>; Returns: string[] }
+      get_auto_create_account_types: { Args: never; Returns: string[] }
+      get_projection_parameter: {
+        Args: { p_date?: string; p_key: string }
+        Returns: number
+      }
       get_transactions_with_running_balance: {
         Args: { p_account_id: string; p_limit?: number; p_offset?: number }
         Returns: {
@@ -792,10 +1001,10 @@ export type Database = {
           value_date: string
         }[]
       }
-      is_admin_or_above: { Args: Record<PropertyKey, never>; Returns: boolean }
-      is_admin_user: { Args: Record<PropertyKey, never>; Returns: boolean }
-      is_authenticated_active_user: { Args: Record<PropertyKey, never>; Returns: boolean }
-      is_super_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
+      is_admin_or_above: { Args: never; Returns: boolean }
+      is_admin_user: { Args: never; Returns: boolean }
+      is_authenticated_active_user: { Args: never; Returns: boolean }
+      is_super_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       balance_effect: "positive" | "negative" | "neutral"
@@ -933,116 +1142,68 @@ export type CompositeTypes<
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
-// ============================================
-// Helper Types (existing)
-// ============================================
-export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
-export type UserProfileInsert = Database['public']['Tables']['user_profiles']['Insert']
-export type UserProfileUpdate = Database['public']['Tables']['user_profiles']['Update']
-export type UserRole = 'super_admin' | 'admin' | 'viewer'
-export type Language = 'de' | 'en' | 'fr'
+export const Constants = {
+  public: {
+    Enums: {
+      balance_effect: ["positive", "negative", "neutral"],
+      gender_type: ["m", "f", "d"],
+      insured_person_status: ["active", "exited", "retired", "deceased"],
+      marital_status_type: [
+        "single",
+        "married",
+        "divorced",
+        "widowed",
+        "registered_partnership",
+      ],
+      sort_direction: ["asc", "desc"],
+      transaction_effect: ["credit", "debit"],
+    },
+  },
+} as const
 
-export type InsuredPerson = Database['public']['Tables']['insured_persons']['Row']
-export type InsuredPersonInsert = Database['public']['Tables']['insured_persons']['Insert']
-export type InsuredPersonUpdate = Database['public']['Tables']['insured_persons']['Update']
-export type InsuredPersonStatus = Database['public']['Enums']['insured_person_status']
-export type GenderType = Database['public']['Enums']['gender_type']
-export type MaritalStatusType = Database['public']['Enums']['marital_status_type']
+// Convenience type aliases for common operations
 
-export type Employer = Database['public']['Tables']['employers']['Row']
-export type EmployerInsert = Database['public']['Tables']['employers']['Insert']
-export type EmployerUpdate = Database['public']['Tables']['employers']['Update']
+// Employments
+export type Employment = Database["public"]["Tables"]["employments"]["Row"]
+export type EmploymentRow = Database["public"]["Tables"]["employments"]["Row"]
+export type EmploymentInsert = Database["public"]["Tables"]["employments"]["Insert"]
+export type EmploymentUpdate = Database["public"]["Tables"]["employments"]["Update"]
 
-export type UserTablePreferences = Database['public']['Tables']['user_table_preferences']['Row']
-export type SortDirection = Database['public']['Enums']['sort_direction']
+// Insured Persons
+export type InsuredPerson = Database["public"]["Tables"]["insured_persons"]["Row"]
+export type InsuredPersonRow = Database["public"]["Tables"]["insured_persons"]["Row"]
+export type InsuredPersonInsert = Database["public"]["Tables"]["insured_persons"]["Insert"]
+export type InsuredPersonUpdate = Database["public"]["Tables"]["insured_persons"]["Update"]
+export type InsuredPersonStatus = Database["public"]["Enums"]["insured_person_status"]
 
-export type Employment = Database['public']['Tables']['employments']['Row']
-export type EmploymentInsert = Database['public']['Tables']['employments']['Insert']
-export type EmploymentUpdate = Database['public']['Tables']['employments']['Update']
+// Employers
+export type Employer = Database["public"]["Tables"]["employers"]["Row"]
+export type EmployerRow = Database["public"]["Tables"]["employers"]["Row"]
+export type EmployerInsert = Database["public"]["Tables"]["employers"]["Insert"]
+export type EmployerUpdate = Database["public"]["Tables"]["employers"]["Update"]
 
-export type InsuredPersonStatusType = {
-  id: string
-  name: string
-  name_en: string
-  name_fr: string
-  color: string
-  sort_order: number
-  is_final: boolean | null
-  requires_date: boolean | null
-  is_active: boolean | null
-  created_at: string | null
-  updated_at: string | null
-}
+// Projections
+export type Projection = Database["public"]["Tables"]["projections"]["Row"]
+export type ProjectionRow = Database["public"]["Tables"]["projections"]["Row"]
+export type ProjectionInsert = Database["public"]["Tables"]["projections"]["Insert"]
+export type ProjectionUpdate = Database["public"]["Tables"]["projections"]["Update"]
 
-export type StatusTransition = {
-  id: string
-  from_status_id: string
-  to_status_id: string
-}
+export type ProjectionScenario = Database["public"]["Tables"]["projection_scenarios"]["Row"]
+export type ProjectionScenarioRow = Database["public"]["Tables"]["projection_scenarios"]["Row"]
+export type ProjectionScenarioInsert = Database["public"]["Tables"]["projection_scenarios"]["Insert"]
+export type ProjectionScenarioUpdate = Database["public"]["Tables"]["projection_scenarios"]["Update"]
 
-// ============================================
-// PROJ-10: Account Management Types
-// ============================================
+// Accounts
+export type Account = Database["public"]["Tables"]["accounts"]["Row"]
+export type AccountType = Database["public"]["Tables"]["account_types"]["Row"]
+export type AccountBalance = Database["public"]["Views"]["account_balances"]["Row"]
+export type AccountSummary = Database["public"]["Views"]["account_summaries"]["Row"]
+export type BalanceEffect = Database["public"]["Enums"]["balance_effect"]
 
-// Account Types (Kontotypen)
-export type AccountType = Database['public']['Tables']['account_types']['Row']
-export type AccountTypeInsert = Database['public']['Tables']['account_types']['Insert']
-export type AccountTypeUpdate = Database['public']['Tables']['account_types']['Update']
+// Transactions
+export type Transaction = Database["public"]["Tables"]["transactions"]["Row"]
+export type TransactionType = Database["public"]["Tables"]["transaction_types"]["Row"]
+export type TransactionEffect = Database["public"]["Enums"]["transaction_effect"]
 
-// Transaction Types (Transaktionstypen)
-export type TransactionType = Database['public']['Tables']['transaction_types']['Row']
-export type TransactionTypeInsert = Database['public']['Tables']['transaction_types']['Insert']
-export type TransactionTypeUpdate = Database['public']['Tables']['transaction_types']['Update']
-
-// Accounts (Konten)
-export type Account = Database['public']['Tables']['accounts']['Row']
-export type AccountInsert = Database['public']['Tables']['accounts']['Insert']
-export type AccountUpdate = Database['public']['Tables']['accounts']['Update']
-
-// Transactions (Transaktionen)
-export type Transaction = Database['public']['Tables']['transactions']['Row']
-export type TransactionInsert = Database['public']['Tables']['transactions']['Insert']
-export type TransactionUpdate = Database['public']['Tables']['transactions']['Update']
-
-// Views
-export type AccountBalance = Database['public']['Views']['account_balances']['Row']
-export type AccountSummary = Database['public']['Views']['account_summaries']['Row']
-
-// Enums
-export type BalanceEffect = Database['public']['Enums']['balance_effect']
-export type TransactionEffect = Database['public']['Enums']['transaction_effect']
-
-// Extended types with relations
-export type AccountWithType = Account & {
-  account_type: AccountType
-}
-
-export type AccountWithBalance = Account & {
-  account_type: AccountType
-  balance: number
-  transaction_count: number
-  last_transaction_date: string | null
-}
-
-export type TransactionWithType = Transaction & {
-  transaction_type: TransactionType
-}
-
-export type TransactionWithRunningBalance = {
-  id: string
-  transaction_type_id: string
-  transaction_type_code: string
-  transaction_type_name: string
-  effect: TransactionEffect
-  amount: number
-  signed_amount: number
-  booking_date: string
-  value_date: string
-  reference: string | null
-  description: string | null
-  related_transaction_id: string | null
-  is_reversed: boolean
-  created_by: string | null
-  created_at: string
-  running_balance: number
-}
+// For the transactions with running balance function result
+export type TransactionWithRunningBalance = Database["public"]["Functions"]["get_transactions_with_running_balance"]["Returns"][number]

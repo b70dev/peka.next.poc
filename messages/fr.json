@@ -337,7 +337,8 @@
       "employment": "Emploi",
       "employmentEnded": "Emploi terminé",
       "transfer": "Virement",
-      "allTransactions": "Toutes les transactions"
+      "allTransactions": "Toutes les transactions",
+      "projection": "Projection"
     },
     "accountTypes": {
       "altersguthaben": "Avoir de vieillesse (obligatoire)",
@@ -622,6 +623,95 @@
         "success": "Le type de transaction a été mis à jour avec succès",
         "error": "Erreur lors de la mise à jour du type de transaction"
       }
+    }
+  },
+  "projections": {
+    "title": "Projection LPP",
+    "description": "Simulez différents scénarios de retraite",
+    "backToAccounts": "Retour aux comptes",
+    "currentBalances": "Soldes actuels des comptes",
+    "balanceDate": "au {date}",
+    "balanceObl": "Avoir de vieillesse obligatoire",
+    "balanceUeob": "Avoir de vieillesse surobligatoire",
+    "balanceTotal": "Total avoir de vieillesse",
+    "annualContribution": "Cotisations annuelles",
+    "purchasePotential": "Potentiel de rachat",
+    "age": "Âge",
+    "yearsToRetirement": "Années jusqu'à la retraite",
+    "scenarios": {
+      "title": "Scénarios",
+      "add": "Nouveau scénario",
+      "maxReached": "Maximum 5 scénarios atteint",
+      "duplicate": "Dupliquer",
+      "delete": "Supprimer",
+      "deleteConfirm": "Vraiment supprimer le scénario?",
+      "minOne": "Au moins un scénario requis",
+      "defaultName": "Scénario {number}",
+      "standard": "Standard",
+      "earlyRetirement": "Retraite anticipée",
+      "withPurchase": "Avec rachat"
+    },
+    "parameters": {
+      "title": "Paramètres",
+      "name": "Nom",
+      "namePlaceholder": "p.ex. Retraite anticipée 63",
+      "retirementAge": "Âge de la retraite",
+      "years": "ans",
+      "interestRate": "Taux d'intérêt projeté",
+      "conversionRateObl": "Taux de conversion obligatoire",
+      "conversionRateUeob": "Taux de conversion surobligatoire",
+      "salaryGrowth": "Évolution salariale p.a.",
+      "purchaseAmount": "Rachat simulé",
+      "capitalRatio": "Part en capital",
+      "pension": "Rente",
+      "capital": "Capital",
+      "useMaxPurchase": "Utiliser rachat max."
+    },
+    "results": {
+      "title": "Résultats",
+      "projectedCapital": "Capital projeté",
+      "monthlyPension": "Rente mensuelle",
+      "totalPension": "Total rente",
+      "totalCapital": "Total capital",
+      "obl": "Obligatoire",
+      "ueob": "Surobligatoire",
+      "mixed": "Forme mixte",
+      "mixedCapital": "Retrait en capital",
+      "mixedPension": "Rente mensuelle"
+    },
+    "comparison": {
+      "title": "Comparaison des scénarios",
+      "chart": "Graphique",
+      "table": "Tableau"
+    },
+    "warnings": {
+      "retirementInPast": "L'âge de la retraite est antérieur à l'âge actuel",
+      "purchaseExceedsPotential": "Le rachat dépasse le potentiel de CHF {max}",
+      "unrealisticInterest": "Taux d'intérêt irréaliste",
+      "unrealisticSalaryGrowth": "Évolution salariale irréaliste",
+      "negativeInterest": "Taux d'intérêt négatif défini"
+    },
+    "save": {
+      "title": "Enregistrer la projection",
+      "name": "Nom de la projection",
+      "namePlaceholder": "p.ex. Consultation du {date}",
+      "success": "Projection enregistrée",
+      "error": "Erreur lors de l'enregistrement"
+    },
+    "saved": {
+      "title": "Projections enregistrées",
+      "empty": "Aucune projection enregistrée",
+      "load": "Charger",
+      "delete": "Supprimer",
+      "deleteConfirm": "Vraiment supprimer la projection?",
+      "scenarioCount": "{count} scénarios",
+      "createdAt": "Créé le {date}",
+      "outdatedWarning": "Basé sur les données du {date}"
+    },
+    "noData": {
+      "title": "Projection impossible",
+      "noBalance": "Aucun avoir de vieillesse disponible",
+      "noEmployment": "Aucun emploi actif"
     }
   }
 }
