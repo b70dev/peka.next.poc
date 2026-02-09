@@ -63,6 +63,63 @@
     "or": "or",
     "privacy": "Privacy",
     "imprint": "Imprint",
+    "registration": {
+      "title": "Register",
+      "description": "Create your account for peka.next",
+      "name": "Name",
+      "namePlaceholder": "First and last name",
+      "confirmPassword": "Confirm password",
+      "acceptTerms": "I accept the terms of service and privacy policy",
+      "termsRequired": "You must accept the terms of service",
+      "registering": "Registering...",
+      "passwordMismatch": "Passwords do not match",
+      "strengthWeak": "Weak",
+      "strengthMedium": "Medium",
+      "strengthGood": "Good",
+      "strengthStrong": "Strong",
+      "requirementsLabel": "Password requirements",
+      "requirements": {
+        "minLength": "At least 12 characters",
+        "uppercase": "At least 1 uppercase letter",
+        "number": "At least 1 number",
+        "special": "At least 1 special character"
+      },
+      "errorEmailExists": "This email is already registered. Please log in or use 'Forgot password'.",
+      "errorRateLimit": "Too many registration attempts. Please try again later.",
+      "errorGeneric": "Registration failed. Please try again."
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "description": "We have sent you a verification email. Please click the link in the email.",
+      "checkSpam": "Check your spam folder if you don't receive an email.",
+      "resendButton": "Resend",
+      "resending": "Sending...",
+      "resendSuccess": "Verification email has been resent.",
+      "resendError": "Error resending. Please try again later.",
+      "backToLogin": "Back to login"
+    },
+    "forgotPasswordPage": {
+      "title": "Reset password",
+      "description": "Enter your email address. We will send you a reset link.",
+      "sendResetLink": "Send reset link",
+      "sending": "Sending...",
+      "emailSentTitle": "Email sent",
+      "emailSentDescription": "If an account with this email exists, you will receive a reset link shortly.",
+      "backToLogin": "Back to login",
+      "errorRateLimit": "Too many attempts. Please wait a few minutes.",
+      "errorGeneric": "Error sending. Please try again."
+    },
+    "resetPasswordPage": {
+      "title": "Set new password",
+      "description": "Enter your new password.",
+      "newPassword": "New password",
+      "savePassword": "Save password",
+      "saving": "Saving...",
+      "successTitle": "Password changed",
+      "successDescription": "Your password has been changed successfully. All sessions have been signed out. Please log in again.",
+      "errorSamePassword": "The new password must be different from the old one.",
+      "errorGeneric": "Error changing password. Please try again."
+    },
     "mfa": {
       "setup": {
         "title": "Set Up Two-Factor Authentication",

@@ -63,6 +63,63 @@
     "or": "ou",
     "privacy": "Confidentialité",
     "imprint": "Mentions légales",
+    "registration": {
+      "title": "S'inscrire",
+      "description": "Créez votre compte pour peka.next",
+      "name": "Nom",
+      "namePlaceholder": "Prénom et nom",
+      "confirmPassword": "Confirmer le mot de passe",
+      "acceptTerms": "J'accepte les conditions d'utilisation et la politique de confidentialité",
+      "termsRequired": "Vous devez accepter les conditions d'utilisation",
+      "registering": "Inscription en cours...",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "strengthWeak": "Faible",
+      "strengthMedium": "Moyen",
+      "strengthGood": "Bon",
+      "strengthStrong": "Fort",
+      "requirementsLabel": "Exigences du mot de passe",
+      "requirements": {
+        "minLength": "Au moins 12 caractères",
+        "uppercase": "Au moins 1 lettre majuscule",
+        "number": "Au moins 1 chiffre",
+        "special": "Au moins 1 caractère spécial"
+      },
+      "errorEmailExists": "Cet e-mail est déjà enregistré. Veuillez vous connecter ou utiliser «Mot de passe oublié».",
+      "errorRateLimit": "Trop de tentatives d'inscription. Veuillez réessayer plus tard.",
+      "errorGeneric": "L'inscription a échoué. Veuillez réessayer."
+    },
+    "verifyEmail": {
+      "title": "Vérifiez votre e-mail",
+      "description": "Nous vous avons envoyé un e-mail de vérification. Veuillez cliquer sur le lien dans l'e-mail.",
+      "checkSpam": "Vérifiez votre dossier spam si vous ne recevez pas d'e-mail.",
+      "resendButton": "Renvoyer",
+      "resending": "Envoi en cours...",
+      "resendSuccess": "L'e-mail de vérification a été renvoyé.",
+      "resendError": "Erreur lors du renvoi. Veuillez réessayer plus tard.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "forgotPasswordPage": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Entrez votre adresse e-mail. Nous vous enverrons un lien de réinitialisation.",
+      "sendResetLink": "Envoyer le lien",
+      "sending": "Envoi en cours...",
+      "emailSentTitle": "E-mail envoyé",
+      "emailSentDescription": "Si un compte existe avec cet e-mail, vous recevrez un lien de réinitialisation sous peu.",
+      "backToLogin": "Retour à la connexion",
+      "errorRateLimit": "Trop de tentatives. Veuillez patienter quelques minutes.",
+      "errorGeneric": "Erreur lors de l'envoi. Veuillez réessayer."
+    },
+    "resetPasswordPage": {
+      "title": "Définir un nouveau mot de passe",
+      "description": "Entrez votre nouveau mot de passe.",
+      "newPassword": "Nouveau mot de passe",
+      "savePassword": "Enregistrer le mot de passe",
+      "saving": "Enregistrement...",
+      "successTitle": "Mot de passe modifié",
+      "successDescription": "Votre mot de passe a été modifié avec succès. Toutes les sessions ont été déconnectées. Veuillez vous reconnecter.",
+      "errorSamePassword": "Le nouveau mot de passe doit être différent de l'ancien.",
+      "errorGeneric": "Erreur lors du changement de mot de passe. Veuillez réessayer."
+    },
     "mfa": {
       "setup": {
         "title": "Configurer l'authentification à deux facteurs",

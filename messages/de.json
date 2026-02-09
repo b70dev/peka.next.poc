@@ -63,6 +63,63 @@
     "or": "oder",
     "privacy": "Datenschutz",
     "imprint": "Impressum",
+    "registration": {
+      "title": "Registrieren",
+      "description": "Erstellen Sie Ihren Account für peka.next",
+      "name": "Name",
+      "namePlaceholder": "Vor- und Nachname",
+      "confirmPassword": "Passwort bestätigen",
+      "acceptTerms": "Ich akzeptiere die Nutzungsbedingungen und Datenschutzrichtlinien",
+      "termsRequired": "Sie müssen die Nutzungsbedingungen akzeptieren",
+      "registering": "Wird registriert...",
+      "passwordMismatch": "Passwörter stimmen nicht überein",
+      "strengthWeak": "Schwach",
+      "strengthMedium": "Mittel",
+      "strengthGood": "Gut",
+      "strengthStrong": "Stark",
+      "requirementsLabel": "Passwort-Anforderungen",
+      "requirements": {
+        "minLength": "Mindestens 12 Zeichen",
+        "uppercase": "Mindestens 1 Grossbuchstabe",
+        "number": "Mindestens 1 Zahl",
+        "special": "Mindestens 1 Sonderzeichen"
+      },
+      "errorEmailExists": "Diese E-Mail ist bereits registriert. Bitte melden Sie sich an oder nutzen Sie «Passwort vergessen».",
+      "errorRateLimit": "Zu viele Registrierungsversuche. Bitte versuchen Sie es später erneut.",
+      "errorGeneric": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
+    },
+    "verifyEmail": {
+      "title": "E-Mail bestätigen",
+      "description": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Bitte klicken Sie auf den Link in der E-Mail.",
+      "checkSpam": "Prüfen Sie auch Ihren Spam-Ordner, falls Sie keine E-Mail erhalten.",
+      "resendButton": "Erneut senden",
+      "resending": "Wird gesendet...",
+      "resendSuccess": "Bestätigungs-E-Mail wurde erneut gesendet.",
+      "resendError": "Fehler beim erneuten Senden. Bitte versuchen Sie es später.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "forgotPasswordPage": {
+      "title": "Passwort zurücksetzen",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen.",
+      "sendResetLink": "Reset-Link senden",
+      "sending": "Wird gesendet...",
+      "emailSentTitle": "E-Mail gesendet",
+      "emailSentDescription": "Falls ein Account mit dieser E-Mail existiert, erhalten Sie in Kürze einen Link zum Zurücksetzen.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "errorRateLimit": "Zu viele Versuche. Bitte warten Sie einige Minuten.",
+      "errorGeneric": "Fehler beim Senden. Bitte versuchen Sie es erneut."
+    },
+    "resetPasswordPage": {
+      "title": "Neues Passwort setzen",
+      "description": "Geben Sie Ihr neues Passwort ein.",
+      "newPassword": "Neues Passwort",
+      "savePassword": "Passwort speichern",
+      "saving": "Wird gespeichert...",
+      "successTitle": "Passwort geändert",
+      "successDescription": "Ihr Passwort wurde erfolgreich geändert. Alle Sitzungen wurden abgemeldet. Bitte melden Sie sich erneut an.",
+      "errorSamePassword": "Das neue Passwort muss sich vom alten unterscheiden.",
+      "errorGeneric": "Fehler beim Ändern des Passworts. Bitte versuchen Sie es erneut."
+    },
     "mfa": {
       "setup": {
         "title": "Zwei-Faktor-Authentifizierung einrichten",
