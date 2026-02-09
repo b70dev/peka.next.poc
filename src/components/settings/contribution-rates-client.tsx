@@ -391,7 +391,7 @@ export function ContributionRatesClient({
         <CardContent>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* Version Info */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               {selectedVersion && (
                 <>
                   <div className="text-sm">
@@ -416,10 +416,10 @@ export function ContributionRatesClient({
             </div>
 
             {/* View Mode Toggle and Gender Toggle */}
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
               {/* View Mode Toggle */}
               <div className="flex items-center gap-3">
-                <Label className="text-sm text-muted-foreground">
+                <Label className="text-sm text-muted-foreground whitespace-nowrap">
                   {t('viewMode.label')}:
                 </Label>
                 <RadioGroup
@@ -430,13 +430,13 @@ export function ContributionRatesClient({
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="individual" id="view-individual" />
-                    <Label htmlFor="view-individual" className="text-sm cursor-pointer">
+                    <Label htmlFor="view-individual" className="text-sm cursor-pointer whitespace-nowrap">
                       {t('viewMode.individual')}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="ageGroups" id="view-ageGroups" />
-                    <Label htmlFor="view-ageGroups" className="text-sm cursor-pointer">
+                    <Label htmlFor="view-ageGroups" className="text-sm cursor-pointer whitespace-nowrap">
                       {t('viewMode.ageGroups')}
                     </Label>
                   </div>
@@ -451,7 +451,7 @@ export function ContributionRatesClient({
                   onCheckedChange={handleGenderToggleClick}
                   disabled={!isEditable || isUpdatingGender}
                 />
-                <Label htmlFor="same-for-all-genders" className="text-sm">
+                <Label htmlFor="same-for-all-genders" className="text-sm whitespace-nowrap">
                   {t('sameForAllGenders')}
                 </Label>
               </div>
@@ -537,8 +537,8 @@ export function ContributionRatesClient({
 
       {/* Action Bar */}
       {isEditable && (
-        <div className="flex items-center justify-between p-4 bg-card border rounded-lg sticky bottom-4">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-card border rounded-lg sticky bottom-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             <BvgMinimumButton
               employerId={employerId}
               onRatesLoaded={handleBvgMinimumLoaded}
@@ -550,12 +550,12 @@ export function ContributionRatesClient({
             />
             {hasChanges && (
               <div className="flex items-center gap-2 text-amber-600">
-                <AlertTriangle className="h-4 w-4" />
+                <AlertTriangle className="h-4 w-4 shrink-0" />
                 <span className="text-sm">{t('warnings.unsavedChanges')}</span>
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-end sm:self-auto">
             <Button
               variant="outline"
               onClick={() => {
