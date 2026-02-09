@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
@@ -31,6 +31,7 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
   const [isEnrolling, setIsEnrolling] = useState(false)
   const [backupCodes, setBackupCodes] = useState<string[]>([])
   const [codesSaved, setCodesSaved] = useState(false)
+  const enrollStartedRef = useRef(false)
 
   const supabase = createClient()
 
@@ -93,28 +94,31 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
       }
 
       // Generate backup codes via Edge Function
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.access_token) {
-        const backupResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mfa-backup-codes?action=generate`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${session.access_token}`,
-              'Content-Type': 'application/json',
-              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            },
+      // Don't let backup code generation failure block MFA enrollment
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.access_token) {
+          const backupResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mfa-backup-codes?action=generate`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`,
+                'Content-Type': 'application/json',
+                'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+              },
+            }
+          )
+          if (backupResponse.ok) {
+            const backupData = await backupResponse.json()
+            setBackupCodes(backupData.codes)
           }
-        )
-        if (backupResponse.ok) {
-          const backupData = await backupResponse.json()
-          setBackupCodes(backupData.codes)
-        } else {
-          setError(t('backup.regenerateError'))
-          setIsLoading(false)
-          return
         }
+      } catch {
+        console.error('Failed to generate backup codes')
       }
+
+      // Always advance to backup codes step - MFA is already verified
       setStep('backup-codes')
     } catch {
       setError(t('errors.verifyFailed'))
@@ -127,10 +131,14 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
     onComplete()
   }
 
-  // Start enrollment when component mounts
-  if (!qrCode && !isEnrolling && !error) {
-    startEnrollment()
-  }
+  // Start enrollment when component mounts (useEffect prevents double-execution in StrictMode)
+  useEffect(() => {
+    if (!enrollStartedRef.current) {
+      enrollStartedRef.current = true
+      startEnrollment()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="w-full max-w-lg mx-auto space-y-6">
@@ -298,7 +306,7 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
             <Button
               className="w-full"
               onClick={handleComplete}
-              disabled={!codesSaved}
+              disabled={backupCodes.length > 0 && !codesSaved}
             >
               {tActions('confirm')}
             </Button>

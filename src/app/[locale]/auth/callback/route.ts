@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { type NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
@@ -25,7 +25,32 @@ export async function GET(request: Request) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  const supabase = await createClient()
+  // Collect auth cookies to apply on the redirect response
+  const authCookies: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          authCookies.push(...cookiesToSet)
+        },
+      },
+    }
+  )
+
+  // Helper: create redirect response with session cookies applied
+  const redirectWithCookies = (url: string | URL) => {
+    const response = NextResponse.redirect(url)
+    for (const { name, value, options } of authCookies) {
+      response.cookies.set(name, value, options)
+    }
+    return response
+  }
 
   // Handle token_hash (email verification, password reset via implicit flow)
   if (tokenHash && type) {
@@ -43,11 +68,11 @@ export async function GET(request: Request) {
 
     // Redirect based on type
     if (type === 'recovery') {
-      return NextResponse.redirect(`${origin}/auth/reset-password`)
+      return redirectWithCookies(`${origin}/auth/reset-password`)
     }
 
     // For signup verification, go to dashboard
-    return NextResponse.redirect(`${origin}/dashboard`)
+    return redirectWithCookies(`${origin}/dashboard`)
   }
 
   // Handle code exchange (PKCE flow: OAuth, email verification, password reset)
@@ -59,11 +84,11 @@ export async function GET(request: Request) {
       const isLocalEnv = process.env.NODE_ENV === 'development'
 
       if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
+        return redirectWithCookies(`${origin}${next}`)
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+        return redirectWithCookies(`https://${forwardedHost}${next}`)
       } else {
-        return NextResponse.redirect(`${origin}${next}`)
+        return redirectWithCookies(`${origin}${next}`)
       }
     }
 
