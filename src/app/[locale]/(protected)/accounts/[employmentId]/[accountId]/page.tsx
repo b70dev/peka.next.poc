@@ -2,8 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/routing'
-import { LogoutButton } from '@/components/auth/logout-button'
-import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { AppHeader } from '@/components/layout/app-header'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -33,7 +32,6 @@ export default async function AccountTransactionsPage({ params, searchParams }: 
 
   const t = await getTranslations('transactions');
   const tAccounts = await getTranslations('accounts');
-  const tNav = await getTranslations('navigation');
 
   const page = parseInt(search.page || '1', 10);
   const pageSize = parseInt(search.pageSize || '50', 10);
@@ -104,43 +102,7 @@ export default async function AccountTransactionsPage({ params, searchParams }: 
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-xl font-bold hover:opacity-80">
-              peka.next
-            </Link>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('dashboard')}
-              </Link>
-              <Link
-                href="/insured"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('insuredPersons')}
-              </Link>
-              <Link
-                href="/accounts"
-                className="text-sm font-medium"
-              >
-                {tNav('accounts')}
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user.email}
-            </span>
-            <LogoutButton variant="outline" />
-          </div>
-        </div>
-      </header>
+      <AppHeader userEmail={user.email} activeRoute="accounts" />
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">

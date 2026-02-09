@@ -2,8 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/routing'
-import { LogoutButton } from '@/components/auth/logout-button'
-import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { AppHeader } from '@/components/layout/app-header'
 import { InsuredPersonDetail } from '@/components/insured/insured-person-detail'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -24,7 +23,6 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
   }
 
   const t = await getTranslations('insured');
-  const tNav = await getTranslations('navigation');
 
   // Fetch insured person with employments
   const { data: insuredPerson, error } = await supabase
@@ -43,42 +41,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
   if (error || !insuredPerson) {
     return (
       <div className="min-h-screen bg-muted/30">
-        <header className="border-b bg-card">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/dashboard" className="text-xl font-bold hover:opacity-80">
-                peka.next
-              </Link>
-              <nav className="hidden md:flex items-center gap-4">
-                <Link
-                  href="/dashboard"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {tNav('dashboard')}
-                </Link>
-                <Link
-                  href="/insured"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {tNav('insuredPersons')}
-                </Link>
-                <Link
-                  href="/accounts"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  {tNav('accounts')}
-                </Link>
-              </nav>
-            </div>
-            <div className="flex items-center gap-4">
-              <LanguageSwitcher />
-              <span className="text-sm text-muted-foreground hidden sm:inline">
-                {user.email}
-              </span>
-              <LogoutButton variant="outline" />
-            </div>
-          </div>
-        </header>
+        <AppHeader userEmail={user.email} activeRoute="insured" />
 
         <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
           <div className="text-center py-12">
@@ -98,43 +61,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-xl font-bold hover:opacity-80">
-              peka.next
-            </Link>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('dashboard')}
-              </Link>
-              <Link
-                href="/insured"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('insuredPersons')}
-              </Link>
-              <Link
-                href="/accounts"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('accounts')}
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user.email}
-            </span>
-            <LogoutButton variant="outline" />
-          </div>
-        </div>
-      </header>
+      <AppHeader userEmail={user.email} activeRoute="insured" />
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">

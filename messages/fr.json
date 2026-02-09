@@ -62,7 +62,81 @@
     "loginWithGoogle": "Se connecter avec Google",
     "or": "ou",
     "privacy": "Confidentialité",
-    "imprint": "Mentions légales"
+    "imprint": "Mentions légales",
+    "mfa": {
+      "setup": {
+        "title": "Configurer l'authentification à deux facteurs",
+        "description": "Protégez votre compte avec une application d'authentification",
+        "step1Title": "Connecter l'application d'authentification",
+        "step1Description": "Scannez le code QR avec votre application d'authentification (p.ex. Google Authenticator, Microsoft Authenticator)",
+        "manualCode": "Code de configuration manuel",
+        "manualCodeDescription": "Si vous ne pouvez pas scanner le code QR, saisissez ce code manuellement dans votre application:",
+        "step2Title": "Confirmer le code",
+        "step2Description": "Saisissez le code à 6 chiffres de votre application d'authentification",
+        "step3Title": "Sauvegarder les codes de secours",
+        "step3Description": "Conservez ces codes dans un endroit sûr. Vous pouvez les utiliser si vous perdez l'accès à votre application d'authentification.",
+        "verifyCode": "Confirmer le code",
+        "codeLabel": "Code de confirmation",
+        "codePlaceholder": "000000",
+        "setupComplete": "L'authentification à deux facteurs a été configurée avec succès",
+        "mandatory": "L'authentification à deux facteurs est obligatoire pour votre compte."
+      },
+      "verify": {
+        "title": "Authentification à deux facteurs",
+        "description": "Saisissez le code de votre application d'authentification",
+        "codeLabel": "Code d'authentification",
+        "codePlaceholder": "000000",
+        "verify": "Vérifier",
+        "useBackupCode": "Utiliser un code de secours",
+        "backupCodeLabel": "Code de secours",
+        "backupCodePlaceholder": "XXXXXXXX",
+        "backupCodeDescription": "Saisissez un de vos codes de secours",
+        "backToCode": "Retour à la saisie du code",
+        "attemptsRemaining": "{count} tentatives restantes",
+        "accountLocked": "Votre compte a été temporairement verrouillé. Veuillez réessayer dans 15 minutes.",
+        "verifying": "Vérification en cours..."
+      },
+      "backup": {
+        "title": "Codes de secours",
+        "description": "Chaque code ne peut être utilisé qu'une seule fois. Conservez-les dans un endroit sûr.",
+        "codesRemaining": "{count} sur {total} codes disponibles",
+        "copyAll": "Tout copier",
+        "copied": "Copié!",
+        "download": "Télécharger en fichier",
+        "confirmSaved": "J'ai sauvegardé les codes en lieu sûr",
+        "warningLow": "Plus que {count} codes de secours restants. Générez de nouveaux codes.",
+        "allUsed": "Tous les codes de secours ont été utilisés. Générez de nouveaux codes.",
+        "used": "Utilisé",
+        "regenerate": "Générer de nouveaux codes",
+        "regenerateConfirm": "Tous les codes de secours existants seront invalidés. Continuer?",
+        "regenerateSuccess": "De nouveaux codes de secours ont été générés",
+        "regenerateError": "Erreur lors de la génération de nouveaux codes de secours"
+      },
+      "settings": {
+        "title": "Authentification à deux facteurs",
+        "description": "Gérez vos paramètres MFA",
+        "activeSince": "MFA actif depuis le {date}",
+        "backToSettings": "Retour aux Paramètres",
+        "newDevice": "Configurer un nouvel appareil",
+        "newDeviceDescription": "Configurez une nouvelle application d'authentification. L'ancienne sera désactivée.",
+        "newDeviceConfirm": "Saisissez votre code MFA actuel pour continuer",
+        "backupCodes": "Gérer les codes de secours",
+        "backupCodesDescription": "Consultez vos codes de secours restants ou générez-en de nouveaux.",
+        "recoveryInfo": "Appareil et codes de secours perdus?",
+        "recoveryDescription": "Contactez votre administrateur pour le processus de récupération manuel.",
+        "contactAdmin": "Contacter l'administrateur"
+      },
+      "errors": {
+        "invalidCode": "Le code saisi est invalide",
+        "expiredCode": "Le code a expiré. Veuillez utiliser un nouveau code.",
+        "tooManyAttempts": "Trop de tentatives échouées. Veuillez attendre 15 minutes.",
+        "setupFailed": "La configuration MFA a échoué. Veuillez réessayer.",
+        "verifyFailed": "La vérification a échoué. Veuillez réessayer.",
+        "backupCodeInvalid": "Code de secours invalide ou déjà utilisé",
+        "enrollFailed": "Erreur lors de la configuration de l'application d'authentification",
+        "challengeFailed": "Erreur lors de la création du défi MFA"
+      }
+    }
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -84,7 +158,9 @@
     "accounts": "Comptes",
     "employers": "Employeurs",
     "settings": "Paramètres",
-    "admin": "Administration"
+    "admin": "Administration",
+    "menu": "Menu",
+    "mainNavigation": "Navigation principale"
   },
   "language": {
     "title": "Langue",
@@ -623,6 +699,11 @@
         "success": "Le type de transaction a été mis à jour avec succès",
         "error": "Erreur lors de la mise à jour du type de transaction"
       }
+    },
+    "mfa": {
+      "title": "Authentification à deux facteurs",
+      "description": "Augmentez la sécurité de votre compte avec MFA",
+      "status": "Afficher le statut MFA"
     },
     "contributionRates": {
       "title": "Taux de cotisation",

@@ -3,9 +3,7 @@ import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { InsuredPersonsTable } from '@/components/insured/insured-persons-table'
 import { CreateInsuredPersonDialog } from '@/components/insured/create-insured-person-dialog'
-import { LogoutButton } from '@/components/auth/logout-button'
-import { LanguageSwitcher } from '@/components/i18n/language-switcher'
-import { Link } from '@/i18n/routing'
+import { AppHeader } from '@/components/layout/app-header'
 import { InsuredPerson, Employer } from '@/lib/database.types'
 
 type Props = {
@@ -36,7 +34,6 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
   }
 
   const t = await getTranslations('insured');
-  const tNav = await getTranslations('navigation');
 
   // Parse search params
   const searchTerm = search.search || '';
@@ -75,49 +72,7 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-xl font-bold hover:opacity-80">
-              peka.next
-            </Link>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('dashboard')}
-              </Link>
-              <Link
-                href="/insured"
-                className="text-sm font-medium"
-              >
-                {tNav('insuredPersons')}
-              </Link>
-              <Link
-                href="/accounts"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('accounts')}
-              </Link>
-              <Link
-                href="/settings"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('settings')}
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user.email}
-            </span>
-            <LogoutButton variant="outline" />
-          </div>
-        </div>
-      </header>
+      <AppHeader userEmail={user.email} activeRoute="insured" />
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">

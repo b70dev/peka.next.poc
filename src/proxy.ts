@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import createIntlMiddleware from 'next-intl/middleware'
 import { createServerClient } from '@supabase/ssr'
 import { routing } from '@/i18n/routing'
+import { verifyBackupVerificationToken, COOKIE_NAME as MFA_BACKUP_COOKIE } from '@/lib/mfa/backup-verify'
 
 const intlMiddleware = createIntlMiddleware(routing)
 
@@ -47,10 +48,14 @@ export async function proxy(request: NextRequest) {
   // Protected routes - redirect to login if not authenticated
   const isProtectedRoute = pathnameWithoutLocale.startsWith('/dashboard') ||
     pathnameWithoutLocale.startsWith('/insured') ||
-    pathnameWithoutLocale.startsWith('/admin')
+    pathnameWithoutLocale.startsWith('/admin') ||
+    pathnameWithoutLocale.startsWith('/settings') ||
+    pathnameWithoutLocale.startsWith('/accounts')
 
   const isAuthRoute = pathnameWithoutLocale === '/login' ||
     pathnameWithoutLocale.startsWith('/auth/')
+
+  const isMfaRoute = pathnameWithoutLocale.startsWith('/mfa/')
 
   // Get locale from pathname or default
   const localeMatch = pathname.match(/^\/(de|en|fr)/)
@@ -63,6 +68,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Redirect unauthenticated users away from MFA pages
+  if (!user && isMfaRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = `/${locale}/login`
+    return NextResponse.redirect(url)
+  }
+
   // Redirect authenticated users away from login page
   if (user && isAuthRoute && pathnameWithoutLocale === '/login') {
     const url = request.nextUrl.clone()
@@ -70,6 +82,71 @@ export async function proxy(request: NextRequest) {
     url.pathname = `/${locale}${redirectTo}`
     url.searchParams.delete('redirectTo')
     return NextResponse.redirect(url)
+  }
+
+  // MFA checks for authenticated users on protected routes
+  if (user && (isProtectedRoute || isMfaRoute)) {
+    // Check if user is an IDP user (Microsoft/Google) - skip MFA for IDP users
+    const provider = user.app_metadata?.provider
+    const isIDPUser = provider && provider !== 'email'
+
+    if (!isIDPUser) {
+      // Email/password user: check MFA status
+      const { data: factorsData } = await supabase.auth.mfa.listFactors()
+      const verifiedFactors = factorsData?.totp?.filter(
+        (factor) => factor.status === 'verified'
+      ) ?? []
+      const hasMFA = verifiedFactors.length > 0
+
+      // Get current AAL level using Supabase MFA API
+      const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+      const currentAAL = aalData?.currentLevel ?? 'aal1'
+
+      if (!hasMFA) {
+        // No MFA enrolled - redirect to setup (unless already there)
+        if (!pathnameWithoutLocale.startsWith('/mfa/setup')) {
+          const url = request.nextUrl.clone()
+          url.pathname = `/${locale}/mfa/setup`
+          return NextResponse.redirect(url)
+        }
+      } else if (currentAAL !== 'aal2') {
+        // Check if user verified via backup code (signed httpOnly cookie)
+        const backupToken = request.cookies.get(MFA_BACKUP_COOKIE)?.value
+        const isBackupVerified = backupToken
+          ? await verifyBackupVerificationToken(backupToken, user.id)
+          : false
+
+        if (!isBackupVerified) {
+          // MFA enrolled but not yet verified in this session - redirect to verify
+          if (!pathnameWithoutLocale.startsWith('/mfa/verify')) {
+            const url = request.nextUrl.clone()
+            url.pathname = `/${locale}/mfa/verify`
+            return NextResponse.redirect(url)
+          }
+        } else {
+          // Backup code verified - redirect away from MFA pages
+          if (isMfaRoute) {
+            const url = request.nextUrl.clone()
+            url.pathname = `/${locale}/dashboard`
+            return NextResponse.redirect(url)
+          }
+        }
+      } else {
+        // MFA verified (aal2) - redirect away from MFA pages if user navigates there
+        if (isMfaRoute && !pathnameWithoutLocale.startsWith('/mfa/setup')) {
+          const url = request.nextUrl.clone()
+          url.pathname = `/${locale}/dashboard`
+          return NextResponse.redirect(url)
+        }
+      }
+    } else {
+      // IDP user should not see MFA pages
+      if (isMfaRoute) {
+        const url = request.nextUrl.clone()
+        url.pathname = `/${locale}/dashboard`
+        return NextResponse.redirect(url)
+      }
+    }
   }
 
   return response

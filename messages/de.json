@@ -62,7 +62,81 @@
     "loginWithGoogle": "Mit Google anmelden",
     "or": "oder",
     "privacy": "Datenschutz",
-    "imprint": "Impressum"
+    "imprint": "Impressum",
+    "mfa": {
+      "setup": {
+        "title": "Zwei-Faktor-Authentifizierung einrichten",
+        "description": "Schützen Sie Ihren Account mit einer Authenticator-App",
+        "step1Title": "Authenticator-App verbinden",
+        "step1Description": "Scannen Sie den QR-Code mit Ihrer Authenticator-App (z.B. Google Authenticator, Microsoft Authenticator)",
+        "manualCode": "Manueller Setup-Code",
+        "manualCodeDescription": "Falls Sie den QR-Code nicht scannen können, geben Sie diesen Code manuell in Ihrer App ein:",
+        "step2Title": "Code bestätigen",
+        "step2Description": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein",
+        "step3Title": "Backup-Codes sichern",
+        "step3Description": "Speichern Sie diese Codes an einem sicheren Ort. Sie können diese verwenden, falls Sie keinen Zugriff auf Ihre Authenticator-App haben.",
+        "verifyCode": "Code bestätigen",
+        "codeLabel": "Bestätigungscode",
+        "codePlaceholder": "000000",
+        "setupComplete": "Zwei-Faktor-Authentifizierung wurde erfolgreich eingerichtet",
+        "mandatory": "Die Zwei-Faktor-Authentifizierung ist für Ihren Account obligatorisch."
+      },
+      "verify": {
+        "title": "Zwei-Faktor-Authentifizierung",
+        "description": "Geben Sie den Code aus Ihrer Authenticator-App ein",
+        "codeLabel": "Authentifizierungscode",
+        "codePlaceholder": "000000",
+        "verify": "Bestätigen",
+        "useBackupCode": "Backup-Code verwenden",
+        "backupCodeLabel": "Backup-Code",
+        "backupCodePlaceholder": "XXXXXXXX",
+        "backupCodeDescription": "Geben Sie einen Ihrer Backup-Codes ein",
+        "backToCode": "Zurück zur Code-Eingabe",
+        "attemptsRemaining": "{count} Versuche verbleibend",
+        "accountLocked": "Ihr Account wurde vorübergehend gesperrt. Bitte versuchen Sie es in 15 Minuten erneut.",
+        "verifying": "Wird überprüft..."
+      },
+      "backup": {
+        "title": "Backup-Codes",
+        "description": "Jeder Code kann nur einmal verwendet werden. Bewahren Sie diese an einem sicheren Ort auf.",
+        "codesRemaining": "{count} von {total} Codes verfügbar",
+        "copyAll": "Alle kopieren",
+        "copied": "Kopiert!",
+        "download": "Als Datei herunterladen",
+        "confirmSaved": "Ich habe die Codes sicher gespeichert",
+        "warningLow": "Nur noch {count} Backup-Codes übrig. Generieren Sie neue Codes.",
+        "allUsed": "Alle Backup-Codes wurden verwendet. Generieren Sie neue Codes.",
+        "used": "Verwendet",
+        "regenerate": "Neue Codes generieren",
+        "regenerateConfirm": "Alle bestehenden Backup-Codes werden ungültig. Fortfahren?",
+        "regenerateSuccess": "Neue Backup-Codes wurden generiert",
+        "regenerateError": "Fehler beim Generieren neuer Backup-Codes"
+      },
+      "settings": {
+        "title": "Zwei-Faktor-Authentifizierung",
+        "description": "Verwalten Sie Ihre MFA-Einstellungen",
+        "activeSince": "MFA aktiv seit {date}",
+        "backToSettings": "Zurück zu Einstellungen",
+        "newDevice": "Neues Gerät einrichten",
+        "newDeviceDescription": "Richten Sie eine neue Authenticator-App ein. Die alte wird deaktiviert.",
+        "newDeviceConfirm": "Geben Sie Ihren aktuellen MFA-Code ein, um fortzufahren",
+        "backupCodes": "Backup-Codes verwalten",
+        "backupCodesDescription": "Sehen Sie Ihre verbleibenden Backup-Codes ein oder generieren Sie neue.",
+        "recoveryInfo": "Gerät und Backup-Codes verloren?",
+        "recoveryDescription": "Kontaktieren Sie Ihren Administrator für den manuellen Recovery-Prozess.",
+        "contactAdmin": "Administrator kontaktieren"
+      },
+      "errors": {
+        "invalidCode": "Der eingegebene Code ist ungültig",
+        "expiredCode": "Der Code ist abgelaufen. Bitte verwenden Sie einen neuen Code.",
+        "tooManyAttempts": "Zu viele Fehlversuche. Bitte warten Sie 15 Minuten.",
+        "setupFailed": "MFA-Einrichtung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "verifyFailed": "Verifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "backupCodeInvalid": "Ungültiger oder bereits verwendeter Backup-Code",
+        "enrollFailed": "Fehler beim Einrichten der Authenticator-App",
+        "challengeFailed": "Fehler beim Erstellen der MFA-Challenge"
+      }
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -84,7 +158,9 @@
     "accounts": "Konten",
     "employers": "Arbeitgeber",
     "settings": "Einstellungen",
-    "admin": "Administration"
+    "admin": "Administration",
+    "menu": "Menü",
+    "mainNavigation": "Hauptnavigation"
   },
   "language": {
     "title": "Sprache",
@@ -623,6 +699,11 @@
         "success": "Transaktionstyp wurde erfolgreich aktualisiert",
         "error": "Fehler beim Aktualisieren des Transaktionstyps"
       }
+    },
+    "mfa": {
+      "title": "Zwei-Faktor-Authentifizierung",
+      "description": "Erhöhen Sie die Sicherheit Ihres Accounts mit MFA",
+      "status": "MFA-Status anzeigen"
     },
     "contributionRates": {
       "title": "Sparbeitragssätze",

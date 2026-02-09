@@ -2,10 +2,10 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/routing'
-import { LogoutButton } from '@/components/auth/logout-button'
-import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { AppHeader } from '@/components/layout/app-header'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreditCard, Receipt, Settings as SettingsIcon, Percent } from 'lucide-react'
+import { CreditCard, Receipt, Settings as SettingsIcon, Percent, Shield } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -23,7 +23,18 @@ export default async function SettingsPage({ params }: Props) {
   }
 
   const t = await getTranslations('settings');
-  const tNav = await getTranslations('navigation');
+  const tMfa = await getTranslations('auth.mfa.settings');
+
+  // Check if user is email/password (not IDP) for MFA card visibility
+  const provider = user.app_metadata?.provider
+  const isEmailUser = !provider || provider === 'email'
+
+  // Check MFA status for email users
+  let hasMfa = false
+  if (isEmailUser) {
+    const { data: factorsData } = await supabase.auth.mfa.listFactors()
+    hasMfa = (factorsData?.totp?.filter(f => f.status === 'verified')?.length ?? 0) > 0
+  }
 
   // Fetch counts for display
   const { count: accountTypesCount } = await supabase
@@ -41,49 +52,7 @@ export default async function SettingsPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-xl font-bold hover:opacity-80">
-              peka.next
-            </Link>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('dashboard')}
-              </Link>
-              <Link
-                href="/insured"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('insuredPersons')}
-              </Link>
-              <Link
-                href="/accounts"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {tNav('accounts')}
-              </Link>
-              <Link
-                href="/settings"
-                className="text-sm font-medium"
-              >
-                {tNav('settings')}
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <LanguageSwitcher />
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user.email}
-            </span>
-            <LogoutButton variant="outline" />
-          </div>
-        </div>
-      </header>
+      <AppHeader userEmail={user.email} activeRoute="settings" />
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
@@ -131,6 +100,27 @@ export default async function SettingsPage({ params }: Props) {
               </CardContent>
             </Card>
           </Link>
+
+          {/* MFA Card - only for email/password users */}
+          {isEmailUser && (
+            <Link href="/settings/mfa">
+              <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-lg">{t('mfa.title')}</CardTitle>
+                  </div>
+                  <CardDescription>{t('mfa.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Badge variant={hasMfa ? 'default' : 'secondary'} className={hasMfa ? 'bg-green-500/10 text-green-700 border-green-500/20' : ''}>
+                    {hasMfa ? tMfa('title') : 'Nicht eingerichtet'}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground mt-1">{t('mfa.status')}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
 
           {/* Contribution Rates Card */}
           <Link href="/settings/contribution-rates">
