@@ -49,7 +49,7 @@ export function VersionSelector({
         onValueChange={onVersionChange}
         disabled={isLoading}
       >
-        <SelectTrigger className="w-[240px]">
+        <SelectTrigger className="w-full sm:w-[280px]">
           {isLoading ? (
             <div className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />

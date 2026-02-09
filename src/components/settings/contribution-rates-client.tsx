@@ -373,7 +373,7 @@ export function ContributionRatesClient({
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <CardTitle className="text-lg">{t('version.title')}</CardTitle>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <VersionSelector
                 versions={versions}
                 selectedVersionId={selectedVersion?.id || null}

@@ -84,8 +84,15 @@ export function convertRatesToAgeGroups(rates: ContributionRateWithTotal[]): Age
     return DEFAULT_AGE_GROUPS.map(g => ({ ...g, id: generateId() }))
   }
 
+  // When rates exist for multiple genders (M/W), pick one representative set
+  // to avoid creating duplicate/overlapping age groups
+  const genders = [...new Set(rates.map(r => r.gender))]
+  const representativeRates = genders.length > 1
+    ? rates.filter(r => r.gender === (genders.includes('M') ? 'M' : genders[0]))
+    : rates
+
   // Sort rates by age
-  const sortedRates = [...rates].sort((a, b) => a.age - b.age)
+  const sortedRates = [...representativeRates].sort((a, b) => a.age - b.age)
 
   const groups: AgeGroup[] = []
   let currentGroup: AgeGroup | null = null
