@@ -538,7 +538,7 @@ export function ContributionRatesClient({
 
       {/* Action Bar */}
       {isEditable && (
-        <div className="p-4 bg-card border rounded-lg space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-4 bg-card border rounded-lg">
           <div className="flex flex-wrap items-center gap-2">
             <BvgMinimumButton
               employerId={employerId}
@@ -549,44 +549,40 @@ export function ContributionRatesClient({
               sameForAllGenders={sameForAllGenders}
               onImport={handleImport}
             />
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            {hasChanges ? (
+            {hasChanges && (
               <div className="flex items-center gap-2 text-amber-600">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
                 <span className="text-sm">{t('warnings.unsavedChanges')}</span>
               </div>
-            ) : (
-              <div />
             )}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setRates([...originalRates])
-                  setAgeGroups(convertRatesToAgeGroups(originalRates))
-                }}
-                disabled={!hasChanges || isSaving}
-              >
-                {tActions('cancel')}
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={!hasChanges || isSaving || (viewMode === 'ageGroups' && !ageGroupsValid)}
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {t('save.saving')}
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    {t('save.button')}
-                  </>
-                )}
-              </Button>
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRates([...originalRates])
+                setAgeGroups(convertRatesToAgeGroups(originalRates))
+              }}
+              disabled={!hasChanges || isSaving}
+            >
+              {tActions('cancel')}
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!hasChanges || isSaving || (viewMode === 'ageGroups' && !ageGroupsValid)}
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t('save.saving')}
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  {t('save.button')}
+                </>
+              )}
+            </Button>
           </div>
         </div>
       )}
