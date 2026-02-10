@@ -33,8 +33,10 @@ export interface AgeGroup {
   id: string
   fromAge: number
   toAge: number
-  employeeRate: number
-  employerRate: number
+  employeeRate: number     // Used for all genders (or M when gender-specific)
+  employerRate: number     // Used for all genders (or M when gender-specific)
+  employeeRateW?: number   // W-specific employee rate (only when gender-specific)
+  employerRateW?: number   // W-specific employer rate (only when gender-specific)
 }
 
 // Default BVG age groups
@@ -69,6 +71,7 @@ interface ValidationError {
 interface ContributionRatesAgeGroupsProps {
   ageGroups: AgeGroup[]
   isEditable: boolean
+  sameForAllGenders: boolean
   onAgeGroupsChange: (groups: AgeGroup[]) => void
   onValidationChange?: (isValid: boolean, errors: ValidationError[]) => void
 }
@@ -84,20 +87,35 @@ export function convertRatesToAgeGroups(rates: ContributionRateWithTotal[]): Age
     return DEFAULT_AGE_GROUPS.map(g => ({ ...g, id: generateId() }))
   }
 
-  // When rates exist for multiple genders (M/W), pick one representative set
-  // to avoid creating duplicate/overlapping age groups
-  const genders = [...new Set(rates.map(r => r.gender))]
-  const representativeRates = genders.length > 1
-    ? rates.filter(r => r.gender === (genders.includes('M') ? 'M' : genders[0]))
-    : rates
+  // Separate rates by gender
+  const maleRates = rates.filter(r => r.gender === 'M')
+  const femaleRates = rates.filter(r => r.gender === 'W')
+  const neutralRates = rates.filter(r => r.gender === null)
 
-  // Sort rates by age
-  const sortedRates = [...representativeRates].sort((a, b) => a.age - b.age)
+  // Use M rates (or neutral) as the basis for grouping
+  const baseRates = maleRates.length > 0 ? maleRates : neutralRates
+  if (baseRates.length === 0) {
+    return DEFAULT_AGE_GROUPS.map(g => ({ ...g, id: generateId() }))
+  }
+
+  // Build a lookup for W rates by age
+  const femaleByAge = new Map<number, ContributionRateWithTotal>()
+  femaleRates.forEach(r => femaleByAge.set(r.age, r))
+  const hasGenderSpecific = femaleRates.length > 0
+
+  // Sort base rates by age
+  const sortedRates = [...baseRates].sort((a, b) => a.age - b.age)
 
   const groups: AgeGroup[] = []
   let currentGroup: AgeGroup | null = null
+  let currentWEmployee: number | undefined
+  let currentWEmployer: number | undefined
 
   for (const rate of sortedRates) {
+    const wRate = femaleByAge.get(rate.age)
+    const wEmployee = hasGenderSpecific ? (wRate?.employee_rate ?? rate.employee_rate) : undefined
+    const wEmployer = hasGenderSpecific ? (wRate?.employer_rate ?? rate.employer_rate) : undefined
+
     if (!currentGroup) {
       currentGroup = {
         id: generateId(),
@@ -105,13 +123,19 @@ export function convertRatesToAgeGroups(rates: ContributionRateWithTotal[]): Age
         toAge: rate.age,
         employeeRate: rate.employee_rate,
         employerRate: rate.employer_rate,
+        employeeRateW: wEmployee,
+        employerRateW: wEmployer,
       }
+      currentWEmployee = wEmployee
+      currentWEmployer = wEmployer
     } else if (
       rate.employee_rate === currentGroup.employeeRate &&
       rate.employer_rate === currentGroup.employerRate &&
+      wEmployee === currentWEmployee &&
+      wEmployer === currentWEmployer &&
       rate.age === currentGroup.toAge + 1
     ) {
-      // Extend current group
+      // Extend current group (both M and W rates match)
       currentGroup.toAge = rate.age
     } else {
       // Start new group
@@ -122,7 +146,11 @@ export function convertRatesToAgeGroups(rates: ContributionRateWithTotal[]): Age
         toAge: rate.age,
         employeeRate: rate.employee_rate,
         employerRate: rate.employer_rate,
+        employeeRateW: wEmployee,
+        employerRateW: wEmployer,
       }
+      currentWEmployee = wEmployee
+      currentWEmployer = wEmployer
     }
   }
 
@@ -154,7 +182,7 @@ export function expandAgeGroupsToIndividual(
           total_rate: group.employeeRate + group.employerRate,
         })
       } else {
-        // Male
+        // Male - uses employeeRate/employerRate
         rates.push({
           age,
           gender: 'M',
@@ -162,13 +190,15 @@ export function expandAgeGroupsToIndividual(
           employer_rate: group.employerRate,
           total_rate: group.employeeRate + group.employerRate,
         })
-        // Female
+        // Female - uses W-specific rates, falling back to M rates
+        const wEmployeeRate = group.employeeRateW ?? group.employeeRate
+        const wEmployerRate = group.employerRateW ?? group.employerRate
         rates.push({
           age,
           gender: 'W',
-          employee_rate: group.employeeRate,
-          employer_rate: group.employerRate,
-          total_rate: group.employeeRate + group.employerRate,
+          employee_rate: wEmployeeRate,
+          employer_rate: wEmployerRate,
+          total_rate: wEmployeeRate + wEmployerRate,
         })
       }
     }
@@ -243,6 +273,7 @@ export function validateAgeGroups(groups: AgeGroup[]): ValidationError[] {
 export function ContributionRatesAgeGroups({
   ageGroups,
   isEditable,
+  sameForAllGenders,
   onAgeGroupsChange,
   onValidationChange,
 }: ContributionRatesAgeGroupsProps) {
@@ -281,10 +312,11 @@ export function ContributionRatesAgeGroups({
       toAge: newToAge,
       employeeRate: 0,
       employerRate: 0,
+      ...(!sameForAllGenders && { employeeRateW: 0, employerRateW: 0 }),
     }
 
     onAgeGroupsChange([...ageGroups, newGroup])
-  }, [ageGroups, onAgeGroupsChange])
+  }, [ageGroups, onAgeGroupsChange, sameForAllGenders])
 
   // Delete age group
   const handleDeleteGroup = useCallback((id: string) => {
@@ -384,12 +416,38 @@ export function ContributionRatesAgeGroups({
       <ScrollArea className="h-[400px] rounded-md border">
         <Table>
           <TableHeader className="sticky top-0 bg-card z-10">
+            {!sameForAllGenders && (
+              <TableRow>
+                <TableHead className="w-24" />
+                <TableHead className="w-24" />
+                <TableHead colSpan={3} className="text-center border-l font-semibold">
+                  {tTable('male')} (M)
+                </TableHead>
+                <TableHead colSpan={3} className="text-center border-l font-semibold">
+                  {tTable('female')} (W)
+                </TableHead>
+                {isEditable && <TableHead className="w-16" />}
+              </TableRow>
+            )}
             <TableRow>
               <TableHead className="w-24 text-center">{tAgeGroups('fromAge')}</TableHead>
               <TableHead className="w-24 text-center">{tAgeGroups('toAge')}</TableHead>
-              <TableHead className="text-right">{tTable('employeeRate')}</TableHead>
-              <TableHead className="text-right">{tTable('employerRate')}</TableHead>
-              <TableHead className="text-right">{tTable('totalRate')}</TableHead>
+              {sameForAllGenders ? (
+                <>
+                  <TableHead className="text-right">{tTable('employeeRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
+                </>
+              ) : (
+                <>
+                  <TableHead className="text-right border-l">{tTable('employeeRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
+                  <TableHead className="text-right border-l">{tTable('employeeRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
+                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
+                </>
+              )}
               {isEditable && <TableHead className="w-16"></TableHead>}
             </TableRow>
           </TableHeader>
@@ -398,8 +456,14 @@ export function ContributionRatesAgeGroups({
               const groupErrors = getGroupErrors(index)
               const hasErrors = groupErrors.length > 0
               const bgColor = getAgeGroupColor(group.fromAge)
-              const totalRate = group.employeeRate + group.employerRate
-              const isHighValue = totalRate > 25
+              const totalRateM = group.employeeRate + group.employerRate
+              const isHighValueM = totalRateM > 25
+
+              // W rates (fallback to M if not set)
+              const wEmployeeRate = group.employeeRateW ?? group.employeeRate
+              const wEmployerRate = group.employerRateW ?? group.employerRate
+              const totalRateW = wEmployeeRate + wEmployerRate
+              const isHighValueW = totalRateW > 25
 
               return (
                 <TableRow
@@ -449,8 +513,8 @@ export function ContributionRatesAgeGroups({
                     )}
                   </TableCell>
 
-                  {/* Employee Rate */}
-                  <TableCell className="text-right">
+                  {/* Employee Rate (M / all) */}
+                  <TableCell className={cn("text-right", !sameForAllGenders && "border-l")}>
                     {isEditable ? (
                       <Input
                         type="number"
@@ -460,14 +524,14 @@ export function ContributionRatesAgeGroups({
                         value={group.employeeRate}
                         onChange={(e) => handleNumberInput(group.id, 'employeeRate', e.target.value, 0, 100)}
                         className="w-20 h-8 text-right font-mono"
-                        aria-label={`${tTable('employeeRate')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
+                        aria-label={`${tTable('employeeRate')} ${!sameForAllGenders ? `${tTable('male')} ` : ''}${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
                       />
                     ) : (
                       <span className="font-mono">{group.employeeRate.toFixed(2)}</span>
                     )}
                   </TableCell>
 
-                  {/* Employer Rate */}
+                  {/* Employer Rate (M / all) */}
                   <TableCell className="text-right">
                     {isEditable ? (
                       <Input
@@ -478,22 +542,73 @@ export function ContributionRatesAgeGroups({
                         value={group.employerRate}
                         onChange={(e) => handleNumberInput(group.id, 'employerRate', e.target.value, 0, 100)}
                         className="w-20 h-8 text-right font-mono"
-                        aria-label={`${tTable('employerRate')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
+                        aria-label={`${tTable('employerRate')} ${!sameForAllGenders ? `${tTable('male')} ` : ''}${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
                       />
                     ) : (
                       <span className="font-mono">{group.employerRate.toFixed(2)}</span>
                     )}
                   </TableCell>
 
-                  {/* Total Rate */}
+                  {/* Total Rate (M / all) */}
                   <TableCell className="text-right">
                     <span className={cn(
                       "font-mono font-medium",
-                      isHighValue && "text-amber-600"
+                      isHighValueM && "text-amber-600"
                     )}>
-                      {totalRate.toFixed(2)}
+                      {totalRateM.toFixed(2)}
                     </span>
                   </TableCell>
+
+                  {/* W-specific columns (only when gender-specific) */}
+                  {!sameForAllGenders && (
+                    <>
+                      {/* Employee Rate W */}
+                      <TableCell className="text-right border-l">
+                        {isEditable ? (
+                          <Input
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            value={wEmployeeRate}
+                            onChange={(e) => handleNumberInput(group.id, 'employeeRateW', e.target.value, 0, 100)}
+                            className="w-20 h-8 text-right font-mono"
+                            aria-label={`${tTable('employeeRate')} ${tTable('female')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
+                          />
+                        ) : (
+                          <span className="font-mono">{wEmployeeRate.toFixed(2)}</span>
+                        )}
+                      </TableCell>
+
+                      {/* Employer Rate W */}
+                      <TableCell className="text-right">
+                        {isEditable ? (
+                          <Input
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={0.01}
+                            value={wEmployerRate}
+                            onChange={(e) => handleNumberInput(group.id, 'employerRateW', e.target.value, 0, 100)}
+                            className="w-20 h-8 text-right font-mono"
+                            aria-label={`${tTable('employerRate')} ${tTable('female')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
+                          />
+                        ) : (
+                          <span className="font-mono">{wEmployerRate.toFixed(2)}</span>
+                        )}
+                      </TableCell>
+
+                      {/* Total Rate W */}
+                      <TableCell className="text-right">
+                        <span className={cn(
+                          "font-mono font-medium",
+                          isHighValueW && "text-amber-600"
+                        )}>
+                          {totalRateW.toFixed(2)}
+                        </span>
+                      </TableCell>
+                    </>
+                  )}
 
                   {/* Delete Button */}
                   {isEditable && (

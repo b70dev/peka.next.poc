@@ -522,6 +522,7 @@ export function ContributionRatesClient({
             <ContributionRatesAgeGroups
               ageGroups={ageGroups}
               isEditable={isEditable}
+              sameForAllGenders={sameForAllGenders}
               onAgeGroupsChange={handleAgeGroupsChange}
               onValidationChange={handleAgeGroupsValidationChange}
             />
