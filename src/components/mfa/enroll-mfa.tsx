@@ -80,7 +80,7 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
         return
       }
 
-      const { error: verifyError } = await supabase.auth.mfa.verify({
+      const { data: verifyData, error: verifyError } = await supabase.auth.mfa.verify({
         factorId,
         challengeId: challengeData.id,
         code: verifyCode,
@@ -94,16 +94,21 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
       }
 
       // Generate backup codes via Edge Function
+      // Use the session from mfa.verify() directly to avoid stale token issues
       // Don't let backup code generation failure block MFA enrollment
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session?.access_token) {
+        let accessToken: string | undefined = verifyData?.access_token
+        if (!accessToken) {
+          const { data: { session } } = await supabase.auth.getSession()
+          accessToken = session?.access_token ?? undefined
+        }
+        if (accessToken) {
           const backupResponse = await fetch(
             `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mfa-backup-codes?action=generate`,
             {
               method: 'POST',
               headers: {
-                'Authorization': `Bearer ${session.access_token}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
                 'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
               },

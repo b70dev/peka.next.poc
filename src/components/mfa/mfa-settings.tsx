@@ -156,7 +156,7 @@ export function MfaSettings() {
         return
       }
 
-      const { error: verifyError } = await supabase.auth.mfa.verify({
+      const { data: verifyData, error: verifyError } = await supabase.auth.mfa.verify({
         factorId: totpFactor.id,
         challengeId: challengeData.id,
         code: confirmCode,
@@ -169,20 +169,24 @@ export function MfaSettings() {
         return
       }
 
-      // Generate new backup codes via Edge Function
-      const token = await getAccessToken()
-      if (!token) {
+      // Use the session from mfa.verify() directly to avoid stale token issues
+      let accessToken: string | undefined = verifyData?.access_token
+      if (!accessToken) {
+        accessToken = await getAccessToken() ?? undefined
+      }
+      if (!accessToken) {
         setError(t('errors.verifyFailed'))
         setIsProcessing(false)
         return
       }
 
+      // Generate new backup codes via Edge Function
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mfa-backup-codes?action=generate`,
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
             'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
           },
