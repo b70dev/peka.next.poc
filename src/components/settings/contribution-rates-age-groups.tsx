@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import {
   Table,
@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -416,38 +417,15 @@ export function ContributionRatesAgeGroups({
       <ScrollArea className="h-[400px] rounded-md border">
         <Table>
           <TableHeader className="sticky top-0 bg-card z-10">
-            {!sameForAllGenders && (
-              <TableRow>
-                <TableHead className="w-24" />
-                <TableHead className="w-24" />
-                <TableHead colSpan={3} className="text-center border-l font-semibold">
-                  {tTable('male')} (M)
-                </TableHead>
-                <TableHead colSpan={3} className="text-center border-l font-semibold">
-                  {tTable('female')} (W)
-                </TableHead>
-                {isEditable && <TableHead className="w-16" />}
-              </TableRow>
-            )}
             <TableRow>
               <TableHead className="w-24 text-center">{tAgeGroups('fromAge')}</TableHead>
               <TableHead className="w-24 text-center">{tAgeGroups('toAge')}</TableHead>
-              {sameForAllGenders ? (
-                <>
-                  <TableHead className="text-right">{tTable('employeeRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
-                </>
-              ) : (
-                <>
-                  <TableHead className="text-right border-l">{tTable('employeeRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
-                  <TableHead className="text-right border-l">{tTable('employeeRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('employerRate')}</TableHead>
-                  <TableHead className="text-right">{tTable('totalRate')}</TableHead>
-                </>
+              {!sameForAllGenders && (
+                <TableHead className="w-20 text-center">{tTable('gender')}</TableHead>
               )}
+              <TableHead className="text-right">{tTable('employeeRate')}</TableHead>
+              <TableHead className="text-right">{tTable('employerRate')}</TableHead>
+              <TableHead className="text-right">{tTable('totalRate')}</TableHead>
               {isEditable && <TableHead className="w-16"></TableHead>}
             </TableRow>
           </TableHeader>
@@ -465,176 +443,228 @@ export function ContributionRatesAgeGroups({
               const totalRateW = wEmployeeRate + wEmployerRate
               const isHighValueW = totalRateW > 25
 
-              return (
-                <TableRow
-                  key={group.id}
-                  className={cn(
-                    bgColor,
-                    hasErrors && 'bg-red-50 border-red-200'
-                  )}
-                >
-                  {/* From Age */}
-                  <TableCell className="text-center">
-                    {isEditable ? (
-                      <Input
-                        type="number"
-                        min={18}
-                        max={70}
-                        value={group.fromAge}
-                        onChange={(e) => handleNumberInput(group.id, 'fromAge', e.target.value, 18, 70)}
-                        className={cn(
-                          "w-16 h-8 text-center font-mono",
-                          hasErrors && "border-red-400"
-                        )}
-                        aria-label={`${tAgeGroups('fromAge')} ${index + 1}`}
-                      />
-                    ) : (
-                      <span className="font-mono">{group.fromAge}</span>
-                    )}
-                  </TableCell>
+              const rowClassName = cn(
+                bgColor,
+                hasErrors && 'bg-red-50 border-red-200'
+              )
 
-                  {/* To Age */}
-                  <TableCell className="text-center">
-                    {isEditable ? (
-                      <Input
-                        type="number"
-                        min={18}
-                        max={70}
-                        value={group.toAge}
-                        onChange={(e) => handleNumberInput(group.id, 'toAge', e.target.value, 18, 70)}
-                        className={cn(
-                          "w-16 h-8 text-center font-mono",
-                          hasErrors && "border-red-400"
-                        )}
-                        aria-label={`${tAgeGroups('toAge')} ${index + 1}`}
-                      />
-                    ) : (
-                      <span className="font-mono">{group.toAge}</span>
-                    )}
-                  </TableCell>
-
-                  {/* Employee Rate (M / all) */}
-                  <TableCell className={cn("text-right", !sameForAllGenders && "border-l")}>
-                    {isEditable ? (
-                      <Input
-                        type="number"
-                        min={0}
-                        max={100}
-                        step={0.01}
-                        value={group.employeeRate}
-                        onChange={(e) => handleNumberInput(group.id, 'employeeRate', e.target.value, 0, 100)}
-                        className="w-20 h-8 text-right font-mono"
-                        aria-label={`${tTable('employeeRate')} ${!sameForAllGenders ? `${tTable('male')} ` : ''}${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
-                      />
-                    ) : (
-                      <span className="font-mono">{group.employeeRate.toFixed(2)}</span>
-                    )}
-                  </TableCell>
-
-                  {/* Employer Rate (M / all) */}
-                  <TableCell className="text-right">
-                    {isEditable ? (
-                      <Input
-                        type="number"
-                        min={0}
-                        max={100}
-                        step={0.01}
-                        value={group.employerRate}
-                        onChange={(e) => handleNumberInput(group.id, 'employerRate', e.target.value, 0, 100)}
-                        className="w-20 h-8 text-right font-mono"
-                        aria-label={`${tTable('employerRate')} ${!sameForAllGenders ? `${tTable('male')} ` : ''}${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
-                      />
-                    ) : (
-                      <span className="font-mono">{group.employerRate.toFixed(2)}</span>
-                    )}
-                  </TableCell>
-
-                  {/* Total Rate (M / all) */}
-                  <TableCell className="text-right">
-                    <span className={cn(
-                      "font-mono font-medium",
-                      isHighValueM && "text-amber-600"
-                    )}>
-                      {totalRateM.toFixed(2)}
-                    </span>
-                  </TableCell>
-
-                  {/* W-specific columns (only when gender-specific) */}
-                  {!sameForAllGenders && (
-                    <>
-                      {/* Employee Rate W */}
-                      <TableCell className="text-right border-l">
-                        {isEditable ? (
-                          <Input
-                            type="number"
-                            min={0}
-                            max={100}
-                            step={0.01}
-                            value={wEmployeeRate}
-                            onChange={(e) => handleNumberInput(group.id, 'employeeRateW', e.target.value, 0, 100)}
-                            className="w-20 h-8 text-right font-mono"
-                            aria-label={`${tTable('employeeRate')} ${tTable('female')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
-                          />
-                        ) : (
-                          <span className="font-mono">{wEmployeeRate.toFixed(2)}</span>
-                        )}
-                      </TableCell>
-
-                      {/* Employer Rate W */}
-                      <TableCell className="text-right">
-                        {isEditable ? (
-                          <Input
-                            type="number"
-                            min={0}
-                            max={100}
-                            step={0.01}
-                            value={wEmployerRate}
-                            onChange={(e) => handleNumberInput(group.id, 'employerRateW', e.target.value, 0, 100)}
-                            className="w-20 h-8 text-right font-mono"
-                            aria-label={`${tTable('employerRate')} ${tTable('female')} ${tAgeGroups('fromAge')} ${group.fromAge}-${group.toAge}`}
-                          />
-                        ) : (
-                          <span className="font-mono">{wEmployerRate.toFixed(2)}</span>
-                        )}
-                      </TableCell>
-
-                      {/* Total Rate W */}
-                      <TableCell className="text-right">
-                        <span className={cn(
-                          "font-mono font-medium",
-                          isHighValueW && "text-amber-600"
-                        )}>
-                          {totalRateW.toFixed(2)}
-                        </span>
-                      </TableCell>
-                    </>
-                  )}
-
-                  {/* Delete Button */}
-                  {isEditable && (
+              if (sameForAllGenders) {
+                // Single row per age group
+                return (
+                  <TableRow key={group.id} className={rowClassName}>
                     <TableCell className="text-center">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                              onClick={() => handleDeleteGroup(group.id)}
-                              disabled={ageGroups.length <= 1}
-                              aria-label={tAgeGroups('deleteGroup')}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {tAgeGroups('deleteGroup')}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      {isEditable ? (
+                        <Input
+                          type="number"
+                          min={18}
+                          max={70}
+                          value={group.fromAge}
+                          onChange={(e) => handleNumberInput(group.id, 'fromAge', e.target.value, 18, 70)}
+                          className={cn("w-16 h-8 text-center font-mono", hasErrors && "border-red-400")}
+                          aria-label={`${tAgeGroups('fromAge')} ${index + 1}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.fromAge}</span>
+                      )}
                     </TableCell>
-                  )}
-                </TableRow>
+                    <TableCell className="text-center">
+                      {isEditable ? (
+                        <Input
+                          type="number"
+                          min={18}
+                          max={70}
+                          value={group.toAge}
+                          onChange={(e) => handleNumberInput(group.id, 'toAge', e.target.value, 18, 70)}
+                          className={cn("w-16 h-8 text-center font-mono", hasErrors && "border-red-400")}
+                          aria-label={`${tAgeGroups('toAge')} ${index + 1}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.toAge}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={group.employeeRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employeeRate', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employeeRate')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.employeeRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={group.employerRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employerRate', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employerRate')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.employerRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className={cn("font-mono font-medium", isHighValueM && "text-amber-600")}>
+                        {totalRateM.toFixed(2)}
+                      </span>
+                    </TableCell>
+                    {isEditable && (
+                      <TableCell className="text-center">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost" size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                onClick={() => handleDeleteGroup(group.id)}
+                                disabled={ageGroups.length <= 1}
+                                aria-label={tAgeGroups('deleteGroup')}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>{tAgeGroups('deleteGroup')}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                )
+              }
+
+              // Two rows per age group (M + W) - matching the individual view layout
+              return (
+                <React.Fragment key={group.id}>
+                  {/* Male row */}
+                  <TableRow className={rowClassName}>
+                    <TableCell rowSpan={2} className="text-center align-middle border-b-0">
+                      {isEditable ? (
+                        <Input
+                          type="number"
+                          min={18}
+                          max={70}
+                          value={group.fromAge}
+                          onChange={(e) => handleNumberInput(group.id, 'fromAge', e.target.value, 18, 70)}
+                          className={cn("w-16 h-8 text-center font-mono", hasErrors && "border-red-400")}
+                          aria-label={`${tAgeGroups('fromAge')} ${index + 1}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.fromAge}</span>
+                      )}
+                    </TableCell>
+                    <TableCell rowSpan={2} className="text-center align-middle border-b-0">
+                      {isEditable ? (
+                        <Input
+                          type="number"
+                          min={18}
+                          max={70}
+                          value={group.toAge}
+                          onChange={(e) => handleNumberInput(group.id, 'toAge', e.target.value, 18, 70)}
+                          className={cn("w-16 h-8 text-center font-mono", hasErrors && "border-red-400")}
+                          aria-label={`${tAgeGroups('toAge')} ${index + 1}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.toAge}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="outline">{tTable('male')}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={group.employeeRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employeeRate', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employeeRate')} ${tTable('male')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.employeeRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={group.employerRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employerRate', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employerRate')} ${tTable('male')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{group.employerRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className={cn("font-mono font-medium", isHighValueM && "text-amber-600")}>
+                        {totalRateM.toFixed(2)}
+                      </span>
+                    </TableCell>
+                    {isEditable && (
+                      <TableCell rowSpan={2} className="text-center align-middle border-b-0">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost" size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                onClick={() => handleDeleteGroup(group.id)}
+                                disabled={ageGroups.length <= 1}
+                                aria-label={tAgeGroups('deleteGroup')}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>{tAgeGroups('deleteGroup')}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                  {/* Female row */}
+                  <TableRow className={rowClassName}>
+                    <TableCell className="text-center">
+                      <Badge variant="outline">{tTable('female')}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={wEmployeeRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employeeRateW', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employeeRate')} ${tTable('female')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{wEmployeeRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {isEditable ? (
+                        <Input
+                          type="number" min={0} max={100} step={0.01}
+                          value={wEmployerRate}
+                          onChange={(e) => handleNumberInput(group.id, 'employerRateW', e.target.value, 0, 100)}
+                          className="w-20 h-8 text-right font-mono"
+                          aria-label={`${tTable('employerRate')} ${tTable('female')} ${group.fromAge}-${group.toAge}`}
+                        />
+                      ) : (
+                        <span className="font-mono">{wEmployerRate.toFixed(2)}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className={cn("font-mono font-medium", isHighValueW && "text-amber-600")}>
+                        {totalRateW.toFixed(2)}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
               )
             })}
           </TableBody>
