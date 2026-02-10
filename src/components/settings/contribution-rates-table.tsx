@@ -208,10 +208,10 @@ export function ContributionRatesTable({
 
       <div className="h-[600px] overflow-auto rounded-md border">
         <Table>
-          <TableHeader className="sticky top-0 bg-card z-10">
+          <TableHeader>
             <TableRow>
               <TableHead
-                className="w-16 text-center cursor-pointer hover:bg-muted/50 select-none"
+                className="w-16 text-center cursor-pointer hover:bg-muted/50 select-none sticky top-0 bg-card z-10"
                 onClick={toggleSortDirection}
                 aria-label={sortDirection === 'asc' ? t('sort.ageAsc') : t('sort.ageDesc')}
               >
@@ -225,11 +225,11 @@ export function ContributionRatesTable({
                 </div>
               </TableHead>
             {!sameForAllGenders && (
-              <TableHead className="w-20 text-center">{t('gender')}</TableHead>
+              <TableHead className="w-20 text-center sticky top-0 bg-card z-10">{t('gender')}</TableHead>
             )}
-            <TableHead className="text-right">{t('employeeRate')}</TableHead>
-            <TableHead className="text-right">{t('employerRate')}</TableHead>
-            <TableHead className="text-right">{t('totalRate')}</TableHead>
+            <TableHead className="text-right sticky top-0 bg-card z-10">{t('employeeRate')}</TableHead>
+            <TableHead className="text-right sticky top-0 bg-card z-10">{t('employerRate')}</TableHead>
+            <TableHead className="text-right sticky top-0 bg-card z-10">{t('totalRate')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
