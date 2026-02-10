@@ -450,6 +450,7 @@ export function ContributionRatesClient({
                   checked={sameForAllGenders}
                   onCheckedChange={handleGenderToggleClick}
                   disabled={!isEditable || isUpdatingGender}
+                  className="scale-75 origin-left"
                 />
                 <Label htmlFor="same-for-all-genders" className="text-sm whitespace-nowrap">
                   {t('sameForAllGenders')}

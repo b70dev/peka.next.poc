@@ -528,7 +528,7 @@ export function ContributionRatesAgeGroups({
 
       {/* Action Buttons */}
       {isEditable && (
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
