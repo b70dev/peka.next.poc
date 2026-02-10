@@ -206,7 +206,7 @@ export function ContributionRatesTable({
         </div>
       )}
 
-      <div className="h-[600px] overflow-auto rounded-md border">
+      <div className="h-[600px] overflow-auto rounded-md border [&>div]:overflow-visible">
         <Table>
           <TableHeader>
             <TableRow>
