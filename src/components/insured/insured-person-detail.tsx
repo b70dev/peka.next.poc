@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/routing'
-import { InsuredPerson, Employment, Employer } from '@/lib/database.types'
+import { InsuredPerson, Employment, Employer, AccountSummary } from '@/lib/database.types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings } from 'lucide-react'
+import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings, Wallet } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { EmploymentDialog } from './employment-dialog'
 import { EditInsuredPersonDialog } from './edit-insured-person-dialog'
 
@@ -19,6 +20,7 @@ type EmploymentWithEmployer = Employment & {
 interface InsuredPersonDetailProps {
   insuredPerson: InsuredPerson;
   employments: EmploymentWithEmployer[];
+  accountSummaries: Record<string, AccountSummary>;
 }
 
 const statusColors: Record<string, string> = {
@@ -28,7 +30,7 @@ const statusColors: Record<string, string> = {
   deceased: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
 }
 
-export function InsuredPersonDetail({ insuredPerson, employments }: InsuredPersonDetailProps) {
+export function InsuredPersonDetail({ insuredPerson, employments, accountSummaries }: InsuredPersonDetailProps) {
   const t = useTranslations('insured')
   const tActions = useTranslations('actions')
   const [employmentDialogOpen, setEmploymentDialogOpen] = useState(false)
@@ -263,7 +265,27 @@ export function InsuredPersonDetail({ insuredPerson, employments }: InsuredPerso
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-start">
+                      <div className="flex items-center gap-1">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="sm" asChild>
+                                <Link href={`/accounts/${employment.id}`}>
+                                  <Wallet className="h-4 w-4" />
+                                  <span className="text-xs text-muted-foreground ml-1">
+                                    {accountSummaries[employment.id]
+                                      ? t('detail.employments.accountCount', { count: accountSummaries[employment.id].active_account_count ?? 0 })
+                                      : t('detail.employments.noAccounts')
+                                    }
+                                  </span>
+                                </Link>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{t('detail.employments.viewAccounts')}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <Button
                           size="sm"
                           variant="ghost"

@@ -340,7 +340,10 @@
         "addEmployment": "Ajouter un emploi",
         "editEmployment": "Modifier l'emploi",
         "totalRate": "Taux total",
-        "noEmployments": "Aucun emploi enregistré"
+        "noEmployments": "Aucun emploi enregistré",
+        "viewAccounts": "Voir les comptes",
+        "accountCount": "{count} comptes",
+        "noAccounts": "Aucun compte"
       },
       "statusChange": {
         "title": "Changer le statut",

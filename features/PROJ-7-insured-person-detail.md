@@ -12,6 +12,7 @@ Zeigt die vollständigen Informationen einer versicherten Person in einer strukt
 - **Benötigt:** PROJ-5 (i18n) - für mehrsprachige Oberfläche
 - **Benötigt:** PROJ-6 (Versicherte Liste) - Navigation von Liste zu Detail
 - **Benötigt:** PROJ-9 (Arbeitgeber-Stammdaten) - für Arbeitgeber-Auswahl
+- **Benötigt:** PROJ-10 (Kontenverwaltung) - für Konten-Link in Anstellungsliste
 - **Benötigt von:** PROJ-8 (Versicherungsdaten), PROJ-10 (Dokumente), PROJ-11 (Kontakthistorie)
 
 ## User Stories
@@ -67,12 +68,15 @@ Als Super-Admin möchte ich die verfügbaren Versicherten-Status (Aktiv, Austrit
 
 ### Tab: Stammdaten - Anstellungen (Mehrere Arbeitgeber)
 - [x] Liste aller Anstellungen der Person (Tabelle)
-- [x] Spalten: Arbeitgeber, Eintrittsdatum, Austrittsdatum, Stellenprozent, Status (aktiv/beendet)
+- [x] Spalten: Arbeitgeber, Eintrittsdatum, Austrittsdatum, Stellenprozent, Status (aktiv/beendet), Konten (Icon+Anzahl)
 - [x] Aktive Anstellungen zuerst, dann beendete (chronologisch)
 - [x] "Anstellung hinzufügen"-Button öffnet Dialog
 - [ ] Inline-Edit für Stellenprozent möglich - *Verschoben*
 - [x] Summe der Stellenprozente wird angezeigt (kann > 100% sein)
 - [ ] Klick auf Arbeitgeber-Name öffnet Arbeitgeber-Detail (PROJ-9) - *Benötigt PROJ-9*
+- [ ] Wallet-Icon-Button pro Anstellungszeile zur Kontenverwaltung (PROJ-10)
+- [ ] Neben dem Icon wird die Anzahl aktiver Konten angezeigt (z.B. "3 Konten")
+- [ ] Klick auf Icon navigiert zur Kontendetailansicht der jeweiligen Anstellung (`/accounts?employment=<id>`)
 
 ### Anstellung hinzufügen/bearbeiten (Dialog)
 - [x] Arbeitgeber-Auswahl (Dropdown mit Suche aus PROJ-9)

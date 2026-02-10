@@ -340,7 +340,10 @@
         "addEmployment": "Add Employment",
         "editEmployment": "Edit Employment",
         "totalRate": "Total Rate",
-        "noEmployments": "No employments registered"
+        "noEmployments": "No employments registered",
+        "viewAccounts": "View accounts",
+        "accountCount": "{count} accounts",
+        "noAccounts": "No accounts"
       },
       "statusChange": {
         "title": "Change Status",

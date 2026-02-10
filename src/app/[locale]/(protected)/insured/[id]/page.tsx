@@ -6,6 +6,7 @@ import { AppHeader } from '@/components/layout/app-header'
 import { InsuredPersonDetail } from '@/components/insured/insured-person-detail'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import type { AccountSummary } from '@/lib/database.types'
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -38,6 +39,21 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
     .eq('insured_person_id', id)
     .order('entry_date', { ascending: false });
 
+  // Fetch account summaries for all employments of this person
+  const employmentIds = (employments || []).map(e => e.id)
+  let accountSummariesMap: Record<string, AccountSummary> = {}
+  if (employmentIds.length > 0) {
+    const { data: summaries } = await supabase
+      .from('account_summaries')
+      .select('*')
+      .in('employment_id', employmentIds)
+    if (summaries) {
+      accountSummariesMap = Object.fromEntries(
+        summaries.map(s => [s.employment_id!, s])
+      )
+    }
+  }
+
   if (error || !insuredPerson) {
     return (
       <div className="min-h-screen bg-muted/30">
@@ -68,6 +84,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
         <InsuredPersonDetail
           insuredPerson={insuredPerson}
           employments={employments || []}
+          accountSummaries={accountSummariesMap}
         />
       </main>
     </div>

@@ -340,7 +340,10 @@
         "addEmployment": "Anstellung hinzufügen",
         "editEmployment": "Anstellung bearbeiten",
         "totalRate": "Gesamtpensum",
-        "noEmployments": "Keine Anstellungen erfasst"
+        "noEmployments": "Keine Anstellungen erfasst",
+        "viewAccounts": "Konten anzeigen",
+        "accountCount": "{count} Konten",
+        "noAccounts": "Keine Konten"
       },
       "statusChange": {
         "title": "Status ändern",
