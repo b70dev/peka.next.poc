@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { ContributionRateWithTotal } from '@/app/[locale]/(protected)/settings/contribution-rates/actions'
 
@@ -207,7 +206,7 @@ export function ContributionRatesTable({
         </div>
       )}
 
-      <ScrollArea className="h-[600px] rounded-md border">
+      <div className="h-[600px] overflow-auto rounded-md border">
         <Table>
           <TableHeader className="sticky top-0 bg-card z-10">
             <TableRow>
@@ -315,7 +314,7 @@ export function ContributionRatesTable({
           })}
         </TableBody>
       </Table>
-      </ScrollArea>
+      </div>
     </div>
   )
 }
