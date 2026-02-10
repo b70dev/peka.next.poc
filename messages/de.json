@@ -191,7 +191,8 @@
         "verifyFailed": "Verifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
         "backupCodeInvalid": "Ungültiger oder bereits verwendeter Backup-Code",
         "enrollFailed": "Fehler beim Einrichten der Authenticator-App",
-        "challengeFailed": "Fehler beim Erstellen der MFA-Challenge"
+        "challengeFailed": "Fehler beim Erstellen der MFA-Challenge",
+        "backupCodeGenerationFailed": "Backup-Codes konnten nicht generiert werden. Bitte generieren Sie diese unter Einstellungen > MFA."
       }
     }
   },

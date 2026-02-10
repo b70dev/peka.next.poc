@@ -191,7 +191,8 @@
         "verifyFailed": "La vérification a échoué. Veuillez réessayer.",
         "backupCodeInvalid": "Code de secours invalide ou déjà utilisé",
         "enrollFailed": "Erreur lors de la configuration de l'application d'authentification",
-        "challengeFailed": "Erreur lors de la création du défi MFA"
+        "challengeFailed": "Erreur lors de la création du défi MFA",
+        "backupCodeGenerationFailed": "Les codes de secours n'ont pas pu être générés. Veuillez les générer dans Paramètres > MFA."
       }
     }
   },

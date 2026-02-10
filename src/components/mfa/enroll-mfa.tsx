@@ -94,8 +94,7 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
       }
 
       // Generate backup codes via Edge Function
-      // Use the session from mfa.verify() directly to avoid stale token issues
-      // Don't let backup code generation failure block MFA enrollment
+      // Use the access_token from mfa.verify() directly (fresh AAL2 token)
       try {
         let accessToken: string | undefined = verifyData?.access_token
         if (!accessToken) {
@@ -117,10 +116,18 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
           if (backupResponse.ok) {
             const backupData = await backupResponse.json()
             setBackupCodes(backupData.codes)
+          } else {
+            const errorData = await backupResponse.json().catch(() => ({}))
+            console.error('Backup code generation failed:', backupResponse.status, errorData)
+            setError(t('errors.backupCodeGenerationFailed'))
           }
+        } else {
+          console.error('No access token available for backup code generation')
+          setError(t('errors.backupCodeGenerationFailed'))
         }
-      } catch {
-        console.error('Failed to generate backup codes')
+      } catch (err) {
+        console.error('Failed to generate backup codes:', err)
+        setError(t('errors.backupCodeGenerationFailed'))
       }
 
       // Always advance to backup codes step - MFA is already verified

@@ -191,7 +191,8 @@
         "verifyFailed": "Verification failed. Please try again.",
         "backupCodeInvalid": "Invalid or already used backup code",
         "enrollFailed": "Error setting up authenticator app",
-        "challengeFailed": "Error creating MFA challenge"
+        "challengeFailed": "Error creating MFA challenge",
+        "backupCodeGenerationFailed": "Backup codes could not be generated. Please generate them under Settings > MFA."
       }
     }
   },
