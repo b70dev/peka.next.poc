@@ -916,6 +916,75 @@
         "lastModified": "Zuletzt geändert am {date} um {time}",
         "by": "von"
       }
+    },
+    "userManagement": {
+      "title": "Benutzerverwaltung",
+      "description": "Verwalten Sie Benutzer, Rollen und Berechtigungen.",
+      "count": "Benutzer registriert",
+      "backToSettings": "Zurück zu Einstellungen",
+      "searchPlaceholder": "Name oder E-Mail suchen...",
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "role": "Rolle",
+        "status": "Status",
+        "lastLogin": "Letzter Login",
+        "actions": "Aktionen"
+      },
+      "filter": {
+        "allRoles": "Alle Rollen",
+        "allStatuses": "Alle Status",
+        "active": "Aktiv",
+        "deactivated": "Deaktiviert"
+      },
+      "noUsers": "Keine Benutzer gefunden",
+      "noUsersForSearch": "Keine Benutzer für '{search}' gefunden",
+      "never": "Noch nie",
+      "you": "(Sie)",
+      "changeRole": {
+        "title": "Rolle ändern",
+        "description": "Ändern Sie die Rolle von {name}.",
+        "currentRole": "Aktuelle Rolle",
+        "newRole": "Neue Rolle",
+        "selectRole": "Rolle auswählen",
+        "mfaCode": "MFA-Code",
+        "mfaCodePlaceholder": "000000",
+        "mfaCodeHint": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein",
+        "success": "Rolle wurde erfolgreich geändert",
+        "error": "Fehler beim Ändern der Rolle",
+        "sameRole": "Der Benutzer hat bereits diese Rolle",
+        "cannotChangeSelf": "Sie können Ihre eigene Rolle nicht ändern",
+        "lastSuperAdmin": "Der letzte Super-Admin kann nicht herabgestuft werden. Ernennen Sie zuerst einen anderen Super-Admin."
+      },
+      "deactivate": {
+        "title": "Benutzer deaktivieren",
+        "description": "Möchten Sie den Benutzer {name} wirklich deaktivieren?",
+        "warning": "Der Benutzer kann sich nach der Deaktivierung nicht mehr anmelden.",
+        "reason": "Grund (optional)",
+        "reasonPlaceholder": "Grund für die Deaktivierung",
+        "confirm": "Deaktivieren",
+        "success": "Benutzer wurde deaktiviert",
+        "error": "Fehler beim Deaktivieren des Benutzers",
+        "cannotDeactivateSelf": "Sie können Ihren eigenen Account nicht deaktivieren",
+        "lastSuperAdmin": "Der letzte aktive Super-Admin kann nicht deaktiviert werden."
+      },
+      "activate": {
+        "title": "Benutzer aktivieren",
+        "description": "Möchten Sie den Benutzer {name} wieder aktivieren?",
+        "confirm": "Aktivieren",
+        "success": "Benutzer wurde aktiviert",
+        "error": "Fehler beim Aktivieren des Benutzers"
+      }
+    }
+  },
+  "roles": {
+    "super_admin": "Super-Admin",
+    "admin": "Admin",
+    "viewer": "Viewer",
+    "description": {
+      "super_admin": "Vollzugriff inkl. Benutzerverwaltung",
+      "admin": "Kann Daten bearbeiten und verwalten",
+      "viewer": "Nur Lese-Zugriff"
     }
   },
   "projections": {

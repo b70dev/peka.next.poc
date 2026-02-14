@@ -2,6 +2,7 @@ import { Link } from '@/i18n/routing'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 import { MobileNav } from './mobile-nav'
+import { HeaderRoleBadge } from './header-role-badge'
 import { getTranslations } from 'next-intl/server'
 
 interface AppHeaderProps {
@@ -49,6 +50,7 @@ export async function AppHeader({ userEmail, activeRoute }: AppHeaderProps) {
           <span className="text-sm text-muted-foreground hidden sm:inline">
             {userEmail}
           </span>
+          <HeaderRoleBadge />
           <LogoutButton variant="outline" />
         </div>
       </div>

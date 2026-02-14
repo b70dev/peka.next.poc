@@ -12,6 +12,7 @@ import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, A
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { EmploymentDialog } from './employment-dialog'
 import { EditInsuredPersonDialog } from './edit-insured-person-dialog'
+import { usePermissions } from '@/hooks/use-permissions'
 
 type EmploymentWithEmployer = Employment & {
   employer: Employer | null;
@@ -33,6 +34,8 @@ const statusColors: Record<string, string> = {
 export function InsuredPersonDetail({ insuredPerson, employments, accountSummaries }: InsuredPersonDetailProps) {
   const t = useTranslations('insured')
   const tActions = useTranslations('actions')
+  const { hasPermission } = usePermissions()
+  const canEdit = hasPermission('insured.edit')
   const [employmentDialogOpen, setEmploymentDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [selectedEmployment, setSelectedEmployment] = useState<EmploymentWithEmployer | undefined>()
@@ -96,10 +99,12 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
               {t(`status.${insuredPerson.status}`)}
             </Badge>
           )}
-          <Button variant="outline" size="sm" onClick={() => setEditDialogOpen(true)}>
-            <Pencil className="h-4 w-4 mr-2" />
-            {tActions('edit')}
-          </Button>
+          {canEdit && (
+            <Button variant="outline" size="sm" onClick={() => setEditDialogOpen(true)}>
+              <Pencil className="h-4 w-4 mr-2" />
+              {tActions('edit')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -220,10 +225,12 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
                 <span className="text-sm text-muted-foreground">
                   {t('detail.employments.totalRate')}: <span className="font-semibold">{totalEmploymentRate}%</span>
                 </span>
-                <Button size="sm" onClick={handleAddEmployment}>
-                  <Plus className="h-4 w-4 mr-1" />
-                  {t('detail.employments.addEmployment')}
-                </Button>
+                {canEdit && (
+                  <Button size="sm" onClick={handleAddEmployment}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    {t('detail.employments.addEmployment')}
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent>
@@ -286,13 +293,15 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleEditEmployment(employment)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
+                        {canEdit && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditEmployment(employment)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -9,6 +9,7 @@ import { AccountSummaryCard } from '@/components/accounts/account-summary-card'
 import { AccountsList } from '@/components/accounts/accounts-list'
 import { CreateAccountDialog } from '@/components/accounts/create-account-dialog'
 import { TransferDialog } from '@/components/accounts/transfer-dialog'
+import { PermissionGate } from '@/components/auth/permission-gate'
 
 type Props = {
   params: Promise<{ locale: string; employmentId: string }>;
@@ -131,16 +132,20 @@ export default async function EmploymentAccountsPage({ params, searchParams }: P
               {t('detail.projection')}
             </Link>
           </Button>
-          <CreateAccountDialog
-            employmentId={employmentId}
-            accountTypes={accountTypes || []}
-            existingAccounts={accounts || []}
-          />
-          {(accounts?.length ?? 0) >= 2 && (
-            <TransferDialog
+          <PermissionGate permission="accounts.manage">
+            <CreateAccountDialog
               employmentId={employmentId}
-              accounts={accounts || []}
+              accountTypes={accountTypes || []}
+              existingAccounts={accounts || []}
             />
+          </PermissionGate>
+          {(accounts?.length ?? 0) >= 2 && (
+            <PermissionGate permission="transactions.create">
+              <TransferDialog
+                employmentId={employmentId}
+                accounts={accounts || []}
+              />
+            </PermissionGate>
           )}
         </div>
 

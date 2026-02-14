@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChevronLeft, Wallet } from 'lucide-react'
 import { TransactionsTable } from '@/components/accounts/transactions-table'
 import { CreateTransactionDialog } from '@/components/accounts/create-transaction-dialog'
+import { PermissionGate } from '@/components/auth/permission-gate'
 
 type Props = {
   params: Promise<{ locale: string; employmentId: string; accountId: string }>;
@@ -151,11 +152,13 @@ export default async function AccountTransactionsPage({ params, searchParams }: 
 
         {/* Actions */}
         <div className="flex gap-2 mb-6">
-          <CreateTransactionDialog
-            accountId={accountId}
-            currentBalance={accountBalance.balance ?? 0}
-            transactionTypes={transactionTypes || []}
-          />
+          <PermissionGate permission="transactions.create">
+            <CreateTransactionDialog
+              accountId={accountId}
+              currentBalance={accountBalance.balance ?? 0}
+              transactionTypes={transactionTypes || []}
+            />
+          </PermissionGate>
         </div>
 
         {/* Transactions Table */}

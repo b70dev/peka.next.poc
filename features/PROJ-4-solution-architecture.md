@@ -3,6 +3,7 @@
 ## Status: Draft
 
 **Erstellt:** 2026-02-10
+**Überarbeitet:** 2026-02-14
 **Feature Spec:** [PROJ-4-roles.md](./PROJ-4-roles.md)
 
 ---
@@ -17,7 +18,7 @@ Dieses Dokument beschreibt die technische Architektur für das Rollen-basierte Z
 Rollen & Berechtigungen (RBAC)
 ├── User-Verwaltung (nur Super-Admin)
 │   ├── User-Liste mit Rollen-Filter
-│   ├── Rollen-Änderung
+│   ├── Rollen-Änderung (mit MFA-Bestätigung)
 │   └── Account aktivieren/deaktivieren
 ├── Middleware für Berechtigungsprüfung
 ├── UI-Berechtigungen (Feature-Gating)
@@ -29,89 +30,70 @@ Rollen & Berechtigungen (RBAC)
 
 ## 2. Komponenten-Struktur
 
-### 2.1 Seitenstruktur (Page Routes)
+### 2.1 Seitenstruktur (Neue/Geänderte Routes)
 
 ```
 /settings
-├── /users                    [NEU] User-Verwaltung (nur Super-Admin)
-└── page.tsx                  [ERWEITERN] Neue Card "User-Verwaltung"
+├── page.tsx             [ERWEITERN] Neue Card "User-Verwaltung" (nur Super-Admin sichtbar)
+└── /users               [NEU] User-Verwaltungsseite (nur Super-Admin)
 
-/dashboard
-└── layout.tsx                [ERWEITERN] Rollen-Badge im Header
-```
-
-**Dateien:**
-```
-src/app/[locale]/(protected)/
-├── settings/
-│   ├── page.tsx                      [ERWEITERN] Card für User-Verwaltung
-│   └── users/
-│       └── page.tsx                  [NEU] User-Verwaltung
-├── layout.tsx                        [ERWEITERN] Rollen-Badge im Header
-└── middleware.ts                     [NEU] Rollen-Middleware
-
-src/middleware.ts                     [ERWEITERN] Auth + Rollen-Check
+App-Layout               [ERWEITERN] Rollen-Badge neben User-Email im Header
 ```
 
 ### 2.2 UI-Komponenten-Baum
 
 ```
-Settings-Hauptseite (page.tsx)
-└── Card: "User-Verwaltung" → Link zu /settings/users (nur Super-Admin sichtbar)
-
 User-Verwaltung (/settings/users)
-├── Header
-│   ├── Zurück-Button
-│   ├── Titel "Benutzerverwaltung"
-│   └── Suchfeld (Name/Email)
-├── Filters-Bar
-│   ├── Rollen-Filter (Super-Admin, Admin, Viewer, Alle)
-│   └── Status-Filter (Aktiv, Deaktiviert, Alle)
-├── Users-Table
-│   ├── Tabellenkopf
-│   │   ├── Name
-│   │   ├── Email
-│   │   ├── Rolle
-│   │   ├── Status
-│   │   ├── Letzter Login
-│   │   └── Aktionen
-│   └── Tabellenzeilen
-│       ├── Avatar + Name
-│       ├── Email
-│       ├── Rollen-Badge (editierbar für Super-Admin)
-│       ├── Status-Badge (Aktiv/Deaktiviert)
-│       ├── Letztes Login-Datum
-│       └── Actions-Dropdown
-│           ├── [Rolle ändern]
-│           ├── [Deaktivieren/Aktivieren]
-│           └── [Audit-Log anzeigen]
-└── Dialogs
-    ├── Change-Role-Dialog (mit MFA-Bestätigung)
-    ├── Deactivate-User-Dialog
-    └── Activate-User-Dialog
+├── Header mit Zurück-Button und Titel
+├── Suchfeld (Name/Email-Suche)
+├── Filter-Bar
+│   ├── Rollen-Filter (Super-Admin / Admin / Viewer / Alle)
+│   └── Status-Filter (Aktiv / Deaktiviert / Alle)
+├── Users-Tabelle
+│   ├── Spalten: Name, Email, Rolle, Status, Letzter Login, Aktionen
+│   └── Jede Zeile: Avatar, Rollen-Badge, Status-Badge, Actions-Dropdown
+│       ├── Rolle ändern → Dialog mit MFA-Eingabe
+│       ├── Deaktivieren → Bestätigungsdialog mit Grund-Eingabe
+│       └── Aktivieren → Bestätigungsdialog
+└── Leer-Zustand wenn keine User gefunden
 
-App-Layout (Alle Seiten)
-├── Header
-│   └── User-Menu
-│       ├── Avatar + Name
-│       ├── Rollen-Badge (Super-Admin/Admin/Viewer)
-│       └── Dropdown
-│           ├── Profil
-│           ├── Einstellungen
-│           └── Abmelden
+App-Header (alle Seiten)
+└── Neben User-Email: Rollen-Badge
+    ├── Super-Admin = rot
+    ├── Admin = blau
+    └── Viewer = grau
 ```
 
 ### 2.3 Neue Komponenten
 
-| Komponente | Pfad | Beschreibung |
-|------------|------|--------------|
-| `UsersTable` | `src/components/settings/users-table.tsx` | Haupttabelle für User-Verwaltung |
-| `RoleBadge` | `src/components/ui/role-badge.tsx` | Rollen-Anzeige (rot/blau/grau) |
-| `ChangeRoleDialog` | `src/components/settings/change-role-dialog.tsx` | Rollen-Änderung mit MFA |
-| `DeactivateUserDialog` | `src/components/settings/deactivate-user-dialog.tsx` | Account deaktivieren |
-| `UserStatusBadge` | `src/components/ui/user-status-badge.tsx` | Status-Badge (Aktiv/Deaktiviert) |
-| `requireRole()` | `src/lib/auth/require-role.ts` | Server-seitige Rollen-Prüfung |
-| `usePermissions()` | `src/hooks/use-permissions.ts` | Client-Hook für Berechtigungen |
+| Komponente | Ort | Beschreibung |
+|------------|-----|--------------|
+| UsersTable | `components/settings/` | Haupttabelle mit Suche, Filter, Actions |
+| RoleBadge | `components/ui/` | Farbiger Badge (rot/blau/grau) mit Tooltip |
+| ChangeRoleDialog | `components/settings/` | Rollen-Auswahl + MFA-Code-Eingabe |
+| DeactivateUserDialog | `components/settings/` | Bestätigung + optionaler Grund |
+| UserStatusBadge | `components/ui/` | Aktiv/Deaktiviert-Anzeige |
+
+### 2.4 Bestehende Komponenten (wiederverwenden)
+
+| Komponente | Verwendung |
+|------------|------------|
+| Table, TableHeader, TableRow, TableCell | User-Tabelle |
+| Dialog, AlertDialog | Rollen-Änderung, Deaktivierung |
+| Badge | Basis für RoleBadge und UserStatusBadge |
+| Select | Rollen-Filter, Rollen-Auswahl im Dialog |
+| Input | Suchfeld, MFA-Code |
+| Avatar | User-Avatar in Tabelle |
+| DropdownMenu | Actions pro Zeile |
+| Toast (sonner) | Erfolgs-/Fehlermeldungen |
+
+### 2.5 Bestehende Patterns (übernehmen)
+
+| Pattern | Quelle | Übernehmen für |
+|---------|--------|----------------|
+| Settings-Seiten-Layout | Account-Types-Seite | Header, Zurück-Button, Card-Layout |
+| Table mit Actions-Dropdown | Account-Types-Table | Tabellenstruktur und Actions |
+| Dialog mit Formular | Create-Account-Type-Dialog | Change-Role-Dialog |
 
 ---
 
@@ -119,797 +101,247 @@ App-Layout (Alle Seiten)
 
 ### 3.1 Erweiterte Tabelle: `user_profiles`
 
-**WICHTIG:** Tabelle existiert bereits, wird nur erweitert!
+Die bestehende Tabelle wird um drei Felder erweitert:
 
-```sql
--- Neue Spalten hinzufügen
-ALTER TABLE user_profiles
-  ADD COLUMN role TEXT NOT NULL DEFAULT 'viewer'
-    CHECK (role IN ('super_admin', 'admin', 'viewer')),
-  ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true,
-  ADD COLUMN last_login_at TIMESTAMPTZ;
-
--- Index für Performance
-CREATE INDEX idx_user_profiles_role ON user_profiles(role);
-CREATE INDEX idx_user_profiles_is_active ON user_profiles(is_active);
+```
+user_profiles (bestehend)
+├── id                    (existiert)
+├── email                 (existiert)
+├── name                  (existiert)
+├── mfa_enabled           (existiert)
+├── role                  [NEU] "super_admin" | "admin" | "viewer", Standard: "viewer"
+├── is_active             [NEU] Ja/Nein, Standard: Ja
+└── last_login_at         [NEU] Letzter Login-Zeitpunkt
 ```
 
 ### 3.2 Neue Tabelle: `user_role_audit_log`
 
-Protokolliert alle Rollen-Änderungen und Account-Status-Änderungen.
+Protokolliert jede Rollen- und Status-Änderung:
 
-```sql
-CREATE TABLE user_role_audit_log (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-
-  -- Wer hat geändert?
-  actor_id UUID NOT NULL REFERENCES user_profiles(id),
-
-  -- Wer wurde geändert?
-  target_user_id UUID NOT NULL REFERENCES user_profiles(id),
-
-  -- Was wurde geändert?
-  action TEXT NOT NULL CHECK (action IN ('role_change', 'activate', 'deactivate')),
-
-  -- Bei Rollen-Änderung: Alte und neue Rolle
-  old_role TEXT CHECK (old_role IN ('super_admin', 'admin', 'viewer')),
-  new_role TEXT CHECK (new_role IN ('super_admin', 'admin', 'viewer')),
-
-  -- Bei Status-Änderung: Grund
-  reason TEXT,
-
-  -- Metadaten
-  ip_address INET,
-  user_agent TEXT,
-
-  -- Timestamp
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Indizes
-CREATE INDEX idx_audit_log_target_user ON user_role_audit_log(target_user_id);
-CREATE INDEX idx_audit_log_actor ON user_role_audit_log(actor_id);
-CREATE INDEX idx_audit_log_created_at ON user_role_audit_log(created_at DESC);
+```
+user_role_audit_log
+├── id                    Eindeutige ID
+├── actor_id              Wer hat die Änderung vorgenommen? → user_profiles
+├── target_user_id        Wer wurde geändert? → user_profiles
+├── action                "role_change" | "activate" | "deactivate"
+├── old_role / new_role   Bei Rollen-Änderung: vorherige und neue Rolle
+├── reason                Bei Deaktivierung: optionaler Grund
+└── created_at            Zeitstempel
 ```
 
 ### 3.3 Beziehungen
 
 ```
-user_profiles
-├── id (PK)
-├── email
-├── name
-├── role (super_admin | admin | viewer)
-├── is_active (boolean)
-├── last_login_at
-└── mfa_enabled
-
-user_role_audit_log
-├── id (PK)
-├── actor_id (FK → user_profiles)
-├── target_user_id (FK → user_profiles)
-├── action
-├── old_role / new_role
-└── created_at
+user_profiles (1) ──── (N) user_role_audit_log (als actor)
+user_profiles (1) ──── (N) user_role_audit_log (als target)
 ```
 
-### 3.4 Datenbank-Migration
+### 3.4 Migration
 
-**Datei:** `supabase/migrations/YYYYMMDD_add_user_roles.sql`
+Eine einzelne Datenbank-Migration:
+1. `user_profiles` um drei Spalten erweitern (role, is_active, last_login_at)
+2. Erster registrierter User wird automatisch Super-Admin
+3. Neue Tabelle `user_role_audit_log` erstellen
+4. Indizes für Performance (role, is_active, audit-timestamps)
 
-```sql
--- 1. Spalten hinzufügen
-ALTER TABLE user_profiles
-  ADD COLUMN role TEXT NOT NULL DEFAULT 'viewer'
-    CHECK (role IN ('super_admin', 'admin', 'viewer')),
-  ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true,
-  ADD COLUMN last_login_at TIMESTAMPTZ;
+---
 
--- 2. Erster User wird Super-Admin
-UPDATE user_profiles
-SET role = 'super_admin'
-WHERE id = (SELECT id FROM user_profiles ORDER BY created_at ASC LIMIT 1);
+## 4. API-Design (Server Actions)
 
--- 3. Audit-Log Tabelle
-CREATE TABLE user_role_audit_log (
-  -- siehe 3.2
-);
+### 4.1 User-Verwaltung
 
--- 4. Indizes
-CREATE INDEX idx_user_profiles_role ON user_profiles(role);
-CREATE INDEX idx_user_profiles_is_active ON user_profiles(is_active);
-CREATE INDEX idx_audit_log_target_user ON user_role_audit_log(target_user_id);
-CREATE INDEX idx_audit_log_actor ON user_role_audit_log(actor_id);
+| Aktion | Beschreibung | Wer darf? |
+|--------|--------------|-----------|
+| Alle User laden | User-Liste mit Rollen und Status | Nur Super-Admin |
+| Rolle ändern | Neue Rolle setzen + MFA-Bestätigung | Nur Super-Admin |
+| User deaktivieren | Account sperren (mit optionalem Grund) | Nur Super-Admin |
+| User aktivieren | Gesperrten Account reaktivieren | Nur Super-Admin |
+| Audit-Log laden | Änderungshistorie eines Users | Nur Super-Admin |
 
--- 5. RLS Policies (siehe Abschnitt 11)
+### 4.2 Berechtigungs-Hilfsfunktionen
+
+| Funktion | Beschreibung | Wo eingesetzt? |
+|----------|--------------|----------------|
+| Aktuelle Rolle laden | Rolle des eingeloggten Users lesen | Header, Feature-Gating |
+| Rolle prüfen (Server) | Server-Action abblocken wenn Rolle nicht passt → HTTP 403 | Jede schreibende Server Action |
+| Berechtigung prüfen (Client) | UI-Elemente ein-/ausblenden basierend auf Rolle | Alle Seiten mit Feature-Gating |
+
+### 4.3 Datenfluss: Rolle ändern
+
+```
+Super-Admin klickt "Rolle ändern"
+  → Dialog öffnet sich (neue Rolle auswählen + MFA-Code eingeben)
+  → Server prüft:
+     1. Ist der aktuelle User Super-Admin?
+     2. Ist der MFA-Code gültig?
+     3. Versucht der User seine eigene Rolle zu ändern? → Ablehnen
+     4. Ist der Ziel-User der letzte Super-Admin? → Ablehnen
+  → Rolle wird geändert
+  → Eintrag im Audit-Log
+  → Toast "Rolle erfolgreich geändert"
+  → Tabelle wird aktualisiert
+```
+
+### 4.4 Datenfluss: Session-Update bei Rollen-Änderung
+
+```
+User A ist eingeloggt (Rolle: Admin)
+  → Super-Admin ändert Rolle von User A zu "Viewer"
+  → Bei nächster Seiten-Anfrage von User A:
+     Middleware lädt aktuelle Rolle aus Datenbank
+     → UI passt sich automatisch an (weniger Menüpunkte, Buttons verschwinden)
+     → Kein Logout nötig
 ```
 
 ---
 
-## 4. API-Design
+## 5. Berechtigungs-Matrix
 
-### 4.1 Server Actions
-
-**Datei:** `src/app/[locale]/(protected)/settings/users/actions.ts`
-
-| Action | Beschreibung | Rolle |
-|--------|--------------|-------|
-| `getAllUsers()` | Alle User mit Rollen laden | Super-Admin |
-| `getUserById(userId)` | Einzelnen User laden | Super-Admin |
-| `changeUserRole(userId, newRole, mfaCode)` | Rolle ändern (mit MFA) | Super-Admin |
-| `deactivateUser(userId, reason)` | User deaktivieren | Super-Admin |
-| `activateUser(userId)` | User aktivieren | Super-Admin |
-| `getUserAuditLog(userId)` | Audit-Log für User laden | Super-Admin |
-| `getSuperAdminCount()` | Anzahl Super-Admins (für "letzter Super-Admin"-Check) | Super-Admin |
-
-**Datei:** `src/lib/auth/permissions.ts`
-
-| Function | Beschreibung |
-|----------|--------------|
-| `getCurrentUserRole()` | Rolle des aktuellen Users laden |
-| `requireRole(role)` | Server-seitige Middleware für Rollen-Check |
-| `can(action)` | Prüft ob User eine Aktion ausführen darf |
-| `isSuperAdmin()` | Prüft ob User Super-Admin ist |
-| `isAdmin()` | Prüft ob User Admin oder Super-Admin ist |
-
-### 4.2 Datenfluss: Rolle ändern
-
-```
-Client                          Server                      Datenbank
-──────                          ──────                      ──────────
-
-1. User klickt "Rolle ändern"
-   ───────────────────────────►
-                                changeUserRole(userId, newRole, mfaCode)
-                                ├── requireRole('super_admin') ─────────►
-                                ├── MFA-Code validieren
-                                ├── Prüfe: Ist User der letzte Super-Admin?
-                                │   └── getSuperAdminCount() ──────────►
-                                │       ◄───────────────────────────────
-                                ├── UPDATE user_profiles SET role = ...
-                                │   ───────────────────────────────────►
-                                │   ◄───────────────────────────────────
-                                └── INSERT INTO user_role_audit_log
-                                    ───────────────────────────────────►
-                                    ◄───────────────────────────────────
-   ◄───────────────────────────
-   Toast: "Rolle erfolgreich geändert"
-   revalidatePath('/settings/users')
-```
-
-### 4.3 Datenfluss: Session-Update bei Rollen-Änderung
-
-```
-User A (aktiv eingeloggt, Rolle: Admin)
-  │
-  │ Super-Admin ändert Rolle zu "Viewer"
-  │
-  ▼
-Nächste API-Anfrage von User A
-  │
-  ├── Middleware lädt aktuelle Rolle aus DB
-  ├── Erkennt: Rolle geändert (admin → viewer)
-  ├── Session wird aktualisiert
-  └── API-Response mit neuen Berechtigungen
-
-UI aktualisiert sich automatisch (neue Rolle wirkt sofort)
-```
-
----
-
-## 5. Wiederverwendbare Komponenten
-
-### 5.1 Bestehende UI-Komponenten (nutzen)
-
-| Komponente | Verwendung |
-|------------|------------|
-| `Table`, `TableHeader`, `TableRow`, `TableCell` | User-Tabelle |
-| `Dialog`, `DialogContent`, `DialogHeader` | Rollen-Änderung, Deaktivierung |
-| `Button` | Alle Buttons |
-| `Input` | Suchfeld, MFA-Code-Eingabe |
-| `Select`, `SelectContent`, `SelectItem` | Rollen-Filter, Rollen-Auswahl |
-| `Badge` | Rollen-Badge, Status-Badge |
-| `Avatar`, `AvatarImage`, `AvatarFallback` | User-Avatar |
-| `DropdownMenu` | Actions-Dropdown |
-| `toast` (sonner) | Erfolgs-/Fehlermeldungen |
-| `AlertDialog` | Bestätigungsdialog (Deaktivierung) |
-
-### 5.2 Bestehende Patterns (übernehmen)
-
-| Pattern | Quelle | Verwendung |
-|---------|--------|------------|
-| Settings-Seiten-Layout | `account-types/page.tsx` | Header, Zurück-Button |
-| Table mit Actions | `account-types-table.tsx` | Tabellen-Struktur |
-| Role-Check in Server Action | `projections/actions.ts` | `requireRole()` Pattern |
-| Audit-Logging | Neue Implementierung | Alle Rollen-Änderungen loggen |
-
----
-
-## 6. Zustandsverwaltung
-
-### 6.1 Client State
-
-```typescript
-UsersPage (State)
-├── users: UserProfile[]              // Alle User
-├── filteredUsers: UserProfile[]      // Nach Filter/Suche
-├── searchQuery: string               // Suchbegriff
-├── roleFilter: Role | 'all'          // Rollen-Filter
-├── statusFilter: 'active' | 'inactive' | 'all'
-├── selectedUser: UserProfile | null  // Für Dialogs
-└── isLoading: boolean
-```
-
-### 6.2 Server State
-
-- User-Liste wird initial vom Server geladen
-- Nach Änderungen: `revalidatePath('/settings/users')`
-- `router.refresh()` für Client-Update
-
-### 6.3 Permissions Context (Optional)
-
-Für globale Berechtigungsprüfung im UI:
-
-```typescript
-// src/context/permissions-context.tsx
-const PermissionsContext = React.createContext<{
-  role: Role;
-  can: (action: string) => boolean;
-  isSuperAdmin: boolean;
-  isAdmin: boolean;
-}>();
-
-// Verwendung:
-const { can, isSuperAdmin } = usePermissions();
-
-if (can('manage_users')) {
-  // Zeige User-Verwaltung
-}
-```
-
----
-
-## 7. Berechtigungs-Matrix
-
-### 7.1 Feature-Gating (UI-Sichtbarkeit)
+### 5.1 Feature-Gating (Was sieht wer?)
 
 | Feature | Super-Admin | Admin | Viewer |
-|---------|-------------|-------|--------|
-| User-Verwaltung Seite | ✅ | ❌ | ❌ |
+|---------|:-----------:|:-----:|:------:|
+| User-Verwaltung | ✅ | ❌ | ❌ |
 | Versicherte anlegen/bearbeiten | ✅ | ✅ | ❌ |
 | Arbeitgeber anlegen/bearbeiten | ✅ | ✅ | ❌ |
-| Dokumente hochladen | ✅ | ✅ | ❌ |
-| Berechnungen durchführen | ✅ | ✅ | ❌ |
-| Reports erstellen | ✅ | ✅ | ❌ |
+| Beitragssätze bearbeiten | ✅ | ✅ | ❌ |
+| Konten/Transaktionen verwalten | ✅ | ✅ | ❌ |
+| Excel-Export | ✅ | ✅ | ✅ |
 | Alle Daten ansehen | ✅ | ✅ | ✅ |
 | Eigenes Profil bearbeiten | ✅ | ✅ | ✅ |
 
-### 7.2 API-Berechtigungen
+### 5.2 Verhalten bei fehlendem Zugriff
 
-```typescript
-// Server-seitige Prüfung in jeder Action
-export async function createInsuredPerson(data: InsuredPersonInput) {
-  await requireRole(['super_admin', 'admin']); // Wirft 403 wenn nicht berechtigt
-
-  // ... Implementation
-}
-
-// Verwendung in Components:
-const { can } = usePermissions();
-
-{can('create_insured_person') && (
-  <Button>Neue versicherte Person</Button>
-)}
-```
+- **UI:** Buttons/Links für nicht erlaubte Aktionen werden **nicht angezeigt** (nicht nur disabled)
+- **Server:** Direkte API-Aufrufe ohne Berechtigung geben **HTTP 403** zurück
+- **Navigation:** Aufruf von `/settings/users` als Admin/Viewer → Redirect zu Dashboard
 
 ---
 
-## 8. Middleware
+## 6. Middleware
 
-### 8.1 Rollen-Middleware
+### 6.1 Erweiterung der bestehenden Middleware
 
-**Datei:** `src/middleware.ts` (erweitern)
+Die bestehende Auth-Middleware (`src/lib/supabase/middleware.ts`) wird erweitert um:
 
-```typescript
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+1. **User-Profil mit Rolle laden** bei jeder authentifizierten Anfrage
+2. **Deaktivierte User erkennen** → automatisch ausloggen mit Fehlermeldung
+3. **Route-basierter Rollen-Check** → z.B. `/settings/users` nur für Super-Admin
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
+### 6.2 Performance-Überlegung
 
-  // 1. Auth-Check
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-
-  // 2. User-Profile mit Rolle laden
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role, is_active')
-    .eq('id', session.user.id)
-    .single();
-
-  // 3. Deaktivierte User ausloggen
-  if (!profile?.is_active) {
-    await supabase.auth.signOut();
-    return NextResponse.redirect(new URL('/login?error=account_deactivated', req.url));
-  }
-
-  // 4. Rollen-basierte Route-Protection
-  const path = req.nextUrl.pathname;
-
-  if (path.startsWith('/settings/users') && profile.role !== 'super_admin') {
-    return NextResponse.redirect(new URL('/dashboard?error=unauthorized', req.url));
-  }
-
-  // 5. Rolle in Header setzen (für Server Components)
-  res.headers.set('x-user-role', profile.role);
-
-  return res;
-}
-
-export const config = {
-  matcher: [
-    '/(protected)/:path*',
-    '/settings/:path*',
-    '/dashboard/:path*'
-  ]
-};
-```
-
-### 8.2 Server Action Helper
-
-**Datei:** `src/lib/auth/require-role.ts`
-
-```typescript
-import { createServerClient } from '@/lib/supabase/server';
-
-export async function requireRole(allowedRoles: Role[]) {
-  const supabase = createServerClient();
-
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role, is_active')
-    .eq('id', session.user.id)
-    .single();
-
-  if (!profile?.is_active) {
-    throw new Error('Account deactivated');
-  }
-
-  if (!allowedRoles.includes(profile.role)) {
-    throw new Error('Forbidden');
-  }
-
-  return { userId: session.user.id, role: profile.role };
-}
-
-// Verwendung:
-export async function changeUserRole(targetUserId: string, newRole: Role) {
-  await requireRole(['super_admin']); // Wirft Error wenn nicht Super-Admin
-
-  // ... Implementation
-}
-```
+- Rolle wird bei jeder Anfrage aus der Datenbank geladen (nicht gecached)
+- **Warum:** Rollen-Änderungen wirken sofort, kein Stale-Cache-Risiko
+- **Ziel:** < 50ms zusätzliche Latenz (ein einfacher DB-Query, Index vorhanden)
 
 ---
 
-## 9. Validierung
+## 7. Sicherheit
 
-### 9.1 Client-seitige Validierung
+### 7.1 Row Level Security (RLS)
 
-| Feld | Regel | Nachricht |
-|------|-------|-----------|
-| Rolle | super_admin, admin, viewer | "Ungültige Rolle" |
-| MFA-Code | 6 Ziffern | "MFA-Code muss 6 Ziffern haben" |
-| Deaktivierungs-Grund | min. 10 Zeichen | "Bitte Grund angeben (mind. 10 Zeichen)" |
+| Tabelle | Wer | Lesen | Schreiben |
+|---------|-----|:-----:|:---------:|
+| user_profiles | Eigenes Profil | ✅ | ✅ (nur Profil-Felder) |
+| user_profiles | Alle User (Super-Admin) | ✅ | ✅ (Rolle + Status) |
+| user_profiles | Andere User (Admin/Viewer) | ❌ | ❌ |
+| user_role_audit_log | Super-Admin | ✅ | ❌ (nur System schreibt) |
+| user_role_audit_log | Admin/Viewer | ❌ | ❌ |
 
-### 9.2 Server-seitige Validierung
+### 7.2 MFA-Pflicht für kritische Aktionen
 
-```typescript
-// Bei Rollen-Änderung:
-export async function changeUserRole(
-  targetUserId: string,
-  newRole: Role,
-  mfaCode: string
-) {
-  const { userId } = await requireRole(['super_admin']);
+Folgende Aktionen erfordern eine MFA-Code-Bestätigung:
+- Rolle eines Users ändern
+- User-Account deaktivieren
+- Neuen Super-Admin ernennen
 
-  // 1. MFA validieren
-  const isMfaValid = await verifyMfaCode(userId, mfaCode);
-  if (!isMfaValid) {
-    throw new Error('Ungültiger MFA-Code');
-  }
+### 7.3 Schutz-Massnahmen
 
-  // 2. Prüfe: User versucht eigene Rolle zu ändern
-  if (targetUserId === userId) {
-    throw new Error('Sie können Ihre eigene Rolle nicht ändern');
-  }
-
-  // 3. Prüfe: Letzter Super-Admin
-  if (newRole !== 'super_admin') {
-    const { data: currentUser } = await supabase
-      .from('user_profiles')
-      .select('role')
-      .eq('id', targetUserId)
-      .single();
-
-    if (currentUser?.role === 'super_admin') {
-      const { count } = await supabase
-        .from('user_profiles')
-        .select('id', { count: 'exact', head: true })
-        .eq('role', 'super_admin');
-
-      if (count === 1) {
-        throw new Error('Der letzte Super-Admin kann nicht herabgestuft werden');
-      }
-    }
-  }
-
-  // 4. Rolle ändern
-  const { data: oldUser } = await supabase
-    .from('user_profiles')
-    .select('role')
-    .eq('id', targetUserId)
-    .single();
-
-  await supabase
-    .from('user_profiles')
-    .update({ role: newRole })
-    .eq('id', targetUserId);
-
-  // 5. Audit-Log
-  await supabase.from('user_role_audit_log').insert({
-    actor_id: userId,
-    target_user_id: targetUserId,
-    action: 'role_change',
-    old_role: oldUser.role,
-    new_role: newRole,
-  });
-
-  revalidatePath('/settings/users');
-}
-```
+- **Letzter-Super-Admin-Schutz:** Kann nicht herabgestuft oder deaktiviert werden
+- **Keine Selbst-Änderung:** User kann eigene Rolle nicht ändern
+- **Audit-Trail:** Jede Änderung wird mit Zeitstempel, Akteur und Ziel protokolliert
 
 ---
 
-## 10. Rollen-Badge Implementierung
+## 8. Internationalisierung
 
-### 10.1 RoleBadge Component
+Neue Übersetzungsschlüssel für drei Sprachen (DE/EN/FR):
 
-**Datei:** `src/components/ui/role-badge.tsx`
-
-```typescript
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-
-type Role = 'super_admin' | 'admin' | 'viewer';
-
-const ROLE_CONFIG = {
-  super_admin: {
-    label: 'Super-Admin',
-    variant: 'destructive', // rot
-    description: 'Vollzugriff auf alle Funktionen'
-  },
-  admin: {
-    label: 'Admin',
-    variant: 'default', // blau
-    description: 'Kann Daten bearbeiten'
-  },
-  viewer: {
-    label: 'Viewer',
-    variant: 'secondary', // grau
-    description: 'Nur Lese-Zugriff'
-  }
-} as const;
-
-export function RoleBadge({ role }: { role: Role }) {
-  const config = ROLE_CONFIG[role];
-
-  return (
-    <Badge variant={config.variant} title={config.description}>
-      {config.label}
-    </Badge>
-  );
-}
-```
-
-### 10.2 Integration im Header
-
-**Datei:** `src/app/[locale]/(protected)/layout.tsx`
-
-```typescript
-import { RoleBadge } from '@/components/ui/role-badge';
-import { getCurrentUserRole } from '@/lib/auth/permissions';
-
-export default async function ProtectedLayout({ children }) {
-  const role = await getCurrentUserRole();
-
-  return (
-    <div>
-      <header>
-        <UserMenu>
-          <div className="flex items-center gap-2">
-            <Avatar />
-            <div>
-              <p className="font-medium">{user.name}</p>
-              <RoleBadge role={role} />
-            </div>
-          </div>
-        </UserMenu>
-      </header>
-      {children}
-    </div>
-  );
-}
-```
+| Bereich | Beispiele |
+|---------|-----------|
+| Seitentitel | "Benutzerverwaltung" |
+| Tabelle | Spaltenüberschriften (Name, Email, Rolle, Status, ...) |
+| Rollen-Namen | "Super-Admin", "Admin", "Viewer" |
+| Aktionen | "Rolle ändern", "Deaktivieren", "Aktivieren" |
+| Dialoge | Titel, Beschreibungen, Bestätigungen |
+| Fehler | "Letzter Super-Admin kann nicht herabgestuft werden" |
+| Erfolg | "Rolle erfolgreich geändert" |
 
 ---
 
-## 11. Sicherheit
+## 9. Abhängigkeiten
 
-### 11.1 Row Level Security (RLS)
+### Bestehende Dependencies (bereits installiert)
 
-**Policies für `user_profiles`:**
+Alle Features können mit bestehenden Packages implementiert werden:
+- `next-intl` (Übersetzungen)
+- `@supabase/supabase-js` (Datenbank)
+- `sonner` (Toast-Meldungen)
+- `lucide-react` (Icons)
 
-```sql
--- Super-Admin kann alle User sehen
-CREATE POLICY "super_admin_can_view_all_users"
-  ON user_profiles FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE id = auth.uid()
-      AND role = 'super_admin'
-    )
-  );
-
--- Jeder User kann sein eigenes Profil sehen
-CREATE POLICY "users_can_view_own_profile"
-  ON user_profiles FOR SELECT
-  USING (id = auth.uid());
-
--- Nur Super-Admin kann Rollen ändern
-CREATE POLICY "only_super_admin_can_update_roles"
-  ON user_profiles FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE id = auth.uid()
-      AND role = 'super_admin'
-    )
-  );
-```
-
-**Policies für `user_role_audit_log`:**
-
-```sql
--- Nur Super-Admin kann Audit-Logs lesen
-CREATE POLICY "super_admin_can_view_audit_log"
-  ON user_role_audit_log FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE id = auth.uid()
-      AND role = 'super_admin'
-    )
-  );
-
--- System kann Audit-Logs schreiben (via Service Role)
--- Keine INSERT Policy für regular users
-```
-
-### 11.2 MFA-Pflicht für kritische Aktionen
-
-- Rollen-Änderung: MFA-Code erforderlich
-- Account-Deaktivierung: MFA-Code erforderlich
-- Super-Admin-Ernennung: MFA-Code erforderlich
+**Keine neuen Dependencies erforderlich.**
 
 ---
 
-## 12. Internationalisierung
+## 10. Implementierungs-Reihenfolge
 
-### 12.1 Neue Übersetzungsschlüssel
-
-**Datei:** `messages/de.json`
-
-```json
-{
-  "settings.users": {
-    "title": "Benutzerverwaltung",
-    "description": "Verwalten Sie Benutzer und deren Rollen",
-    "searchPlaceholder": "Suche nach Name oder Email...",
-    "filters": {
-      "role": "Rolle",
-      "status": "Status",
-      "all": "Alle",
-      "active": "Aktiv",
-      "inactive": "Deaktiviert"
-    },
-    "table": {
-      "name": "Name",
-      "email": "Email",
-      "role": "Rolle",
-      "status": "Status",
-      "lastLogin": "Letzter Login",
-      "actions": "Aktionen"
-    },
-    "roles": {
-      "super_admin": "Super-Admin",
-      "admin": "Admin",
-      "viewer": "Viewer"
-    },
-    "actions": {
-      "changeRole": "Rolle ändern",
-      "deactivate": "Deaktivieren",
-      "activate": "Aktivieren",
-      "viewAuditLog": "Audit-Log anzeigen"
-    },
-    "dialogs": {
-      "changeRole": {
-        "title": "Rolle ändern",
-        "description": "Ändern Sie die Rolle von {{name}}",
-        "selectRole": "Neue Rolle wählen",
-        "mfaCode": "MFA-Code",
-        "mfaPlaceholder": "6-stelliger Code",
-        "submit": "Rolle ändern",
-        "cancel": "Abbrechen"
-      },
-      "deactivate": {
-        "title": "Benutzer deaktivieren",
-        "description": "Möchten Sie {{name}} wirklich deaktivieren?",
-        "reason": "Grund (optional)",
-        "reasonPlaceholder": "Warum wird dieser Account deaktiviert?",
-        "submit": "Deaktivieren",
-        "cancel": "Abbrechen"
-      }
-    },
-    "errors": {
-      "lastSuperAdmin": "Der letzte Super-Admin kann nicht herabgestuft werden",
-      "cannotChangeSelf": "Sie können Ihre eigene Rolle nicht ändern",
-      "invalidMfa": "Ungültiger MFA-Code",
-      "userNotFound": "Benutzer nicht gefunden"
-    },
-    "success": {
-      "roleChanged": "Rolle erfolgreich geändert",
-      "userDeactivated": "Benutzer deaktiviert",
-      "userActivated": "Benutzer aktiviert"
-    }
-  },
-  "header": {
-    "yourRole": "Ihre Rolle"
-  }
-}
-```
+| Phase | Beschreibung | Skill |
+|-------|-------------|-------|
+| 1. Datenbank | Migration: user_profiles erweitern + audit_log erstellen + RLS Policies | `/backend` |
+| 2. Auth-Layer | requireRole()-Helper, getCurrentUserRole(), Middleware erweitern | `/backend` |
+| 3. UI Grundstruktur | RoleBadge, Header-Integration, Settings-Card "User-Verwaltung" | `/frontend` |
+| 4. User-Tabelle | UsersTable mit Suche, Filter, Status-Badge, Actions-Dropdown | `/frontend` |
+| 5. Dialoge | ChangeRoleDialog (mit MFA), DeactivateUserDialog, ActivateUserDialog | `/frontend` |
+| 6. Feature-Gating | usePermissions()-Hook, Buttons/Links basierend auf Rolle ausblenden | `/frontend` |
+| 7. Testing | Rollen-Checks, User-Verwaltung, Edge Cases (letzter Super-Admin, etc.) | `/qa` |
 
 ---
 
-## 13. Abhängigkeiten
-
-### 13.1 Bestehende Dependencies (bereits installiert)
-
-- `next-intl` - Internationalisierung
-- `@supabase/supabase-js` - Datenbank-Client
-- `sonner` - Toast-Benachrichtigungen
-- `lucide-react` - Icons
-- `tailwindcss` - Styling
-
-### 13.2 Neue Dependencies
-
-**Keine neuen Dependencies erforderlich!** Alle Features können mit bestehenden Packages implementiert werden.
-
----
-
-## 14. Implementierungs-Reihenfolge
-
-### Phase 1: Datenbank (Backend Developer)
-1. Migration erstellen (`user_profiles` erweitern + `user_role_audit_log` erstellen)
-2. RLS Policies konfigurieren
-3. `database.types.ts` aktualisieren (Supabase CLI)
-4. Ersten User zu Super-Admin machen
-
-### Phase 2: Auth-Layer (Backend Developer)
-1. `requireRole()` Helper implementieren
-2. `getCurrentUserRole()` implementieren
-3. Middleware erweitern (Rollen-Check + Deaktivierungs-Check)
-4. Server Actions für User-Verwaltung implementieren
-   - `getAllUsers()`
-   - `changeUserRole()`
-   - `deactivateUser()`
-   - `activateUser()`
-
-### Phase 3: UI Grundstruktur (Frontend Developer)
-1. `RoleBadge` Component erstellen
-2. Rollen-Badge im Header integrieren
-3. Settings-Seite erweitern (neue Card "User-Verwaltung")
-4. User-Verwaltungsseite erstellen (`/settings/users`)
-
-### Phase 4: User-Verwaltung Table (Frontend Developer)
-1. `UsersTable` Component implementieren
-2. Suche + Filter (Rolle, Status)
-3. User-Status-Badge
-4. Actions-Dropdown
-
-### Phase 5: Dialogs (Frontend Developer)
-1. `ChangeRoleDialog` mit MFA-Eingabe
-2. `DeactivateUserDialog` mit Grund-Eingabe
-3. `ActivateUserDialog`
-4. Bestätigungsdialoge
-
-### Phase 6: Berechtigungs-System (Frontend Developer)
-1. `usePermissions()` Hook erstellen
-2. Feature-Gating in bestehenden Komponenten implementieren
-3. Buttons/Links basierend auf Rolle ein/ausblenden
-
-### Phase 7: Testing & Polish
-1. Unit-Tests für `requireRole()`
-2. Integration-Tests für User-Verwaltung
-3. E2E-Tests für Rollen-Änderung
-4. Übersetzungen (DE/EN/FR)
-5. Code-Review
-
----
-
-## 15. Risiken und Mitigationen
+## 11. Risiken und Mitigationen
 
 | Risiko | Wahrscheinlichkeit | Mitigation |
-|--------|-------------------|------------|
-| Letzter Super-Admin löscht sich selbst | Mittel | Validierung: Anzahl Super-Admins prüfen vor Änderung |
+|--------|:-------------------:|------------|
+| Letzter Super-Admin wird herabgestuft | Mittel | Validierung: Anzahl Super-Admins prüfen vor jeder Änderung |
 | Session-Inkonsistenz nach Rollen-Änderung | Mittel | Middleware lädt Rolle bei jeder Anfrage neu aus DB |
 | MFA-Bypass bei Rollen-Änderung | Niedrig | Server-seitige MFA-Validierung (nicht nur Client) |
-| Concurrent Editing (2 Admins ändern gleichzeitig) | Niedrig | Optimistic Locking + Audit-Log zeigt alle Änderungen |
+| Zwei Super-Admins ändern gleichzeitig | Niedrig | Audit-Log zeigt alle Änderungen, Tabelle wird nach Action neu geladen |
 
 ---
 
-## 16. Offene Fragen
+## 12. Abgrenzung zu PROJ-18 (Versicherten-Rolle)
 
-1. **Automatische Deaktivierung:** Sollen User nach X Tagen Inaktivität automatisch deaktiviert werden?
-   - Entscheidung: Nein (MVP), manuell durch Super-Admin
-
-2. **Email-Benachrichtigung:** Soll User per Email benachrichtigt werden bei Rollen-Änderung?
-   - Entscheidung: Nice-to-have (späteres Feature)
-
-3. **Audit-Log UI:** Soll es eine dedizierte Seite für Audit-Logs geben?
-   - Entscheidung: Ja, aber als separates Feature (nicht in PROJ-4 Scope)
-
-4. **Role-Based Navigation:** Soll die Sidebar nur relevante Menüpunkte zeigen?
-   - Entscheidung: Ja, implementieren in Phase 6
-
----
-
-## 17. Integration mit PROJ-18 (Versicherten-Rolle)
-
-### Hinweis
 PROJ-4 behandelt nur **Admin-seitige Rollen** (Super-Admin, Admin, Viewer).
-PROJ-18 behandelt die **Versicherten-Rolle** (eigenes Portal, separates Login).
+PROJ-18 behandelt die **Versicherten-Rolle** mit separatem Portal (`/portal/*`).
 
-**Kein Konflikt:** Die Rollen-Systeme sind getrennt:
-- Admin-Rollen: Spalte `user_profiles.role`
-- Versicherten-Rolle: Separate Tabelle `portal_users`
+Die Rollen-Systeme sind **vollständig getrennt:**
+- Admin-Rollen → Spalte `user_profiles.role`
+- Versicherten-Zugang → Separate Tabelle und separater Auth-Flow
+
+Kein Konflikt, keine gegenseitige Abhängigkeit.
 
 ---
 
-## 18. Checkliste für Review
+## 13. Checkliste für Review
 
-- [ ] Datenbank-Schema bestätigt (user_profiles + audit_log)
+- [ ] Datenbank-Schema bestätigt (user_profiles erweitern + audit_log)
 - [ ] RLS Policies bestätigt
 - [ ] API-Design bestätigt (Server Actions)
-- [ ] UI-Komponenten bestätigt (UsersTable, RoleBadge, Dialogs)
+- [ ] UI-Komponenten bestätigt (UsersTable, RoleBadge, Dialoge)
 - [ ] Middleware-Konzept bestätigt
 - [ ] Berechtigungsmatrix bestätigt
-- [ ] Sicherheitskonzept bestätigt (MFA, letzer Super-Admin)
+- [ ] Sicherheitskonzept bestätigt (MFA, letzter Super-Admin)
 - [ ] Implementierungs-Reihenfolge akzeptiert
 
 ---
 
-**Nächster Schritt:** Review durch Produkt-Manager, dann Handoff an Backend Developer für Phase 1 (Datenbank-Migration).
+**Nächster Schritt:** Review, dann `/frontend` für Phase 3 (UI Grundstruktur) und `/backend` für Phase 1 (Datenbank-Migration).

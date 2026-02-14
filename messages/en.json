@@ -916,6 +916,75 @@
         "lastModified": "Last modified on {date} at {time}",
         "by": "by"
       }
+    },
+    "userManagement": {
+      "title": "User Management",
+      "description": "Manage users, roles and permissions.",
+      "count": "Users registered",
+      "backToSettings": "Back to Settings",
+      "searchPlaceholder": "Search name or email...",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastLogin": "Last Login",
+        "actions": "Actions"
+      },
+      "filter": {
+        "allRoles": "All Roles",
+        "allStatuses": "All Statuses",
+        "active": "Active",
+        "deactivated": "Deactivated"
+      },
+      "noUsers": "No users found",
+      "noUsersForSearch": "No users found for '{search}'",
+      "never": "Never",
+      "you": "(You)",
+      "changeRole": {
+        "title": "Change Role",
+        "description": "Change the role of {name}.",
+        "currentRole": "Current Role",
+        "newRole": "New Role",
+        "selectRole": "Select role",
+        "mfaCode": "MFA Code",
+        "mfaCodePlaceholder": "000000",
+        "mfaCodeHint": "Enter the 6-digit code from your authenticator app",
+        "success": "Role was successfully changed",
+        "error": "Error changing role",
+        "sameRole": "User already has this role",
+        "cannotChangeSelf": "You cannot change your own role",
+        "lastSuperAdmin": "Cannot demote the last Super-Admin. Promote another user to Super-Admin first."
+      },
+      "deactivate": {
+        "title": "Deactivate User",
+        "description": "Do you really want to deactivate user {name}?",
+        "warning": "The user will no longer be able to log in after deactivation.",
+        "reason": "Reason (optional)",
+        "reasonPlaceholder": "Reason for deactivation",
+        "confirm": "Deactivate",
+        "success": "User was deactivated",
+        "error": "Error deactivating user",
+        "cannotDeactivateSelf": "You cannot deactivate your own account",
+        "lastSuperAdmin": "The last active Super-Admin cannot be deactivated."
+      },
+      "activate": {
+        "title": "Activate User",
+        "description": "Do you want to reactivate user {name}?",
+        "confirm": "Activate",
+        "success": "User was activated",
+        "error": "Error activating user"
+      }
+    }
+  },
+  "roles": {
+    "super_admin": "Super-Admin",
+    "admin": "Admin",
+    "viewer": "Viewer",
+    "description": {
+      "super_admin": "Full access including user management",
+      "admin": "Can edit and manage data",
+      "viewer": "Read-only access"
     }
   },
   "projections": {

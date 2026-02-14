@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
 import { TransactionTypesTable } from '@/components/settings/transaction-types-table'
 import { CreateTransactionTypeDialog } from '@/components/settings/create-transaction-type-dialog'
+import { PermissionGate } from '@/components/auth/permission-gate'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -70,7 +71,9 @@ export default async function TransactionTypesPage({ params }: Props) {
               {t('description')}
             </p>
           </div>
-          <CreateTransactionTypeDialog />
+          <PermissionGate permission="settings.system">
+            <CreateTransactionTypeDialog />
+          </PermissionGate>
         </div>
 
         <TransactionTypesTable transactionTypes={transactionTypesWithUsage} />

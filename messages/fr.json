@@ -916,6 +916,75 @@
         "lastModified": "Derniere modification le {date} a {time}",
         "by": "par"
       }
+    },
+    "userManagement": {
+      "title": "Gestion des utilisateurs",
+      "description": "Gerez les utilisateurs, les roles et les autorisations.",
+      "count": "Utilisateurs enregistres",
+      "backToSettings": "Retour aux Parametres",
+      "searchPlaceholder": "Rechercher nom ou e-mail...",
+      "columns": {
+        "name": "Nom",
+        "email": "E-mail",
+        "role": "Role",
+        "status": "Statut",
+        "lastLogin": "Derniere connexion",
+        "actions": "Actions"
+      },
+      "filter": {
+        "allRoles": "Tous les roles",
+        "allStatuses": "Tous les statuts",
+        "active": "Actif",
+        "deactivated": "Desactive"
+      },
+      "noUsers": "Aucun utilisateur trouve",
+      "noUsersForSearch": "Aucun utilisateur trouve pour '{search}'",
+      "never": "Jamais",
+      "you": "(Vous)",
+      "changeRole": {
+        "title": "Changer le role",
+        "description": "Changer le role de {name}.",
+        "currentRole": "Role actuel",
+        "newRole": "Nouveau role",
+        "selectRole": "Selectionner un role",
+        "mfaCode": "Code MFA",
+        "mfaCodePlaceholder": "000000",
+        "mfaCodeHint": "Saisissez le code a 6 chiffres de votre application d'authentification",
+        "success": "Le role a ete modifie avec succes",
+        "error": "Erreur lors du changement de role",
+        "sameRole": "L'utilisateur a deja ce role",
+        "cannotChangeSelf": "Vous ne pouvez pas changer votre propre role",
+        "lastSuperAdmin": "Le dernier Super-Admin ne peut pas etre retrograde. Promouvez d'abord un autre utilisateur."
+      },
+      "deactivate": {
+        "title": "Desactiver l'utilisateur",
+        "description": "Voulez-vous vraiment desactiver l'utilisateur {name}?",
+        "warning": "L'utilisateur ne pourra plus se connecter apres la desactivation.",
+        "reason": "Motif (optionnel)",
+        "reasonPlaceholder": "Motif de la desactivation",
+        "confirm": "Desactiver",
+        "success": "L'utilisateur a ete desactive",
+        "error": "Erreur lors de la desactivation de l'utilisateur",
+        "cannotDeactivateSelf": "Vous ne pouvez pas desactiver votre propre compte",
+        "lastSuperAdmin": "Le dernier Super-Admin actif ne peut pas etre desactive."
+      },
+      "activate": {
+        "title": "Activer l'utilisateur",
+        "description": "Voulez-vous reactiver l'utilisateur {name}?",
+        "confirm": "Activer",
+        "success": "L'utilisateur a ete active",
+        "error": "Erreur lors de l'activation de l'utilisateur"
+      }
+    }
+  },
+  "roles": {
+    "super_admin": "Super-Admin",
+    "admin": "Admin",
+    "viewer": "Viewer",
+    "description": {
+      "super_admin": "Acces complet y compris gestion des utilisateurs",
+      "admin": "Peut modifier et gerer les donnees",
+      "viewer": "Acces en lecture seule"
     }
   },
   "projections": {

@@ -929,6 +929,7 @@ export type Database = {
           id: string
           is_active: boolean
           language: string
+          last_login_at: string | null
           role: string
           updated_at: string
         }
@@ -940,6 +941,7 @@ export type Database = {
           id: string
           is_active?: boolean
           language?: string
+          last_login_at?: string | null
           role?: string
           updated_at?: string
         }
@@ -951,10 +953,59 @@ export type Database = {
           id?: string
           is_active?: boolean
           language?: string
+          last_login_at?: string | null
           role?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      user_role_audit_log: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          id: string
+          new_role: string | null
+          old_role: string | null
+          reason: string | null
+          target_user_id: string
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          created_at?: string
+          id?: string
+          new_role?: string | null
+          old_role?: string | null
+          reason?: string | null
+          target_user_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          id?: string
+          new_role?: string | null
+          old_role?: string | null
+          reason?: string | null
+          target_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_role_audit_log_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_role_audit_log_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_table_preferences: {
         Row: {
@@ -1110,6 +1161,7 @@ export type Database = {
       is_admin_user: { Args: never; Returns: boolean }
       is_authenticated_active_user: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      update_last_login: { Args: never; Returns: undefined }
     }
     Enums: {
       balance_effect: "positive" | "negative" | "neutral"
@@ -1330,3 +1382,14 @@ export type BvgMinimumRate = Database["public"]["Functions"]["get_bvg_minimum_ra
 
 // Contribution Rate for Age (from function)
 export type ContributionRateForAge = Database["public"]["Functions"]["get_contribution_rate_for_age"]["Returns"][number]
+
+// User Profiles
+export type UserProfile = Database["public"]["Tables"]["user_profiles"]["Row"]
+export type UserProfileRow = Database["public"]["Tables"]["user_profiles"]["Row"]
+export type UserProfileInsert = Database["public"]["Tables"]["user_profiles"]["Insert"]
+export type UserProfileUpdate = Database["public"]["Tables"]["user_profiles"]["Update"]
+
+// User Role Audit Log
+export type UserRoleAuditLog = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
+export type UserRoleAuditLogRow = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
+export type UserRoleAuditLogInsert = Database["public"]["Tables"]["user_role_audit_log"]["Insert"]

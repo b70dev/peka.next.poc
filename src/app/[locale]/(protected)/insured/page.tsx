@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { InsuredPersonsTable } from '@/components/insured/insured-persons-table'
 import { CreateInsuredPersonDialog } from '@/components/insured/create-insured-person-dialog'
 import { AppHeader } from '@/components/layout/app-header'
+import { PermissionGate } from '@/components/auth/permission-gate'
 import { InsuredPerson, Employer } from '@/lib/database.types'
 
 type Props = {
@@ -83,7 +84,9 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
               {t('description')}
             </p>
           </div>
-          <CreateInsuredPersonDialog />
+          <PermissionGate permission="insured.create">
+            <CreateInsuredPersonDialog />
+          </PermissionGate>
         </div>
 
         <InsuredPersonsTable

@@ -1,6 +1,8 @@
 # PROJ-4: Rollen und Berechtigungen
 
 ## Status: 🔵 Planned
+**Created:** 2026-02-10
+**Last Updated:** 2026-02-14
 
 ## Übersicht
 
@@ -9,12 +11,12 @@ Implementiert ein Rollen-basiertes Zugriffskontrollsystem (RBAC) für peka.next 
 ## Abhängigkeiten
 
 - **Benötigt:** PROJ-1 (Authentication) - User muss eingeloggt sein
-- **Benötigt:** PROJ-2 (Registration) - Neue User erhalten Standard-Rolle
+- **Optional:** PROJ-2 (Registration) - Neue Self-Service-User erhalten Standard-Rolle (Rollen funktionieren auch ohne Self-Registration)
 
 ## User Stories
 
 ### US-1: Rollen-basierter Zugriff
-Als System möchte ich den Zugriff auf Funktionen basierend auf der Benutzerrolle steuern, um sensible Operationen zu schützen.
+Als Admin möchte ich, dass nur berechtigte User Änderungen vornehmen können, um die Datenintegrität zu gewährleisten.
 
 ### US-2: Super-Admin User-Verwaltung
 Als Super-Admin möchte ich andere Benutzer verwalten können (Rollen zuweisen, Accounts aktivieren/deaktivieren).
@@ -135,3 +137,16 @@ Als Super-Admin möchte ich die Rolle eines anderen Users ändern können, um Be
 - Middleware prüft Rolle bei jeder authentifizierten Anfrage
 - Berechtigungsprüfung sowohl Client-seitig (UX) als auch Server-seitig (Security)
 - Audit-Log für alle Rollen-Änderungen mit Timestamp, Actor, Target, Old/New Role
+- Performance: Rollen-Check in Middleware < 50ms (kein zusätzlicher DB-Roundtrip pro Request)
+
+---
+<!-- Sections below are added by subsequent skills -->
+
+## Tech Design (Solution Architect)
+Siehe [PROJ-4-solution-architecture.md](./PROJ-4-solution-architecture.md)
+
+## QA Test Results
+_To be added by /qa_
+
+## Deployment
+_To be added by /deploy_

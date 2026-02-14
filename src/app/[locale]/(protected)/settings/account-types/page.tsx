@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
 import { AccountTypesTable } from '@/components/settings/account-types-table'
 import { CreateAccountTypeDialog } from '@/components/settings/create-account-type-dialog'
+import { PermissionGate } from '@/components/auth/permission-gate'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -70,7 +71,9 @@ export default async function AccountTypesPage({ params }: Props) {
               {t('description')}
             </p>
           </div>
-          <CreateAccountTypeDialog />
+          <PermissionGate permission="settings.system">
+            <CreateAccountTypeDialog />
+          </PermissionGate>
         </div>
 
         <AccountTypesTable accountTypes={accountTypesWithUsage} />

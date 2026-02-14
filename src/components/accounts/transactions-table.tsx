@@ -23,6 +23,7 @@ import { ChevronLeft, ChevronRight, ArrowUpCircle, ArrowDownCircle, RotateCcw } 
 import { TransactionWithRunningBalance } from '@/lib/database.types'
 import { cn } from '@/lib/utils'
 import { ReverseTransactionDialog } from './reverse-transaction-dialog'
+import { usePermissions } from '@/hooks/use-permissions'
 
 interface TransactionsTableProps {
   transactions: TransactionWithRunningBalance[]
@@ -43,6 +44,8 @@ export function TransactionsTable({
 }: TransactionsTableProps) {
   const t = useTranslations('transactions')
   const tPagination = useTranslations('insured.pagination')
+  const { hasPermission } = usePermissions()
+  const canManageTransactions = hasPermission('transactions.create')
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -156,7 +159,7 @@ export function TransactionsTable({
                   {formatCurrency(transaction.running_balance)}
                 </TableCell>
                 <TableCell>
-                  {!transaction.is_reversed && !transaction.related_transaction_id && (
+                  {canManageTransactions && !transaction.is_reversed && !transaction.related_transaction_id && (
                     <ReverseTransactionDialog
                       transaction={transaction}
                       accountId={accountId}

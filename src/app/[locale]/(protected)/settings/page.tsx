@@ -4,8 +4,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/routing'
 import { AppHeader } from '@/components/layout/app-header'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreditCard, Receipt, Settings as SettingsIcon, Percent, Shield } from 'lucide-react'
+import { CreditCard, Receipt, Settings as SettingsIcon, Percent, Shield, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { getCurrentUserRole } from '@/lib/auth/require-role'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -24,6 +25,11 @@ export default async function SettingsPage({ params }: Props) {
 
   const t = await getTranslations('settings');
   const tMfa = await getTranslations('auth.mfa.settings');
+  const tUsers = await getTranslations('settings.userManagement');
+
+  // Check if current user is super_admin for User Management card
+  const roleResult = await getCurrentUserRole()
+  const isSuperAdmin = roleResult.data?.role === 'super_admin'
 
   // Check if user is email/password (not IDP) for MFA card visibility
   const provider = user.app_metadata?.provider
@@ -49,6 +55,15 @@ export default async function SettingsPage({ params }: Props) {
   const { count: contributionRatesCount } = await supabase
     .from('employer_contribution_rate_versions')
     .select('employer_id', { count: 'exact', head: true })
+
+  // Count users for User Management card (only if super_admin)
+  let usersCount: number | null = null
+  if (isSuperAdmin) {
+    const { count } = await supabase
+      .from('user_profiles')
+      .select('*', { count: 'exact', head: true })
+    usersCount = count
+  }
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -138,6 +153,25 @@ export default async function SettingsPage({ params }: Props) {
               </CardContent>
             </Card>
           </Link>
+
+          {/* User Management Card - only visible for Super-Admin */}
+          {isSuperAdmin && (
+            <Link href="/settings/users">
+              <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <Users className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-lg">{tUsers('title')}</CardTitle>
+                  </div>
+                  <CardDescription>{tUsers('description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-bold">{usersCount ?? 0}</p>
+                  <p className="text-sm text-muted-foreground">{tUsers('count')}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
         </div>
       </main>
     </div>
