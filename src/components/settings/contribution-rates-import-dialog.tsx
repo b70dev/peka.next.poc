@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 import {
   Dialog,
   DialogContent,
@@ -258,7 +258,7 @@ export async function parseFile(file: File): Promise<ImportResult> {
   return new Promise((resolve) => {
     const reader = new FileReader()
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const data = e.target?.result
 
@@ -274,10 +274,13 @@ export async function parseFile(file: File): Promise<ImportResult> {
           resolve(parseExcelOrCsvData(rows))
         } else {
           // Parse Excel
-          const workbook = XLSX.read(data, { type: 'binary' })
-          const firstSheetName = workbook.SheetNames[0]
-          const worksheet = workbook.Sheets[firstSheetName]
-          const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][]
+          const workbook = new ExcelJS.Workbook()
+          await workbook.xlsx.load(data as ArrayBuffer)
+          const worksheet = workbook.worksheets[0]
+          const rows: unknown[][] = []
+          worksheet.eachRow((row) => {
+            rows.push((row.values as unknown[]).slice(1)) // ExcelJS is 1-indexed
+          })
           resolve(parseExcelOrCsvData(rows))
         }
       } catch (error) {
@@ -300,7 +303,7 @@ export async function parseFile(file: File): Promise<ImportResult> {
     if (file.name.endsWith('.csv')) {
       reader.readAsText(file)
     } else {
-      reader.readAsBinaryString(file)
+      reader.readAsArrayBuffer(file)
     }
   })
 }
@@ -309,14 +312,24 @@ export async function parseFile(file: File): Promise<ImportResult> {
 // Template Generation
 // ===========================================
 
-export function generateTemplate(sameForAllGenders: boolean = true): void {
-  const data: (string | number)[][] = []
+export async function generateTemplate(sameForAllGenders: boolean = true): Promise<void> {
+  const workbook = new ExcelJS.Workbook()
+  const worksheet = workbook.addWorksheet('Sparbeitragssätze')
 
-  // Header row
+  // Set column widths and headers
   if (sameForAllGenders) {
-    data.push(['Alter', 'AN-Satz %', 'AG-Satz %'])
+    worksheet.columns = [
+      { header: 'Alter', width: 10 },
+      { header: 'AN-Satz %', width: 15 },
+      { header: 'AG-Satz %', width: 15 },
+    ]
   } else {
-    data.push(['Alter', 'Geschlecht', 'AN-Satz %', 'AG-Satz %'])
+    worksheet.columns = [
+      { header: 'Alter', width: 10 },
+      { header: 'Geschlecht', width: 15 },
+      { header: 'AN-Satz %', width: 15 },
+      { header: 'AG-Satz %', width: 15 },
+    ]
   }
 
   // Data rows with BVG minimum as example
@@ -333,28 +346,24 @@ export function generateTemplate(sameForAllGenders: boolean = true): void {
     const rate = bvgRate?.rate ?? 0
 
     if (sameForAllGenders) {
-      data.push([age, rate, rate])
+      worksheet.addRow([age, rate, rate])
     } else {
-      data.push([age, 'M', rate, rate])
-      data.push([age, 'W', rate, rate])
+      worksheet.addRow([age, 'M', rate, rate])
+      worksheet.addRow([age, 'W', rate, rate])
     }
   }
 
-  // Create workbook
-  const ws = XLSX.utils.aoa_to_sheet(data)
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, 'Sparbeitragssätze')
-
-  // Set column widths
-  ws['!cols'] = [
-    { wch: 10 }, // Alter
-    { wch: 15 }, // Geschlecht or AN-Satz
-    { wch: 15 }, // AG-Satz or empty
-    { wch: 15 }, // AG-Satz if with gender
-  ]
-
   // Download
-  XLSX.writeFile(wb, 'Sparbeitragssaetze_Vorlage.xlsx')
+  const buffer = await workbook.xlsx.writeBuffer()
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'Sparbeitragssaetze_Vorlage.xlsx'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 // ===========================================
@@ -439,8 +448,8 @@ export function ContributionRatesImportDialog({
     setIsLoading(false)
   }
 
-  const handleDownloadTemplate = useCallback(() => {
-    generateTemplate(sameForAllGenders)
+  const handleDownloadTemplate = useCallback(async () => {
+    await generateTemplate(sameForAllGenders)
   }, [sameForAllGenders])
 
   const handleImport = useCallback(() => {

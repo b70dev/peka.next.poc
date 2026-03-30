@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 import { FileSpreadsheet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -122,57 +122,50 @@ export function ExcelExportButton({ data, disabled = false }: ExcelExportButtonP
     }
   }
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!hasSelectedColumns || data.length === 0) return
 
     setIsExporting(true)
 
     try {
       const selectedColumnsList = EXPORT_COLUMNS.filter(c => selectedColumns.has(c.id))
+      const ahvColIndex = selectedColumnsList.findIndex(c => c.id === 'ahv_number')
 
-      // Create header row with translated labels
-      const headers = selectedColumnsList.map(c => t(c.labelKey))
-
-      // Create data rows
-      const rows = data.map(person =>
-        selectedColumnsList.map(c => getCellValue(person, c.id))
-      )
-
-      // Create worksheet
-      const worksheetData = [headers, ...rows]
-      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData)
+      // Create workbook and worksheet
+      const workbook = new ExcelJS.Workbook()
+      const worksheet = workbook.addWorksheet('Versicherte')
 
       // Set column widths
-      const columnWidths = selectedColumnsList.map(col => {
-        // AHV number needs more width
-        if (col.id === 'ahv_number') return { wch: 18 }
-        if (col.id === 'employer') return { wch: 25 }
-        return { wch: 15 }
+      worksheet.columns = selectedColumnsList.map(col => {
+        if (col.id === 'ahv_number') return { header: t(col.labelKey), width: 18 }
+        if (col.id === 'employer') return { header: t(col.labelKey), width: 25 }
+        return { header: t(col.labelKey), width: 15 }
       })
-      worksheet['!cols'] = columnWidths
 
-      // Format AHV column as text to preserve leading zeros
-      const ahvColIndex = selectedColumnsList.findIndex(c => c.id === 'ahv_number')
-      if (ahvColIndex !== -1) {
-        const colLetter = XLSX.utils.encode_col(ahvColIndex)
-        for (let i = 1; i <= data.length; i++) {
-          const cellRef = `${colLetter}${i + 1}`
-          if (worksheet[cellRef]) {
-            worksheet[cellRef].t = 's' // Set type to string
-          }
+      // Add data rows
+      data.forEach(person => {
+        const row = worksheet.addRow(selectedColumnsList.map(c => getCellValue(person, c.id)))
+        // Format AHV column as text to preserve leading zeros
+        if (ahvColIndex !== -1) {
+          row.getCell(ahvColIndex + 1).numFmt = '@'
         }
-      }
-
-      // Create workbook
-      const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Versicherte')
+      })
 
       // Generate filename with current date
       const today = new Date().toISOString().split('T')[0]
       const filename = `versicherte_${today}.xlsx`
 
       // Trigger download
-      XLSX.writeFile(workbook, filename)
+      const buffer = await workbook.xlsx.writeBuffer()
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
 
       setIsOpen(false)
     } catch (error) {
