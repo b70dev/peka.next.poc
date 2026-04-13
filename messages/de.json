@@ -214,6 +214,7 @@
     "dashboard": "Dashboard",
     "insuredPersons": "Versicherte",
     "accounts": "Konten",
+    "payments": "Zahlungen",
     "employers": "Arbeitgeber",
     "settings": "Einstellungen",
     "admin": "Administration",
@@ -1079,6 +1080,102 @@
       "usingBvgMinimum": "BVG-Minimum-Sätze werden verwendet (keine Arbeitgeber-Konfiguration vorhanden)",
       "usingEmployerRates": "Arbeitgeber-spezifische Sparbeitragssätze werden verwendet",
       "configure": "Sätze konfigurieren"
+    }
+  },
+  "paymentOrders": {
+    "title": "Zahlungsaufträge",
+    "description": "Übersicht aller Zahlungsaufträge. Erstellen, bearbeiten und verwalten Sie Auszahlungen.",
+    "newOrder": "Neuer Zahlungsauftrag",
+    "searchPlaceholder": "Empfänger oder IBAN suchen...",
+    "found": "{count} Zahlungsaufträge gefunden",
+    "noResults": "Keine Zahlungsaufträge gefunden",
+    "noResultsDescription": "Passen Sie die Suchkriterien an oder erstellen Sie einen neuen Zahlungsauftrag.",
+    "empty": "Noch keine Zahlungsaufträge vorhanden",
+    "emptyDescription": "Erstellen Sie Ihren ersten Zahlungsauftrag, um Auszahlungen vorzubereiten.",
+    "columns": {
+      "recipientName": "Empfänger",
+      "iban": "IBAN",
+      "amount": "Betrag",
+      "purpose": "Verwendungszweck",
+      "status": "Status",
+      "executionDate": "Ausführungsdatum",
+      "createdAt": "Erstellt am",
+      "actions": "Aktionen"
+    },
+    "status": {
+      "all": "Alle Status",
+      "draft": "Entwurf",
+      "in_payment_run": "In Zahlungslauf",
+      "approved": "Freigegeben",
+      "exported": "Exportiert",
+      "cancelled": "Storniert"
+    },
+    "filter": {
+      "status": "Status filtern",
+      "dateFrom": "Von",
+      "dateTo": "Bis",
+      "clearFilters": "Filter zurücksetzen"
+    },
+    "create": {
+      "title": "Neuer Zahlungsauftrag",
+      "description": "Erstellen Sie einen neuen Zahlungsauftrag für eine Auszahlung.",
+      "recipientName": "Empfänger-Name",
+      "recipientNamePlaceholder": "Name des Empfängers",
+      "iban": "IBAN",
+      "ibanPlaceholder": "CH00 0000 0000 0000 0000 0",
+      "amount": "Betrag (CHF)",
+      "amountPlaceholder": "0.00",
+      "purpose": "Verwendungszweck",
+      "purposePlaceholder": "Zahlungsgrund (max. 140 Zeichen)",
+      "purposeCharCount": "{count}/140 Zeichen",
+      "referenceNumber": "Referenznummer (optional)",
+      "referenceNumberPlaceholder": "QR-Referenz oder ISR-Nummer",
+      "executionDate": "Ausführungsdatum (optional)",
+      "executionDatePlaceholder": "Datum wählen",
+      "note": "Interne Notiz (optional)",
+      "notePlaceholder": "Nur intern sichtbar, nicht im pain.001",
+      "success": "Zahlungsauftrag erfolgreich erstellt",
+      "error": "Fehler beim Erstellen des Zahlungsauftrags"
+    },
+    "edit": {
+      "title": "Zahlungsauftrag bearbeiten",
+      "description": "Bearbeiten Sie den Zahlungsauftrag. Nur Aufträge im Status «Entwurf» können bearbeitet werden.",
+      "success": "Zahlungsauftrag erfolgreich aktualisiert",
+      "error": "Fehler beim Aktualisieren des Zahlungsauftrags",
+      "conflictError": "Dieser Auftrag wurde zwischenzeitlich geändert. Bitte laden Sie die Seite neu.",
+      "conflictReload": "Seite neu laden"
+    },
+    "cancel": {
+      "title": "Zahlungsauftrag stornieren",
+      "description": "Möchten Sie diesen Zahlungsauftrag wirklich stornieren? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "details": "Empfänger: {recipient}, Betrag: CHF {amount}",
+      "success": "Zahlungsauftrag erfolgreich storniert",
+      "error": "Fehler beim Stornieren des Zahlungsauftrags"
+    },
+    "foreignIbanWarning": {
+      "title": "Ausländische IBAN erkannt",
+      "description": "Die eingegebene IBAN gehört nicht zur Schweiz oder Liechtenstein (Länderkennzeichen: {country}). Auslandszahlungen können zusätzliche Gebühren verursachen.",
+      "confirm": "Trotzdem fortfahren",
+      "cancel": "IBAN ändern"
+    },
+    "duplicateWarning": {
+      "title": "Mögliches Duplikat erkannt",
+      "description": "Es existiert bereits ein ähnlicher Zahlungsauftrag. Bitte prüfen Sie, ob es sich um eine Doppelzahlung handelt.",
+      "existingOrder": "Bestehender Auftrag: {recipient}, CHF {amount}, erstellt am {date}",
+      "confirm": "Trotzdem erstellen",
+      "cancel": "Abbrechen"
+    },
+    "validation": {
+      "recipientNameRequired": "Empfänger-Name ist erforderlich",
+      "ibanRequired": "IBAN ist erforderlich",
+      "ibanInvalidFormat": "Ungültiges IBAN-Format",
+      "ibanInvalidLength": "IBAN hat eine ungültige Länge",
+      "ibanInvalidChecksum": "IBAN-Prüfziffer ist ungültig",
+      "ibanInvalidCountry": "Unbekanntes Länderkennzeichen",
+      "amountRequired": "Betrag ist erforderlich",
+      "amountPositive": "Betrag muss grösser als 0 sein",
+      "purposeRequired": "Verwendungszweck ist erforderlich",
+      "purposeMaxLength": "Verwendungszweck darf maximal 140 Zeichen lang sein"
     }
   }
 }

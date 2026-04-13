@@ -214,6 +214,7 @@
     "dashboard": "Dashboard",
     "insuredPersons": "Insured Persons",
     "accounts": "Accounts",
+    "payments": "Payments",
     "employers": "Employers",
     "settings": "Settings",
     "admin": "Administration",
@@ -1079,6 +1080,102 @@
       "usingBvgMinimum": "Using BVG minimum rates (no employer configuration available)",
       "usingEmployerRates": "Using employer-specific contribution rates",
       "configure": "Configure rates"
+    }
+  },
+  "paymentOrders": {
+    "title": "Payment Orders",
+    "description": "Overview of all payment orders. Create, edit and manage disbursements.",
+    "newOrder": "New Payment Order",
+    "searchPlaceholder": "Search recipient or IBAN...",
+    "found": "{count} payment orders found",
+    "noResults": "No payment orders found",
+    "noResultsDescription": "Adjust search criteria or create a new payment order.",
+    "empty": "No payment orders yet",
+    "emptyDescription": "Create your first payment order to prepare disbursements.",
+    "columns": {
+      "recipientName": "Recipient",
+      "iban": "IBAN",
+      "amount": "Amount",
+      "purpose": "Purpose",
+      "status": "Status",
+      "executionDate": "Execution Date",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "All statuses",
+      "draft": "Draft",
+      "in_payment_run": "In Payment Run",
+      "approved": "Approved",
+      "exported": "Exported",
+      "cancelled": "Cancelled"
+    },
+    "filter": {
+      "status": "Filter by status",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "clearFilters": "Clear filters"
+    },
+    "create": {
+      "title": "New Payment Order",
+      "description": "Create a new payment order for a disbursement.",
+      "recipientName": "Recipient Name",
+      "recipientNamePlaceholder": "Name of the recipient",
+      "iban": "IBAN",
+      "ibanPlaceholder": "CH00 0000 0000 0000 0000 0",
+      "amount": "Amount (CHF)",
+      "amountPlaceholder": "0.00",
+      "purpose": "Purpose",
+      "purposePlaceholder": "Payment reason (max. 140 characters)",
+      "purposeCharCount": "{count}/140 characters",
+      "referenceNumber": "Reference Number (optional)",
+      "referenceNumberPlaceholder": "QR reference or ISR number",
+      "executionDate": "Execution Date (optional)",
+      "executionDatePlaceholder": "Select date",
+      "note": "Internal Note (optional)",
+      "notePlaceholder": "Only visible internally, not in pain.001",
+      "success": "Payment order created successfully",
+      "error": "Error creating payment order"
+    },
+    "edit": {
+      "title": "Edit Payment Order",
+      "description": "Edit the payment order. Only orders with status 'Draft' can be edited.",
+      "success": "Payment order updated successfully",
+      "error": "Error updating payment order",
+      "conflictError": "This order has been modified in the meantime. Please reload the page.",
+      "conflictReload": "Reload page"
+    },
+    "cancel": {
+      "title": "Cancel Payment Order",
+      "description": "Do you really want to cancel this payment order? This action cannot be undone.",
+      "details": "Recipient: {recipient}, Amount: CHF {amount}",
+      "success": "Payment order cancelled successfully",
+      "error": "Error cancelling payment order"
+    },
+    "foreignIbanWarning": {
+      "title": "Foreign IBAN Detected",
+      "description": "The entered IBAN does not belong to Switzerland or Liechtenstein (country code: {country}). International payments may incur additional fees.",
+      "confirm": "Proceed anyway",
+      "cancel": "Change IBAN"
+    },
+    "duplicateWarning": {
+      "title": "Possible Duplicate Detected",
+      "description": "A similar payment order already exists. Please verify that this is not a duplicate payment.",
+      "existingOrder": "Existing order: {recipient}, CHF {amount}, created on {date}",
+      "confirm": "Create anyway",
+      "cancel": "Cancel"
+    },
+    "validation": {
+      "recipientNameRequired": "Recipient name is required",
+      "ibanRequired": "IBAN is required",
+      "ibanInvalidFormat": "Invalid IBAN format",
+      "ibanInvalidLength": "IBAN has an invalid length",
+      "ibanInvalidChecksum": "IBAN check digit is invalid",
+      "ibanInvalidCountry": "Unknown country code",
+      "amountRequired": "Amount is required",
+      "amountPositive": "Amount must be greater than 0",
+      "purposeRequired": "Purpose is required",
+      "purposeMaxLength": "Purpose must not exceed 140 characters"
     }
   }
 }

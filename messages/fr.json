@@ -214,6 +214,7 @@
     "dashboard": "Tableau de bord",
     "insuredPersons": "Assurés",
     "accounts": "Comptes",
+    "payments": "Paiements",
     "employers": "Employeurs",
     "settings": "Paramètres",
     "admin": "Administration",
@@ -1079,6 +1080,102 @@
       "usingBvgMinimum": "Taux minimaux LPP utilisés (aucune configuration employeur disponible)",
       "usingEmployerRates": "Taux de cotisation spécifiques à l'employeur utilisés",
       "configure": "Configurer les taux"
+    }
+  },
+  "paymentOrders": {
+    "title": "Ordres de paiement",
+    "description": "Aperçu de tous les ordres de paiement. Créez, modifiez et gérez les versements.",
+    "newOrder": "Nouvel ordre de paiement",
+    "searchPlaceholder": "Rechercher bénéficiaire ou IBAN...",
+    "found": "{count} ordres de paiement trouvés",
+    "noResults": "Aucun ordre de paiement trouvé",
+    "noResultsDescription": "Ajustez les critères de recherche ou créez un nouvel ordre de paiement.",
+    "empty": "Aucun ordre de paiement",
+    "emptyDescription": "Créez votre premier ordre de paiement pour préparer des versements.",
+    "columns": {
+      "recipientName": "Bénéficiaire",
+      "iban": "IBAN",
+      "amount": "Montant",
+      "purpose": "Motif",
+      "status": "Statut",
+      "executionDate": "Date d'exécution",
+      "createdAt": "Créé le",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "Tous les statuts",
+      "draft": "Brouillon",
+      "in_payment_run": "En cours de paiement",
+      "approved": "Approuvé",
+      "exported": "Exporté",
+      "cancelled": "Annulé"
+    },
+    "filter": {
+      "status": "Filtrer par statut",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "clearFilters": "Réinitialiser les filtres"
+    },
+    "create": {
+      "title": "Nouvel ordre de paiement",
+      "description": "Créez un nouvel ordre de paiement pour un versement.",
+      "recipientName": "Nom du bénéficiaire",
+      "recipientNamePlaceholder": "Nom du bénéficiaire",
+      "iban": "IBAN",
+      "ibanPlaceholder": "CH00 0000 0000 0000 0000 0",
+      "amount": "Montant (CHF)",
+      "amountPlaceholder": "0.00",
+      "purpose": "Motif de paiement",
+      "purposePlaceholder": "Motif du paiement (max. 140 caractères)",
+      "purposeCharCount": "{count}/140 caractères",
+      "referenceNumber": "Numéro de référence (optionnel)",
+      "referenceNumberPlaceholder": "Référence QR ou numéro BVR",
+      "executionDate": "Date d'exécution (optionnel)",
+      "executionDatePlaceholder": "Choisir une date",
+      "note": "Note interne (optionnel)",
+      "notePlaceholder": "Visible uniquement en interne, pas dans pain.001",
+      "success": "Ordre de paiement créé avec succès",
+      "error": "Erreur lors de la création de l'ordre de paiement"
+    },
+    "edit": {
+      "title": "Modifier l'ordre de paiement",
+      "description": "Modifiez l'ordre de paiement. Seuls les ordres au statut «Brouillon» peuvent être modifiés.",
+      "success": "Ordre de paiement mis à jour avec succès",
+      "error": "Erreur lors de la mise à jour de l'ordre de paiement",
+      "conflictError": "Cet ordre a été modifié entre-temps. Veuillez recharger la page.",
+      "conflictReload": "Recharger la page"
+    },
+    "cancel": {
+      "title": "Annuler l'ordre de paiement",
+      "description": "Voulez-vous vraiment annuler cet ordre de paiement ? Cette action est irréversible.",
+      "details": "Bénéficiaire : {recipient}, Montant : CHF {amount}",
+      "success": "Ordre de paiement annulé avec succès",
+      "error": "Erreur lors de l'annulation de l'ordre de paiement"
+    },
+    "foreignIbanWarning": {
+      "title": "IBAN étranger détecté",
+      "description": "L'IBAN saisi n'appartient pas à la Suisse ou au Liechtenstein (code pays : {country}). Les paiements internationaux peuvent entraîner des frais supplémentaires.",
+      "confirm": "Continuer quand même",
+      "cancel": "Modifier l'IBAN"
+    },
+    "duplicateWarning": {
+      "title": "Doublon possible détecté",
+      "description": "Un ordre de paiement similaire existe déjà. Veuillez vérifier qu'il ne s'agit pas d'un double paiement.",
+      "existingOrder": "Ordre existant : {recipient}, CHF {amount}, créé le {date}",
+      "confirm": "Créer quand même",
+      "cancel": "Annuler"
+    },
+    "validation": {
+      "recipientNameRequired": "Le nom du bénéficiaire est requis",
+      "ibanRequired": "L'IBAN est requis",
+      "ibanInvalidFormat": "Format IBAN invalide",
+      "ibanInvalidLength": "L'IBAN a une longueur invalide",
+      "ibanInvalidChecksum": "Le chiffre de contrôle de l'IBAN est invalide",
+      "ibanInvalidCountry": "Code pays inconnu",
+      "amountRequired": "Le montant est requis",
+      "amountPositive": "Le montant doit être supérieur à 0",
+      "purposeRequired": "Le motif de paiement est requis",
+      "purposeMaxLength": "Le motif de paiement ne doit pas dépasser 140 caractères"
     }
   }
 }

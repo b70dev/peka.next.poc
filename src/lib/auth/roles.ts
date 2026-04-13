@@ -37,6 +37,8 @@ export const PERMISSIONS = {
   'contribution_rates.edit': 'admin',
   'accounts.manage': 'admin',
   'transactions.create': 'admin',
+  'payment_orders.create': 'admin',
+  'payment_orders.edit': 'admin',
 
   // Read-only access
   'insured.view': 'viewer',

@@ -41,6 +41,9 @@ Ziel ist eine schlanke, barrierefreie Anwendung (WCAG 2.1 AA), die BVG-Verwaltun
 | P1 | Kontenverwaltung pro Anstellung | [PROJ-10](../features/PROJ-10-account-management.md) | Deployed |
 | P1 | BVG-Hochrechnungen (Projections) | [PROJ-11](../features/PROJ-11-bvg-projections.md) | Planned |
 | P1 | Sparbeitragssätze-Verwaltung | [PROJ-17](../features/PROJ-17-savings-contribution-rates.md) | Complete |
+| P1 | Zahlungsaufträge (Payment Orders) | [PROJ-19](../features/PROJ-19-payment-orders.md) | Planned |
+| P1 | Zahlungsläufe & Freigabe (Payment Runs) | [PROJ-20](../features/PROJ-20-payment-runs.md) | Planned |
+| P1 | pain.001 XML-Generierung (ISO 20022) | [PROJ-21](../features/PROJ-21-pain001-xml-generation.md) | Planned |
 
 ### P2 - Versicherten-Portal - Planned
 
@@ -75,7 +78,7 @@ Ziel ist eine schlanke, barrierefreie Anwendung (WCAG 2.1 AA), die BVG-Verwaltun
 - **Kein Dokumenten-Generierung** - Dokumente werden extern erstellt und in peka.next angezeigt/heruntergeladen
 - **Keine Mobile-App** - Responsive Web-Anwendung, kein natives iOS/Android
 - **Keine Arbeitgeber-Selbstverwaltung** - Arbeitgeber werden durch PK-Admins verwaltet, kein eigenes Portal
-- **Kein Zahlungsverkehr** - Keine direkte Anbindung an Bankensysteme oder Zahlungstransaktionen
+- **Kein direkter Zahlungsverkehr** - Keine direkte Anbindung an Bankensysteme; peka.next generiert pain.001-Dateien zum Import ins E-Banking, führt aber selbst keine Transaktionen aus
 
 ---
 
