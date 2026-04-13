@@ -25,8 +25,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Collect auth cookies to apply on the redirect response
+  // Collect auth cookies and headers to apply on the redirect response
   const authCookies: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
+  let authHeaders: Record<string, string> = {}
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,19 +37,23 @@ export async function GET(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet, headers) {
           authCookies.push(...cookiesToSet)
+          authHeaders = headers
         },
       },
     }
   )
 
-  // Helper: create redirect response with session cookies applied
+  // Helper: create redirect response with session cookies and cache headers applied
   const redirectWithCookies = (url: string | URL) => {
     const response = NextResponse.redirect(url)
     for (const { name, value, options } of authCookies) {
       response.cookies.set(name, value, options)
     }
+    Object.entries(authHeaders).forEach(([key, value]) =>
+      response.headers.set(key, value)
+    )
     return response
   }
 

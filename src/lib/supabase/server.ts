@@ -12,7 +12,7 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet, headers) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
@@ -20,6 +20,7 @@ export async function createClient() {
           } catch {
             // The `setAll` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing sessions.
+            // Note: `headers` (cache-control) are applied by the middleware instead.
           }
         },
       },
