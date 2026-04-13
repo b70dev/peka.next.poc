@@ -37,7 +37,7 @@ Ziel ist eine schlanke, barrierefreie Anwendung (WCAG 2.1 AA), die BVG-Verwaltun
 | Priority | Feature | ID | Status |
 |----------|---------|-----|--------|
 | P1 | Admin Registration (Self-Registration) | [PROJ-2](../features/PROJ-2-registration.md) | Planned |
-| P1 | Rollen und Berechtigungen (RBAC) | [PROJ-4](../features/PROJ-4-roles.md) | Planned |
+| P1 | Rollen und Berechtigungen (RBAC) | [PROJ-4](../features/PROJ-4-roles.md) | Done |
 | P1 | Kontenverwaltung pro Anstellung | [PROJ-10](../features/PROJ-10-account-management.md) | Deployed |
 | P1 | BVG-Hochrechnungen (Projections) | [PROJ-11](../features/PROJ-11-bvg-projections.md) | Planned |
 | P1 | Sparbeitragssätze-Verwaltung | [PROJ-17](../features/PROJ-17-savings-contribution-rates.md) | Complete |

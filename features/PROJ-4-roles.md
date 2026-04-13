@@ -1,6 +1,6 @@
 # PROJ-4: Rollen und Berechtigungen
 
-## Status: 🔵 Planned
+## Status: ✅ Done
 **Created:** 2026-02-10
 **Last Updated:** 2026-02-14
 
