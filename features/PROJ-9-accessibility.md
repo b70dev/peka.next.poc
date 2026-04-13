@@ -725,7 +725,7 @@ Die Umsetzung erfolgt in 4 Phasen:
 
 ### 3. Layout Integration - main-content
 
-| Seite | main id="main-content" | tabIndex={-1} | outline-none | Status |
+| Seite | main id="main-content" | tabIndex={-1} | outline-hidden | Status |
 |-------|------------------------|---------------|--------------|--------|
 | Login (`/[locale]/login/page.tsx`) | PASS | PASS | PASS | PASS |
 | Dashboard (`/[locale]/(protected)/dashboard/page.tsx`) | PASS | PASS | PASS | PASS |

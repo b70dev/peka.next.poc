@@ -72,7 +72,7 @@ export default async function AccountsPage({ params, searchParams }: Props) {
       <AppHeader userEmail={user.email} activeRoute="accounts" />
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         <div className="mb-6">
           <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
           <p className="text-muted-foreground mt-2">

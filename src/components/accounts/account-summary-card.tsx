@@ -33,7 +33,7 @@ export function AccountSummaryCard({ summary, className }: AccountSummaryCardPro
   const trendPercent: number = 0
 
   return (
-    <Card className={cn('bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20', className)}>
+    <Card className={cn('bg-linear-to-r from-primary/5 to-primary/10 border-primary/20', className)}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Wallet className="h-5 w-5" />

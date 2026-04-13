@@ -55,7 +55,7 @@ export default async function AccountTypesPage({ params }: Props) {
       <AppHeader userEmail={user.email} activeRoute="settings" />
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         {/* Back link */}
         <Button variant="ghost" size="sm" asChild className="mb-4">
           <Link href="/settings">

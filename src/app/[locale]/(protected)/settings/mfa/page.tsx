@@ -27,7 +27,7 @@ export default async function MfaSettingsPage({ params }: Props) {
     <div className="min-h-screen bg-muted/30">
       <AppHeader userEmail={user.email} activeRoute="settings" />
 
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         {/* Back link */}
         <Link
           href="/settings"

@@ -37,7 +37,7 @@ export default async function DashboardPage({ params }: Props) {
       <AppHeader userEmail={user.email} activeRoute="dashboard" />
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         <div className="mb-8">
           <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
           <p className="text-muted-foreground mt-2">

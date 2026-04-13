@@ -44,7 +44,7 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <main id="main-content" tabIndex={-1} className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12 outline-none">
+    <main id="main-content" tabIndex={-1} className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12 outline-hidden">
       <div className="w-full max-w-md">
         {/* Language Switcher */}
         <div className="flex justify-end mb-4">

@@ -94,7 +94,7 @@ export default async function EmploymentAccountsPage({ params, searchParams }: P
       <AppHeader userEmail={user.email} activeRoute="accounts" />
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         {/* Back link */}
         <Button variant="ghost" size="sm" asChild className="mb-4">
           <Link href="/accounts">

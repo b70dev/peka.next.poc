@@ -59,7 +59,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
       <div className="min-h-screen bg-muted/30">
         <AppHeader userEmail={user.email} activeRoute="insured" />
 
-        <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+        <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold mb-2">{t('detail.notFound')}</h1>
             <p className="text-muted-foreground mb-6">{t('detail.notFoundDescription')}</p>
@@ -80,7 +80,7 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
       <AppHeader userEmail={user.email} activeRoute="insured" />
 
       {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
         <InsuredPersonDetail
           insuredPerson={insuredPerson}
           employments={employments || []}
