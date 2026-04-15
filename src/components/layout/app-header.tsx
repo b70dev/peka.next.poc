@@ -7,7 +7,7 @@ import { getTranslations } from 'next-intl/server'
 
 interface AppHeaderProps {
   userEmail?: string
-  activeRoute: 'dashboard' | 'insured' | 'accounts' | 'payments' | 'settings'
+  activeRoute: 'dashboard' | 'insured' | 'accounts' | 'payments' | 'payment-runs' | 'settings'
 }
 
 export async function AppHeader({ userEmail, activeRoute }: AppHeaderProps) {
@@ -18,6 +18,7 @@ export async function AppHeader({ userEmail, activeRoute }: AppHeaderProps) {
     { href: '/insured' as const, label: tNav('insuredPersons'), active: activeRoute === 'insured' },
     { href: '/accounts' as const, label: tNav('accounts'), active: activeRoute === 'accounts' },
     { href: '/payments' as const, label: tNav('payments'), active: activeRoute === 'payments' },
+    { href: '/payment-runs' as const, label: tNav('paymentRuns'), active: activeRoute === 'payment-runs' },
     { href: '/settings' as const, label: tNav('settings'), active: activeRoute === 'settings' },
   ]
 

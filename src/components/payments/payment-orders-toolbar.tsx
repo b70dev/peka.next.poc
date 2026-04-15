@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { PermissionGate } from '@/components/auth/permission-gate'
-import { Search, Plus, X } from 'lucide-react'
+import { Search, Plus, X, Layers } from 'lucide-react'
 import { PAYMENT_ORDER_STATUSES, type PaymentOrderStatus } from '@/lib/payment-orders.types'
 
 interface PaymentOrdersToolbarProps {
@@ -21,6 +21,7 @@ interface PaymentOrdersToolbarProps {
   onStatusFilterChange: (status: string) => void
   onClearFilters: () => void
   onCreateNew: () => void
+  onCreateNewRun: () => void
   isPending: boolean
 }
 
@@ -31,6 +32,7 @@ export function PaymentOrdersToolbar({
   onStatusFilterChange,
   onClearFilters,
   onCreateNew,
+  onCreateNewRun,
   isPending,
 }: PaymentOrdersToolbarProps) {
   const t = useTranslations('paymentOrders')
@@ -88,12 +90,18 @@ export function PaymentOrdersToolbar({
         )}
       </div>
 
-      {/* Create button */}
+      {/* Action buttons */}
       <PermissionGate permission="payment_orders.create">
-        <Button onClick={onCreateNew} disabled={isPending}>
-          <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
-          {t('newOrder')}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button variant="outline" onClick={onCreateNewRun} disabled={isPending}>
+            <Layers className="h-4 w-4 mr-2" aria-hidden="true" />
+            {t('newRun')}
+          </Button>
+          <Button onClick={onCreateNew} disabled={isPending}>
+            <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
+            {t('newOrder')}
+          </Button>
+        </div>
       </PermissionGate>
     </div>
   )

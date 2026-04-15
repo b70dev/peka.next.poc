@@ -40,7 +40,8 @@
     "confirm": "Confirmer",
     "back": "Retour",
     "next": "Suivant",
-    "close": "Fermer"
+    "close": "Fermer",
+    "view": "Voir"
   },
   "status": {
     "active": "Actif",
@@ -215,6 +216,7 @@
     "insuredPersons": "Assurés",
     "accounts": "Comptes",
     "payments": "Paiements",
+    "paymentRuns": "Cycles de paiement",
     "employers": "Employeurs",
     "settings": "Paramètres",
     "admin": "Administration",
@@ -1087,6 +1089,7 @@
     "title": "Ordres de paiement",
     "description": "Aperçu de tous les ordres de paiement. Créez, modifiez et gérez les versements.",
     "newOrder": "Nouvel ordre de paiement",
+    "newRun": "Nouveau cycle de paiement",
     "searchPlaceholder": "Rechercher bénéficiaire ou IBAN...",
     "found": "{count} ordres de paiement trouvés",
     "noResults": "Aucun ordre de paiement trouvé",
@@ -1177,6 +1180,139 @@
       "amountPositive": "Le montant doit être supérieur à 0",
       "purposeRequired": "Le motif de paiement est requis",
       "purposeMaxLength": "Le motif de paiement ne doit pas dépasser 140 caractères"
+    }
+  },
+  "paymentRuns": {
+    "title": "Cycles de paiement",
+    "description": "Regroupez des ordres de paiement et faites-les passer par le principe des quatre yeux avant l'approbation.",
+    "newRun": "Nouveau cycle de paiement",
+    "searchPlaceholder": "Rechercher par nom de cycle…",
+    "empty": "Aucun cycle de paiement",
+    "emptyDescription": "Créez votre premier cycle de paiement pour approuver des décaissements.",
+    "noResults": "Aucun cycle de paiement trouvé",
+    "noResultsDescription": "Ajustez votre recherche ou créez un nouveau cycle.",
+    "columns": {
+      "name": "Nom",
+      "status": "Statut",
+      "orderCount": "Ordres",
+      "totalAmount": "Total",
+      "executionDate": "Date d'exécution",
+      "createdAt": "Créé le",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "Tous les statuts",
+      "draft": "Brouillon",
+      "in_review": "En revue",
+      "visaed": "Visé",
+      "approved": "Approuvé",
+      "rejected": "Rejeté",
+      "exported": "Exporté"
+    },
+    "filter": {
+      "status": "Filtrer par statut",
+      "clearFilters": "Réinitialiser les filtres"
+    },
+    "pagination": {
+      "first": "Première page",
+      "previous": "Page précédente",
+      "next": "Page suivante",
+      "last": "Dernière page",
+      "page": "Page {current} sur {total}",
+      "range": "{from}–{to} sur {total}"
+    },
+    "create": {
+      "title": "Nouveau cycle de paiement",
+      "description": "Créez un nouveau cycle de paiement. Vous pourrez ajouter des ordres dans la vue détaillée.",
+      "name": "Nom",
+      "namePlaceholder": "p. ex. Décaissements mai 2026",
+      "executionDate": "Date d'exécution (facultative)",
+      "executionDatePlaceholder": "Choisir une date",
+      "submit": "Créer le cycle",
+      "nameRequired": "Le nom est requis",
+      "error": "Échec de la création du cycle"
+    },
+    "detail": {
+      "backToList": "Retour à la liste",
+      "createdAt": "Créé le",
+      "executionDate": "Date d'exécution",
+      "rejectedHeading": "Cycle rejeté",
+      "fourEyesNotice": "Vous avez visé ce cycle. L'approbation doit être effectuée par un autre utilisateur.",
+      "actionError": "Échec de l'action. Veuillez réessayer.",
+      "summary": {
+        "orderCount": "Nombre d'ordres",
+        "totalAmount": "Montant total",
+        "highAmount": "Montants élevés",
+        "highAmountThreshold": "Seuil : {threshold}"
+      },
+      "actions": {
+        "title": "Actions du flux de travail",
+        "addOrders": "Ajouter des ordres",
+        "submit": "Soumettre pour revue",
+        "visa": "Viser",
+        "approve": "Approuver",
+        "reject": "Rejeter"
+      },
+      "confirmations": {
+        "submit": "Soumettre ce cycle avec {count} ordres pour revue ?",
+        "visa": "Le visa confirme la première étape du principe des quatre yeux. Une autre personne doit ensuite approuver.",
+        "approve": "Approuver définitivement ce cycle ? Total : {amount} ({count} ordres). Cette action est irréversible."
+      },
+      "orders": {
+        "title": "Ordres de paiement contenus",
+        "empty": "Aucun ordre dans ce cycle",
+        "recipient": "Bénéficiaire",
+        "iban": "IBAN",
+        "amount": "Montant",
+        "purpose": "Motif",
+        "remove": "Retirer du cycle"
+      },
+      "audit": {
+        "title": "Piste d'audit",
+        "empty": "Aucun événement",
+        "events": {
+          "created": "Cycle créé",
+          "order_added": "Ordres ajoutés",
+          "order_removed": "Ordre retiré",
+          "submitted": "Soumis pour revue",
+          "visaed": "Visé",
+          "approved": "Approuvé",
+          "rejected": "Rejeté",
+          "exported": "Exporté",
+          "renamed": "Renommé"
+        }
+      }
+    },
+    "addOrders": {
+      "title": "Ajouter des ordres au cycle",
+      "description": "Sélectionnez les ordres de paiement en brouillon à attribuer à ce cycle.",
+      "searchPlaceholder": "Rechercher bénéficiaire, IBAN ou motif…",
+      "selectAll": "Tout sélectionner (visibles)",
+      "selected": "{count} sélectionné(s)",
+      "submit": "Ajouter {count}",
+      "loading": "Chargement des ordres disponibles…",
+      "empty": "Aucun ordre disponible. Créez d'abord des ordres de paiement.",
+      "noResults": "Aucun ordre ne correspond à votre recherche.",
+      "loadError": "Échec du chargement des ordres",
+      "saveError": "Échec de l'ajout des ordres"
+    },
+    "reject": {
+      "title": "Rejeter le cycle de paiement",
+      "description": "Veuillez fournir une raison. Les ordres contenus reviendront au statut brouillon.",
+      "reason": "Raison du rejet",
+      "reasonPlaceholder": "p. ex. Mauvais bénéficiaire dans l'ordre XY…",
+      "reasonTooShort": "Veuillez saisir au moins 5 caractères",
+      "submit": "Rejeter",
+      "error": "Échec du rejet"
+    },
+    "settings": {
+      "title": "Paramètres des cycles de paiement",
+      "description": "Configurez les seuils et règles de comportement pour les cycles de paiement.",
+      "thresholdLabel": "Seuil d'avertissement par paiement",
+      "thresholdInputLabel": "Seuil en CHF",
+      "saveSuccess": "Seuil enregistré",
+      "saveError": "Échec de l'enregistrement",
+      "invalid": "Veuillez saisir une valeur positive"
     }
   }
 }

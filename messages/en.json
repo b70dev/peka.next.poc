@@ -40,7 +40,8 @@
     "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
-    "close": "Close"
+    "close": "Close",
+    "view": "View"
   },
   "status": {
     "active": "Active",
@@ -215,6 +216,7 @@
     "insuredPersons": "Insured Persons",
     "accounts": "Accounts",
     "payments": "Payments",
+    "paymentRuns": "Payment Runs",
     "employers": "Employers",
     "settings": "Settings",
     "admin": "Administration",
@@ -1087,6 +1089,7 @@
     "title": "Payment Orders",
     "description": "Overview of all payment orders. Create, edit and manage disbursements.",
     "newOrder": "New Payment Order",
+    "newRun": "New Payment Run",
     "searchPlaceholder": "Search recipient or IBAN...",
     "found": "{count} payment orders found",
     "noResults": "No payment orders found",
@@ -1177,6 +1180,139 @@
       "amountPositive": "Amount must be greater than 0",
       "purposeRequired": "Purpose is required",
       "purposeMaxLength": "Purpose must not exceed 140 characters"
+    }
+  },
+  "paymentRuns": {
+    "title": "Payment Runs",
+    "description": "Bundle payment orders into runs and run them through the four-eyes review process before approval.",
+    "newRun": "New Payment Run",
+    "searchPlaceholder": "Search by run name…",
+    "empty": "No payment runs yet",
+    "emptyDescription": "Create your first payment run to approve disbursements.",
+    "noResults": "No payment runs found",
+    "noResultsDescription": "Adjust your search or create a new run.",
+    "columns": {
+      "name": "Name",
+      "status": "Status",
+      "orderCount": "Orders",
+      "totalAmount": "Total",
+      "executionDate": "Execution date",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "status": {
+      "all": "All statuses",
+      "draft": "Draft",
+      "in_review": "In review",
+      "visaed": "Visaed",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "exported": "Exported"
+    },
+    "filter": {
+      "status": "Filter by status",
+      "clearFilters": "Clear filters"
+    },
+    "pagination": {
+      "first": "First page",
+      "previous": "Previous page",
+      "next": "Next page",
+      "last": "Last page",
+      "page": "Page {current} of {total}",
+      "range": "{from}–{to} of {total}"
+    },
+    "create": {
+      "title": "New Payment Run",
+      "description": "Create a new payment run. You can then add orders in the detail view.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Payouts May 2026",
+      "executionDate": "Execution date (optional)",
+      "executionDatePlaceholder": "Pick a date",
+      "submit": "Create Run",
+      "nameRequired": "Name is required",
+      "error": "Failed to create payment run"
+    },
+    "detail": {
+      "backToList": "Back to list",
+      "createdAt": "Created at",
+      "executionDate": "Execution date",
+      "rejectedHeading": "Run rejected",
+      "fourEyesNotice": "You visaed this run. Approval must be performed by a different user.",
+      "actionError": "Action failed. Please try again.",
+      "summary": {
+        "orderCount": "Order count",
+        "totalAmount": "Total amount",
+        "highAmount": "High-amount orders",
+        "highAmountThreshold": "Threshold: {threshold}"
+      },
+      "actions": {
+        "title": "Workflow actions",
+        "addOrders": "Add orders",
+        "submit": "Submit for review",
+        "visa": "Visa",
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "confirmations": {
+        "submit": "Submit this run with {count} orders for review?",
+        "visa": "Visa confirms the first stage of the four-eyes principle. A different person must then approve it.",
+        "approve": "Finally approve this run? Total: {amount} ({count} orders). This action is irreversible."
+      },
+      "orders": {
+        "title": "Contained payment orders",
+        "empty": "No orders in this run yet",
+        "recipient": "Recipient",
+        "iban": "IBAN",
+        "amount": "Amount",
+        "purpose": "Purpose",
+        "remove": "Remove from run"
+      },
+      "audit": {
+        "title": "Audit trail",
+        "empty": "No events yet",
+        "events": {
+          "created": "Run created",
+          "order_added": "Orders added",
+          "order_removed": "Order removed",
+          "submitted": "Submitted for review",
+          "visaed": "Visaed",
+          "approved": "Approved",
+          "rejected": "Rejected",
+          "exported": "Exported",
+          "renamed": "Renamed"
+        }
+      }
+    },
+    "addOrders": {
+      "title": "Add orders to run",
+      "description": "Select draft payment orders to assign to this run.",
+      "searchPlaceholder": "Search recipient, IBAN or purpose…",
+      "selectAll": "Select all visible",
+      "selected": "{count} selected",
+      "submit": "Add {count}",
+      "loading": "Loading available orders…",
+      "empty": "No orders available. Create payment orders first.",
+      "noResults": "No orders match your search.",
+      "loadError": "Failed to load orders",
+      "saveError": "Failed to add orders"
+    },
+    "reject": {
+      "title": "Reject Payment Run",
+      "description": "Please provide a reason. Contained orders will be returned to draft status.",
+      "reason": "Rejection reason",
+      "reasonPlaceholder": "e.g. Wrong recipient in order XY…",
+      "reasonTooShort": "Please provide at least 5 characters",
+      "submit": "Reject",
+      "error": "Rejection failed"
+    },
+    "settings": {
+      "title": "Payment Run Settings",
+      "description": "Configure thresholds and behaviour rules for payment runs.",
+      "thresholdLabel": "Single-payment warning threshold",
+      "thresholdInputLabel": "Threshold in CHF",
+      "saveSuccess": "Threshold saved",
+      "saveError": "Save failed",
+      "invalid": "Please enter a positive value"
     }
   }
 }

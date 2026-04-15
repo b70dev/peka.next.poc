@@ -9,6 +9,7 @@ import { PaymentOrdersTable } from './payment-orders-table'
 import { CreatePaymentOrderDialog } from './create-payment-order-dialog'
 import { EditPaymentOrderDialog } from './edit-payment-order-dialog'
 import { CancelPaymentOrderDialog } from './cancel-payment-order-dialog'
+import { CreatePaymentRunDialog } from '@/components/payment-runs/create-payment-run-dialog'
 import { PermissionGate } from '@/components/auth/permission-gate'
 import type { PaymentOrder, PaymentOrderStatus } from '@/lib/payment-orders.types'
 import { useDebouncedCallback } from 'use-debounce'
@@ -40,6 +41,7 @@ export function PaymentOrdersClient({
 
   // Dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createRunDialogOpen, setCreateRunDialogOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState<PaymentOrder | null>(null)
   const [cancellingOrder, setCancellingOrder] = useState<PaymentOrder | null>(null)
 
@@ -97,6 +99,7 @@ export function PaymentOrdersClient({
         onStatusFilterChange={handleStatusFilter}
         onClearFilters={handleClearFilters}
         onCreateNew={() => setCreateDialogOpen(true)}
+        onCreateNewRun={() => setCreateRunDialogOpen(true)}
         isPending={isPending}
       />
 
@@ -116,6 +119,10 @@ export function PaymentOrdersClient({
         <CreatePaymentOrderDialog
           open={createDialogOpen}
           onOpenChange={setCreateDialogOpen}
+        />
+        <CreatePaymentRunDialog
+          open={createRunDialogOpen}
+          onOpenChange={setCreateRunDialogOpen}
         />
       </PermissionGate>
 

@@ -40,7 +40,8 @@
     "confirm": "Bestätigen",
     "back": "Zurück",
     "next": "Weiter",
-    "close": "Schliessen"
+    "close": "Schliessen",
+    "view": "Anzeigen"
   },
   "status": {
     "active": "Aktiv",
@@ -215,6 +216,7 @@
     "insuredPersons": "Versicherte",
     "accounts": "Konten",
     "payments": "Zahlungen",
+    "paymentRuns": "Zahlungsläufe",
     "employers": "Arbeitgeber",
     "settings": "Einstellungen",
     "admin": "Administration",
@@ -1087,6 +1089,7 @@
     "title": "Zahlungsaufträge",
     "description": "Übersicht aller Zahlungsaufträge. Erstellen, bearbeiten und verwalten Sie Auszahlungen.",
     "newOrder": "Neuer Zahlungsauftrag",
+    "newRun": "Neuer Zahlungslauf",
     "searchPlaceholder": "Empfänger oder IBAN suchen...",
     "found": "{count} Zahlungsaufträge gefunden",
     "noResults": "Keine Zahlungsaufträge gefunden",
@@ -1177,6 +1180,139 @@
       "amountPositive": "Betrag muss grösser als 0 sein",
       "purposeRequired": "Verwendungszweck ist erforderlich",
       "purposeMaxLength": "Verwendungszweck darf maximal 140 Zeichen lang sein"
+    }
+  },
+  "paymentRuns": {
+    "title": "Zahlungsläufe",
+    "description": "Bündeln Sie Zahlungsaufträge zu Läufen und durchlaufen Sie das Vieraugenprinzip vor der Freigabe.",
+    "newRun": "Neuer Zahlungslauf",
+    "searchPlaceholder": "Lauf-Bezeichnung suchen…",
+    "empty": "Noch keine Zahlungsläufe vorhanden",
+    "emptyDescription": "Erstellen Sie Ihren ersten Zahlungslauf, um Auszahlungen freizugeben.",
+    "noResults": "Keine Zahlungsläufe gefunden",
+    "noResultsDescription": "Passen Sie die Suchkriterien an oder erstellen Sie einen neuen Lauf.",
+    "columns": {
+      "name": "Bezeichnung",
+      "status": "Status",
+      "orderCount": "Aufträge",
+      "totalAmount": "Gesamtbetrag",
+      "executionDate": "Ausführungsdatum",
+      "createdAt": "Erstellt am",
+      "actions": "Aktionen"
+    },
+    "status": {
+      "all": "Alle Status",
+      "draft": "Entwurf",
+      "in_review": "Zur Prüfung",
+      "visaed": "Visiert",
+      "approved": "Freigegeben",
+      "rejected": "Abgelehnt",
+      "exported": "Exportiert"
+    },
+    "filter": {
+      "status": "Status filtern",
+      "clearFilters": "Filter zurücksetzen"
+    },
+    "pagination": {
+      "first": "Erste Seite",
+      "previous": "Vorherige Seite",
+      "next": "Nächste Seite",
+      "last": "Letzte Seite",
+      "page": "Seite {current} von {total}",
+      "range": "{from}–{to} von {total}"
+    },
+    "create": {
+      "title": "Neuer Zahlungslauf",
+      "description": "Erstellen Sie einen neuen Zahlungslauf. Aufträge können Sie anschliessend in der Detailansicht hinzufügen.",
+      "name": "Bezeichnung",
+      "namePlaceholder": "z.B. Auszahlungen Mai 2026",
+      "executionDate": "Ausführungsdatum (optional)",
+      "executionDatePlaceholder": "Datum wählen",
+      "submit": "Lauf erstellen",
+      "nameRequired": "Bezeichnung ist erforderlich",
+      "error": "Fehler beim Erstellen des Zahlungslaufs"
+    },
+    "detail": {
+      "backToList": "Zurück zur Übersicht",
+      "createdAt": "Erstellt am",
+      "executionDate": "Ausführungsdatum",
+      "rejectedHeading": "Lauf abgelehnt",
+      "fourEyesNotice": "Sie haben diesen Lauf visiert. Die Freigabe muss durch einen anderen Benutzer erfolgen.",
+      "actionError": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "summary": {
+        "orderCount": "Anzahl Aufträge",
+        "totalAmount": "Gesamtbetrag",
+        "highAmount": "Auffällige Beträge",
+        "highAmountThreshold": "Schwelle: {threshold}"
+      },
+      "actions": {
+        "title": "Workflow-Aktionen",
+        "addOrders": "Aufträge hinzufügen",
+        "submit": "Zur Prüfung einreichen",
+        "visa": "Visieren",
+        "approve": "Freigeben",
+        "reject": "Ablehnen"
+      },
+      "confirmations": {
+        "submit": "Möchten Sie diesen Lauf mit {count} Aufträgen zur Prüfung einreichen?",
+        "visa": "Mit der Visierung bestätigen Sie die erste Stufe des Vieraugenprinzips. Eine andere Person muss anschliessend die Freigabe erteilen.",
+        "approve": "Möchten Sie diesen Lauf endgültig freigeben? Gesamtbetrag: {amount} ({count} Aufträge). Diese Aktion ist unumkehrbar."
+      },
+      "orders": {
+        "title": "Enthaltene Zahlungsaufträge",
+        "empty": "Noch keine Aufträge in diesem Lauf",
+        "recipient": "Empfänger",
+        "iban": "IBAN",
+        "amount": "Betrag",
+        "purpose": "Verwendungszweck",
+        "remove": "Aus Lauf entfernen"
+      },
+      "audit": {
+        "title": "Audit-Trail",
+        "empty": "Noch keine Ereignisse",
+        "events": {
+          "created": "Lauf erstellt",
+          "order_added": "Aufträge hinzugefügt",
+          "order_removed": "Auftrag entfernt",
+          "submitted": "Zur Prüfung eingereicht",
+          "visaed": "Visiert",
+          "approved": "Freigegeben",
+          "rejected": "Abgelehnt",
+          "exported": "Exportiert",
+          "renamed": "Umbenannt"
+        }
+      }
+    },
+    "addOrders": {
+      "title": "Aufträge zum Lauf hinzufügen",
+      "description": "Wählen Sie Zahlungsaufträge im Status «Entwurf» aus, die diesem Lauf zugeordnet werden sollen.",
+      "searchPlaceholder": "Empfänger, IBAN oder Verwendungszweck suchen…",
+      "selectAll": "Alle sichtbaren auswählen",
+      "selected": "{count} ausgewählt",
+      "submit": "{count} hinzufügen",
+      "loading": "Lade verfügbare Aufträge…",
+      "empty": "Keine Aufträge verfügbar. Erfassen Sie zuerst Zahlungsaufträge.",
+      "noResults": "Keine Aufträge entsprechen Ihrer Suche.",
+      "loadError": "Aufträge konnten nicht geladen werden",
+      "saveError": "Aufträge konnten nicht hinzugefügt werden"
+    },
+    "reject": {
+      "title": "Zahlungslauf ablehnen",
+      "description": "Bitte begründen Sie die Ablehnung. Die enthaltenen Aufträge werden in den Status «Entwurf» zurückgesetzt.",
+      "reason": "Ablehnungsgrund",
+      "reasonPlaceholder": "z.B. Falscher Empfänger in Auftrag XY…",
+      "reasonTooShort": "Bitte mindestens 5 Zeichen angeben",
+      "submit": "Ablehnen",
+      "error": "Ablehnung fehlgeschlagen"
+    },
+    "settings": {
+      "title": "Einstellungen Zahlungsläufe",
+      "description": "Konfiguration der Schwellwerte und Verhaltensregeln für Zahlungsläufe.",
+      "thresholdLabel": "Warnschwelle Einzelzahlung",
+      "thresholdInputLabel": "Schwelle in CHF",
+      "saveSuccess": "Schwelle gespeichert",
+      "saveError": "Speichern fehlgeschlagen",
+      "invalid": "Bitte einen positiven Wert angeben"
     }
   }
 }
