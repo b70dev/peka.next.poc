@@ -146,7 +146,7 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
         <span
           {...attributes}
           {...listeners}
-          className="cursor-grab hover:text-foreground text-muted-foreground"
+          className="cursor-grab hover:text-foreground text-muted-foreground hidden md:inline-flex"
           aria-label={`${t(column.labelKey)} - Drag to reorder`}
         >
           <GripVertical className="h-4 w-4" aria-hidden="true" />
@@ -485,13 +485,13 @@ export function InsuredPersonsTable({
         </div>
 
         {/* Grouping and Column Controls */}
-        <div className="flex flex-wrap gap-4 items-center justify-between border-b pb-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-col gap-3 border-b pb-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Layers className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <span className="text-sm text-muted-foreground">{t('grouping.label')}</span>
               <Select value={groupBy} onValueChange={(v) => handleGroupByChange(v as GroupByOption)}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-full sm:w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -504,7 +504,7 @@ export function InsuredPersonsTable({
             </div>
 
             {groupBy !== 'none' && Object.keys(groupedData).length > 1 && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={expandAllGroups}>
                   {t('grouping.expandAll')}
                 </Button>
@@ -515,11 +515,13 @@ export function InsuredPersonsTable({
             )}
           </div>
 
-          <ExcelExportButton data={insuredPersons} disabled={insuredPersons.length === 0} />
-          <Button variant="ghost" size="sm" onClick={handleResetColumns}>
-            <RotateCcw className="h-4 w-4 mr-2" />
-            {t('columns.reset')}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <ExcelExportButton data={insuredPersons} disabled={insuredPersons.length === 0} />
+            <Button variant="ghost" size="sm" onClick={handleResetColumns}>
+              <RotateCcw className="h-4 w-4 mr-2" aria-hidden="true" />
+              {t('columns.reset')}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -545,42 +547,44 @@ export function InsuredPersonsTable({
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
           >
-            <Table>
-              <TableCaption className="sr-only">{tA11y('tableCaption')}</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <SortableContext
-                    items={columnOrder}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    {orderedColumns.map((column) => (
-                      <SortableHeaderCell
-                        key={column.id}
-                        column={column}
-                        sortBy={sortBy}
-                        sortDirection={sortDirection}
-                        onSort={handleSort}
-                        t={t}
-                      />
-                    ))}
-                  </SortableContext>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {insuredPersons.map((person) => (
-                  <TableRow
-                    key={person.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                  >
-                    {orderedColumns.map((column) => (
-                      <TableCell key={column.id}>
-                        {renderCellContent(person, column.id)}
-                      </TableCell>
-                    ))}
+            <div className="overflow-x-auto">
+              <Table>
+                <TableCaption className="sr-only">{tA11y('tableCaption')}</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <SortableContext
+                      items={columnOrder}
+                      strategy={horizontalListSortingStrategy}
+                    >
+                      {orderedColumns.map((column) => (
+                        <SortableHeaderCell
+                          key={column.id}
+                          column={column}
+                          sortBy={sortBy}
+                          sortDirection={sortDirection}
+                          onSort={handleSort}
+                          t={t}
+                        />
+                      ))}
+                    </SortableContext>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {insuredPersons.map((person) => (
+                    <TableRow
+                      key={person.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                    >
+                      {orderedColumns.map((column) => (
+                        <TableCell key={column.id}>
+                          {renderCellContent(person, column.id)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </DndContext>
         ) : (
           // Grouped table view
@@ -610,42 +614,44 @@ export function InsuredPersonsTable({
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
                   >
-                    <Table>
-                      <TableCaption className="sr-only">{tA11y('tableCaption')} - {getGroupLabel(groupKey)}</TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <SortableContext
-                            items={columnOrder}
-                            strategy={horizontalListSortingStrategy}
-                          >
-                            {orderedColumns.map((column) => (
-                              <SortableHeaderCell
-                                key={column.id}
-                                column={column}
-                                sortBy={sortBy}
-                                sortDirection={sortDirection}
-                                onSort={handleSort}
-                                t={t}
-                              />
-                            ))}
-                          </SortableContext>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {persons.map((person) => (
-                          <TableRow
-                            key={person.id}
-                            className="cursor-pointer hover:bg-muted/50"
-                          >
-                            {orderedColumns.map((column) => (
-                              <TableCell key={column.id}>
-                                {renderCellContent(person, column.id)}
-                              </TableCell>
-                            ))}
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableCaption className="sr-only">{tA11y('tableCaption')} - {getGroupLabel(groupKey)}</TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <SortableContext
+                              items={columnOrder}
+                              strategy={horizontalListSortingStrategy}
+                            >
+                              {orderedColumns.map((column) => (
+                                <SortableHeaderCell
+                                  key={column.id}
+                                  column={column}
+                                  sortBy={sortBy}
+                                  sortDirection={sortDirection}
+                                  onSort={handleSort}
+                                  t={t}
+                                />
+                              ))}
+                            </SortableContext>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {persons.map((person) => (
+                            <TableRow
+                              key={person.id}
+                              className="cursor-pointer hover:bg-muted/50"
+                            >
+                              {orderedColumns.map((column) => (
+                                <TableCell key={column.id}>
+                                  {renderCellContent(person, column.id)}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </DndContext>
                 </CollapsibleContent>
               </Collapsible>
@@ -656,30 +662,29 @@ export function InsuredPersonsTable({
 
       {/* Pagination */}
       {totalCount > 0 && (
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{t('pagination.perPage')}</span>
-            <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-              <SelectTrigger className="w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">{t('pagination.perPage')}</span>
+              <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <span className="text-sm text-muted-foreground">
               {t('pagination.showing', { from, to, total: totalCount })}
             </span>
           </div>
 
           <nav aria-label={tA11y('pageOf', { current: currentPage, total: totalPages })}>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-wrap">
               <Button
                 variant="outline"
                 size="icon"
@@ -698,7 +703,7 @@ export function InsuredPersonsTable({
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <span className="text-sm px-2" aria-current="page">
+              <span className="text-sm px-2 whitespace-nowrap" aria-current="page">
                 {t('pagination.page', { page: currentPage, totalPages })}
               </span>
               <Button

@@ -77,7 +77,7 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8 outline-hidden">
-        <div className="mb-6 flex items-start justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
             <p className="text-muted-foreground mt-2">
