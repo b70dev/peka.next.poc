@@ -101,7 +101,7 @@ export function CreatePaymentOrderDialog({ open, onOpenChange, initialData, insu
           }),
         })
 
-        const data = await response.json()
+        const data = await response.json().catch(() => ({}))
 
         if (!response.ok) {
           // Handle duplicate warning
@@ -112,6 +112,7 @@ export function CreatePaymentOrderDialog({ open, onOpenChange, initialData, insu
             return
           }
 
+          console.error('Payment order create failed:', response.status, data)
           setErrors({ recipientName: data.error || t('create.error') })
           return
         }
@@ -119,7 +120,8 @@ export function CreatePaymentOrderDialog({ open, onOpenChange, initialData, insu
         // Success — close dialog and refresh page data
         onOpenChange(false)
         router.refresh()
-      } catch {
+      } catch (err) {
+        console.error('Payment order create exception:', err)
         setErrors({ recipientName: t('create.error') })
       } finally {
         setLoading(false)
