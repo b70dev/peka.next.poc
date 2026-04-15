@@ -770,6 +770,13 @@
       "description": "Increase the security of your account with MFA",
       "status": "View MFA status"
     },
+    "debtor": {
+      "title": "Debtor (pain.001)",
+      "description": "Master data of the pension fund for XML generation.",
+      "configured": "Configured",
+      "notConfigured": "Not configured",
+      "status": "Debtor data status"
+    },
     "contributionRates": {
       "title": "Contribution Rates",
       "description": "Manage savings contribution rates for employers.",

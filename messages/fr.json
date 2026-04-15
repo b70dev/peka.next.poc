@@ -770,6 +770,13 @@
       "description": "Augmentez la sécurité de votre compte avec MFA",
       "status": "Afficher le statut MFA"
     },
+    "debtor": {
+      "title": "Donneur d'ordre (pain.001)",
+      "description": "Données de base de la caisse de pension pour la génération XML.",
+      "configured": "Configuré",
+      "notConfigured": "Non configuré",
+      "status": "Statut des données du donneur d'ordre"
+    },
     "contributionRates": {
       "title": "Taux de cotisation",
       "description": "Gerez les taux de cotisation d'epargne pour les employeurs.",

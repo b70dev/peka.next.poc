@@ -4,9 +4,11 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/i18n/routing'
 import { AppHeader } from '@/components/layout/app-header'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreditCard, Receipt, Settings as SettingsIcon, Percent, Shield, Users } from 'lucide-react'
+import { CreditCard, Receipt, Settings as SettingsIcon, Percent, Shield, Users, Building2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { getCurrentUserRole } from '@/lib/auth/require-role'
+import { loadDebtorSettings } from '@/lib/debtor-settings'
+import { isDebtorConfigured } from '@/lib/payment-run-exports.types'
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -63,6 +65,13 @@ export default async function SettingsPage({ params }: Props) {
       .from('user_profiles')
       .select('*', { count: 'exact', head: true })
     usersCount = count
+  }
+
+  // Load debtor config status (only relevant for super_admin)
+  let debtorConfigured = false
+  if (isSuperAdmin) {
+    const debtor = await loadDebtorSettings(supabase)
+    debtorConfigured = isDebtorConfigured(debtor)
   }
 
   return (
@@ -153,6 +162,30 @@ export default async function SettingsPage({ params }: Props) {
               </CardContent>
             </Card>
           </Link>
+
+          {/* Debtor Card - only visible for Super-Admin */}
+          {isSuperAdmin && (
+            <Link href="/settings/debtor">
+              <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <Building2 className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-lg">{t('debtor.title')}</CardTitle>
+                  </div>
+                  <CardDescription>{t('debtor.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Badge
+                    variant={debtorConfigured ? 'default' : 'secondary'}
+                    className={debtorConfigured ? 'bg-green-500/10 text-green-700 border-green-500/20' : ''}
+                  >
+                    {debtorConfigured ? t('debtor.configured') : t('debtor.notConfigured')}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground mt-1">{t('debtor.status')}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
 
           {/* User Management Card - only visible for Super-Admin */}
           {isSuperAdmin && (

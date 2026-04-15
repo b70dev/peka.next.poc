@@ -770,6 +770,13 @@
       "description": "Erhöhen Sie die Sicherheit Ihres Accounts mit MFA",
       "status": "MFA-Status anzeigen"
     },
+    "debtor": {
+      "title": "Auftraggeber (pain.001)",
+      "description": "Stammdaten der Pensionskasse für die XML-Generierung.",
+      "configured": "Konfiguriert",
+      "notConfigured": "Nicht konfiguriert",
+      "status": "Status der Auftraggeber-Daten"
+    },
     "contributionRates": {
       "title": "Sparbeitragssätze",
       "description": "Verwalten Sie die Sparbeitragssätze für Arbeitgeber.",
