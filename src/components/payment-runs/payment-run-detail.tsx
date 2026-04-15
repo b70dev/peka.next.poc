@@ -24,14 +24,18 @@ import {
   ShieldCheck,
   AlertTriangle,
   History,
+  FileDown,
 } from 'lucide-react'
 import { usePermissions } from '@/hooks/use-permissions'
 import { formatIBANForDisplay } from '@/lib/iban-validation'
 import type { PaymentRun, PaymentRunEvent, PaymentRunStatus } from '@/lib/payment-runs.types'
 import type { PaymentOrder } from '@/lib/payment-orders.types'
+import type { PaymentRunExport } from '@/lib/payment-run-exports.types'
 import { AddOrdersDialog } from './add-orders-dialog'
 import { RejectRunDialog } from './reject-run-dialog'
 import { ConfirmActionDialog } from './confirm-action-dialog'
+import { ExportXmlDialog } from './export-xml-dialog'
+import { ExportsHistory } from './exports-history'
 
 interface PaymentRunDetailProps {
   run: PaymentRun
@@ -39,6 +43,8 @@ interface PaymentRunDetailProps {
   events: PaymentRunEvent[]
   currentUserId: string
   highAmountThreshold: number
+  exports: PaymentRunExport[]
+  debtorConfigured: boolean
 }
 
 const statusVariant: Record<PaymentRunStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
@@ -56,6 +62,8 @@ export function PaymentRunDetail({
   events,
   currentUserId,
   highAmountThreshold,
+  exports,
+  debtorConfigured,
 }: PaymentRunDetailProps) {
   const t = useTranslations('paymentRuns')
   const tActions = useTranslations('actions')
@@ -69,6 +77,7 @@ export function PaymentRunDetail({
   const [submitConfirmOpen, setSubmitConfirmOpen] = useState(false)
   const [visaConfirmOpen, setVisaConfirmOpen] = useState(false)
   const [approveConfirmOpen, setApproveConfirmOpen] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
   const [removingOrderId, setRemovingOrderId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -88,6 +97,7 @@ export function PaymentRunDetail({
   const canVisa = run.status === 'in_review'
   const canApprove = run.status === 'visaed' && run.visaed_by !== currentUserId
   const canReject = run.status === 'in_review' || run.status === 'visaed'
+  const canExport = run.status === 'approved' || run.status === 'exported'
   const fourEyesViolation = run.status === 'visaed' && run.visaed_by === currentUserId
 
   const callAction = useCallback(
@@ -234,7 +244,7 @@ export function PaymentRunDetail({
       </div>
 
       {/* Workflow actions */}
-      {canManage && run.status !== 'exported' && (
+      {canManage && (
         <Card>
           <CardHeader>
             <CardTitle>{t('detail.actions.title')}</CardTitle>
@@ -270,9 +280,25 @@ export function PaymentRunDetail({
                 {t('detail.actions.reject')}
               </Button>
             )}
+            {canExport && (
+              <Button
+                variant="default"
+                onClick={() => setExportOpen(true)}
+                disabled={loading}
+                title={!debtorConfigured ? t('detail.actions.exportDebtorMissing') : undefined}
+              >
+                <FileDown className="h-4 w-4 mr-2" aria-hidden="true" />
+                {run.status === 'exported'
+                  ? t('detail.actions.exportAgain')
+                  : t('detail.actions.export')}
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}
+
+      {/* Exports history */}
+      <ExportsHistory runId={run.id} exports={exports} />
 
       {/* Orders list */}
       <Card>
@@ -413,6 +439,13 @@ export function PaymentRunDetail({
         open={rejectOpen}
         onOpenChange={setRejectOpen}
         runId={run.id}
+      />
+
+      <ExportXmlDialog
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        runId={run.id}
+        debtorConfigured={debtorConfigured}
       />
     </div>
   )

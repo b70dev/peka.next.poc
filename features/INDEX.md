@@ -33,7 +33,7 @@
 | PROJ-18 | Versicherten-Rolle & Portal-Berechtigungen | Planned | [PROJ-18-insured-person-role.md](./PROJ-18-insured-person-role.md) |
 | PROJ-19 | Zahlungsaufträge (Payment Orders) | Deployed (2026-04-13) | [PROJ-19-payment-orders.md](./PROJ-19-payment-orders.md) |
 | PROJ-20 | Zahlungsläufe & Freigabe (Payment Runs) | In Review | [PROJ-20-payment-runs.md](./PROJ-20-payment-runs.md) |
-| PROJ-21 | pain.001 XML-Generierung (ISO 20022) | Planned | [PROJ-21-pain001-xml-generation.md](./PROJ-21-pain001-xml-generation.md) |
+| PROJ-21 | pain.001 XML-Generierung (ISO 20022) | In Progress | [PROJ-21-pain001-xml-generation.md](./PROJ-21-pain001-xml-generation.md) |
 
 <!-- Add features above this line -->
 

@@ -1251,7 +1251,10 @@
         "submit": "Soumettre pour revue",
         "visa": "Viser",
         "approve": "Approuver",
-        "reject": "Rejeter"
+        "reject": "Rejeter",
+        "export": "Exporter XML",
+        "exportAgain": "Exporter à nouveau",
+        "exportDebtorMissing": "Veuillez d'abord configurer les données du donneur d'ordre"
       },
       "confirmations": {
         "submit": "Soumettre ce cycle avec {count} ordres pour revue ?",
@@ -1313,6 +1316,55 @@
       "saveSuccess": "Seuil enregistré",
       "saveError": "Échec de l'enregistrement",
       "invalid": "Veuillez saisir une valeur positive"
+    },
+    "export": {
+      "title": "Exporter le fichier pain.001 XML",
+      "description": "Choisissez la version pain.001 et générez le fichier XML à importer dans votre e-banking.",
+      "versionLabel": "Version pain.001",
+      "versionHint": "La version dépend de votre banque. pain.001.001.03.ch.02 est actuellement le standard le plus utilisé.",
+      "debtorMissing": "Les données du donneur d'ordre ne sont pas entièrement configurées. Veuillez les renseigner sous Paramètres → Donneur d'ordre.",
+      "submit": "Générer et télécharger",
+      "genericError": "Échec de l'export. Veuillez réessayer.",
+      "moreErrors": "… et {count} erreurs supplémentaires"
+    },
+    "exportHistory": {
+      "title": "Historique des exports",
+      "redownload": "Retélécharger",
+      "columns": {
+        "exportedAt": "Exporté le",
+        "version": "Version",
+        "filename": "Nom du fichier",
+        "exportedBy": "Exporté par",
+        "actions": "Actions"
+      }
+    },
+    "debtorSettings": {
+      "pageTitle": "Configuration du donneur d'ordre",
+      "pageDescription": "Saisissez les données de base de votre caisse de pension, qui seront utilisées comme donneur d'ordre dans chaque fichier pain.001.",
+      "title": "Données de base du donneur d'ordre",
+      "description": "Ces valeurs sont utilisées dans chaque fichier pain.001 XML généré.",
+      "fields": {
+        "name": "Nom de la caisse de pension",
+        "street": "Rue et numéro",
+        "postalCode": "Code postal",
+        "city": "Ville",
+        "country": "Pays",
+        "iban": "IBAN du compte de paiement",
+        "ibanHint": "Seules les IBAN CH ou LI sont autorisées.",
+        "organisationId": "Identifiant court",
+        "organisationIdHint": "Utilisé pour générer des Message-IDs uniques (p. ex. « PEKA »)."
+      },
+      "countries": {
+        "CH": "Suisse",
+        "LI": "Liechtenstein"
+      },
+      "errors": {
+        "required": "Champ requis",
+        "ibanInvalid": "IBAN invalide",
+        "ibanForeign": "L'IBAN doit provenir de Suisse ou du Liechtenstein"
+      },
+      "saveSuccess": "Données du donneur d'ordre enregistrées",
+      "saveError": "Échec de l'enregistrement"
     }
   }
 }

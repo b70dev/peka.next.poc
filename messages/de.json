@@ -1251,7 +1251,10 @@
         "submit": "Zur Prüfung einreichen",
         "visa": "Visieren",
         "approve": "Freigeben",
-        "reject": "Ablehnen"
+        "reject": "Ablehnen",
+        "export": "XML exportieren",
+        "exportAgain": "Erneut exportieren",
+        "exportDebtorMissing": "Bitte zuerst die Auftraggeber-Daten konfigurieren"
       },
       "confirmations": {
         "submit": "Möchten Sie diesen Lauf mit {count} Aufträgen zur Prüfung einreichen?",
@@ -1313,6 +1316,55 @@
       "saveSuccess": "Schwelle gespeichert",
       "saveError": "Speichern fehlgeschlagen",
       "invalid": "Bitte einen positiven Wert angeben"
+    },
+    "export": {
+      "title": "pain.001 XML exportieren",
+      "description": "Wählen Sie die pain.001-Version und generieren Sie die XML-Datei zum Import in Ihr E-Banking.",
+      "versionLabel": "pain.001-Version",
+      "versionHint": "Die Version hängt von Ihrer Bank ab. pain.001.001.03.ch.02 ist der aktuell am weitesten verbreitete Standard.",
+      "debtorMissing": "Die Auftraggeber-Daten sind noch nicht vollständig konfiguriert. Bitte hinterlegen Sie diese unter Einstellungen → Auftraggeber.",
+      "submit": "Generieren & Herunterladen",
+      "genericError": "Export fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "moreErrors": "… und {count} weitere Fehler"
+    },
+    "exportHistory": {
+      "title": "Export-Historie",
+      "redownload": "Erneut herunterladen",
+      "columns": {
+        "exportedAt": "Exportiert am",
+        "version": "Version",
+        "filename": "Dateiname",
+        "exportedBy": "Exportiert von",
+        "actions": "Aktionen"
+      }
+    },
+    "debtorSettings": {
+      "pageTitle": "Auftraggeber-Konfiguration",
+      "pageDescription": "Hinterlegen Sie die Stammdaten Ihrer Pensionskasse, die in jeder pain.001-Datei als Auftraggeber (Debtor) ausgewiesen werden.",
+      "title": "Auftraggeber-Stammdaten",
+      "description": "Diese Angaben werden in jeder generierten pain.001-XML-Datei verwendet.",
+      "fields": {
+        "name": "Name der Pensionskasse",
+        "street": "Strasse und Hausnummer",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "country": "Land",
+        "iban": "IBAN Auszahlungskonto",
+        "ibanHint": "Nur CH- oder LI-IBAN erlaubt.",
+        "organisationId": "Kurzkennung",
+        "organisationIdHint": "Wird für die Generierung eindeutiger Message-IDs verwendet (z.B. «PEKA»)."
+      },
+      "countries": {
+        "CH": "Schweiz",
+        "LI": "Liechtenstein"
+      },
+      "errors": {
+        "required": "Pflichtfeld",
+        "ibanInvalid": "Ungültige IBAN",
+        "ibanForeign": "IBAN muss aus der Schweiz oder Liechtenstein sein"
+      },
+      "saveSuccess": "Auftraggeber-Daten gespeichert",
+      "saveError": "Speichern fehlgeschlagen"
     }
   }
 }
