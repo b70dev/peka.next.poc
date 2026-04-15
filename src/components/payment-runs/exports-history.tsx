@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations, useFormatter } from 'next-intl'
 import { FileDown } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -17,20 +17,32 @@ import type { PaymentRunExport } from '@/lib/payment-run-exports.types'
 interface ExportsHistoryProps {
   runId: string
   exports: PaymentRunExport[]
+  totalAmount: number
+  orderCount: number
 }
 
-export function ExportsHistory({ runId, exports }: ExportsHistoryProps) {
+export function ExportsHistory({ runId, exports, totalAmount, orderCount }: ExportsHistoryProps) {
   const t = useTranslations('paymentRuns.exportHistory')
+  const format = useFormatter()
 
   if (exports.length === 0) return null
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileDown className="h-5 w-5" aria-hidden="true" />
-          {t('title')}
-        </CardTitle>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <FileDown className="h-5 w-5" aria-hidden="true" />
+            {t('title')}
+          </CardTitle>
+          <div className="text-sm text-muted-foreground">
+            <span>{t('runSummary', { count: orderCount })}</span>
+            <span className="mx-2" aria-hidden="true">·</span>
+            <span className="font-semibold text-foreground tabular-nums">
+              {format.number(totalAmount, { style: 'currency', currency: 'CHF' })}
+            </span>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="rounded-md border">

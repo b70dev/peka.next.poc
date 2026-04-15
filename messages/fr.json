@@ -1337,6 +1337,7 @@
     "exportHistory": {
       "title": "Historique des exports",
       "redownload": "Retélécharger",
+      "runSummary": "{count, plural, =1 {1 paiement} other {# paiements}}",
       "columns": {
         "exportedAt": "Exporté le",
         "version": "Version",
