@@ -288,6 +288,7 @@
       "tabs": {
         "masterData": "Master Data",
         "insurance": "Insurance",
+        "payments": "Payments",
         "documents": "Documents",
         "history": "History"
       },

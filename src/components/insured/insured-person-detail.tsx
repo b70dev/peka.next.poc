@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings, Wallet } from 'lucide-react'
+import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings, Wallet, CreditCard } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { EmploymentDialog } from './employment-dialog'
 import { EditInsuredPersonDialog } from './edit-insured-person-dialog'
+import { CreatePaymentOrderDialog } from '@/components/payments/create-payment-order-dialog'
 import { usePermissions } from '@/hooks/use-permissions'
 
 type EmploymentWithEmployer = Employment & {
@@ -36,8 +37,11 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
   const tActions = useTranslations('actions')
   const { hasPermission } = usePermissions()
   const canEdit = hasPermission('insured.edit')
+  const canCreatePayment = hasPermission('payment_orders.create')
   const [employmentDialogOpen, setEmploymentDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<string>('masterData')
   const [selectedEmployment, setSelectedEmployment] = useState<EmploymentWithEmployer | undefined>()
   const [dialogMode, setDialogMode] = useState<'add' | 'edit'>('add')
 
@@ -109,8 +113,19 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="masterData" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+      <Tabs
+        value={activeTab}
+        onValueChange={(val) => {
+          // "payments" is not a real tab — it opens the create payment dialog
+          if (val === 'payments') {
+            setPaymentDialogOpen(true)
+            return
+          }
+          setActiveTab(val)
+        }}
+        className="space-y-6"
+      >
+        <TabsList className={`grid w-full ${canCreatePayment ? 'grid-cols-5' : 'grid-cols-4'} lg:w-auto lg:inline-grid`}>
           <TabsTrigger value="masterData" className="flex items-center gap-2">
             <User className="h-4 w-4 hidden sm:inline" />
             {t('detail.tabs.masterData')}
@@ -119,6 +134,12 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
             <Briefcase className="h-4 w-4 hidden sm:inline" />
             {t('detail.tabs.insurance')}
           </TabsTrigger>
+          {canCreatePayment && (
+            <TabsTrigger value="payments" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 hidden sm:inline" />
+              {t('detail.tabs.payments')}
+            </TabsTrigger>
+          )}
           <TabsTrigger value="documents" className="flex items-center gap-2">
             <FileText className="h-4 w-4 hidden sm:inline" />
             {t('detail.tabs.documents')}
@@ -366,6 +387,18 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
         onOpenChange={setEditDialogOpen}
         insuredPerson={insuredPerson}
       />
+
+      {/* Create Payment Order Dialog — prefilled with this person's name */}
+      {canCreatePayment && (
+        <CreatePaymentOrderDialog
+          open={paymentDialogOpen}
+          onOpenChange={setPaymentDialogOpen}
+          insuredPersonId={insuredPerson.id}
+          initialData={{
+            recipientName: `${insuredPerson.first_name} ${insuredPerson.last_name}`,
+          }}
+        />
+      )}
     </div>
   )
 }

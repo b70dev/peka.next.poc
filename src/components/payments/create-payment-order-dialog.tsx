@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useRouter } from '@/i18n/routing'
 import { useTranslations } from 'next-intl'
 import {
@@ -28,9 +28,13 @@ import type { DuplicateCheckResult } from '@/lib/payment-orders.types'
 interface CreatePaymentOrderDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Optional: prefill form fields (e.g. when creating from an insured person's detail page) */
+  initialData?: Partial<PaymentOrderFormData>
+  /** Optional: link the created order to an insured person */
+  insuredPersonId?: string
 }
 
-export function CreatePaymentOrderDialog({ open, onOpenChange }: CreatePaymentOrderDialogProps) {
+export function CreatePaymentOrderDialog({ open, onOpenChange, initialData, insuredPersonId }: CreatePaymentOrderDialogProps) {
   const t = useTranslations('paymentOrders')
   const router = useRouter()
 
@@ -92,6 +96,7 @@ export function CreatePaymentOrderDialog({ open, onOpenChange }: CreatePaymentOr
               ? formData.executionDate.toISOString().split('T')[0]
               : null,
             note: formData.note || null,
+            insured_person_id: insuredPersonId ?? null,
             force,
           }),
         })
@@ -120,7 +125,7 @@ export function CreatePaymentOrderDialog({ open, onOpenChange }: CreatePaymentOr
         setLoading(false)
       }
     },
-    [onOpenChange, router, t]
+    [onOpenChange, router, t, insuredPersonId]
   )
 
   const handleSubmit = useCallback(
@@ -145,6 +150,20 @@ export function CreatePaymentOrderDialog({ open, onOpenChange }: CreatePaymentOr
     setDuplicates([])
   }, [])
 
+  // Merge optional initialData with empty defaults
+  const formInitialData = useMemo<PaymentOrderFormData | undefined>(() => {
+    if (!initialData) return undefined
+    return {
+      recipientName: initialData.recipientName ?? '',
+      iban: initialData.iban ?? '',
+      amount: initialData.amount ?? '',
+      purpose: initialData.purpose ?? '',
+      referenceNumber: initialData.referenceNumber ?? '',
+      executionDate: initialData.executionDate,
+      note: initialData.note ?? '',
+    }
+  }, [initialData])
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -154,6 +173,7 @@ export function CreatePaymentOrderDialog({ open, onOpenChange }: CreatePaymentOr
             <DialogDescription>{t('create.description')}</DialogDescription>
           </DialogHeader>
           <PaymentOrderForm
+            initialData={formInitialData}
             onSubmit={handleSubmit}
             onForeignIBANDetected={handleForeignIBANDetected}
             loading={loading}
