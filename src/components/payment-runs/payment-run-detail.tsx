@@ -297,14 +297,6 @@ export function PaymentRunDetail({
         </Card>
       )}
 
-      {/* Exports history */}
-      <ExportsHistory
-        runId={run.id}
-        exports={exports}
-        totalAmount={totalAmount}
-        orderCount={orders.length}
-      />
-
       {/* Orders list */}
       <Card>
         <CardHeader>
@@ -363,6 +355,14 @@ export function PaymentRunDetail({
           )}
         </CardContent>
       </Card>
+
+      {/* Exports history */}
+      <ExportsHistory
+        runId={run.id}
+        exports={exports}
+        totalAmount={totalAmount}
+        orderCount={orders.length}
+      />
 
       {/* Audit trail */}
       <Card>
