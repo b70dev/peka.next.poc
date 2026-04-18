@@ -8,7 +8,11 @@ const COOKIE_NAME = 'mfa_backup_verified'
 const TOKEN_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
 function getSecret(): string {
-  return process.env.MFA_BACKUP_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  const secret = process.env.MFA_BACKUP_SECRET
+  if (!secret) {
+    throw new Error('MFA_BACKUP_SECRET environment variable is required but not set')
+  }
+  return secret
 }
 
 async function getHmacKey(): Promise<CryptoKey> {

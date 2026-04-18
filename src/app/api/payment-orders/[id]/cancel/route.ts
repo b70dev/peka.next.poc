@@ -63,13 +63,19 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
-    // 4. Cancel the order
+    // 4. Cancel the order — if it was part of a payment run, detach it so the
+    //    run's order set and the pain.001 export stay consistent.
+    const updatePayload: Record<string, unknown> = {
+      status: 'cancelled',
+      updated_by: user.userId,
+    }
+    if (existing.status === 'in_payment_run') {
+      updatePayload.payment_run_id = null
+    }
+
     const { data: updated, error: updateError } = await supabase
       .from('payment_orders')
-      .update({
-        status: 'cancelled',
-        updated_by: user.userId,
-      })
+      .update(updatePayload)
       .eq('id', id)
       .select()
       .single()

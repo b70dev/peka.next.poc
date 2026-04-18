@@ -36,11 +36,19 @@ export default async function InsuredPersonsPage({ params, searchParams }: Props
 
   const t = await getTranslations('insured');
 
+  const ALLOWED_SORT_COLUMNS = ['last_name', 'first_name', 'ahv_number', 'date_of_birth', 'created_at'] as const;
+  type AllowedSortColumn = typeof ALLOWED_SORT_COLUMNS[number];
+
   // Parse search params
-  const searchTerm = search.search || '';
+  const rawSearch = search.search || '';
+  // Strip PostgREST injection chars and ILIKE wildcards (% _ would cause unintended broad matches)
+  const searchTerm = rawSearch.replace(/[,()\%_]/g, '');
   const page = parseInt(search.page || '1', 10);
   const pageSize = parseInt(search.pageSize || '25', 10);
-  const sortBy = search.sortBy || 'last_name';
+  const rawSortBy = search.sortBy || 'last_name';
+  const sortBy: AllowedSortColumn = (ALLOWED_SORT_COLUMNS as readonly string[]).includes(rawSortBy)
+    ? rawSortBy as AllowedSortColumn
+    : 'last_name';
   const sortDirection = (search.sortDirection || 'asc') as 'asc' | 'desc';
 
   // Build query

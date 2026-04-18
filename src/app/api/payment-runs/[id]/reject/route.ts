@@ -63,51 +63,23 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
-    const now = new Date().toISOString()
-
-    // 1. Mark run as rejected
-    const { data: updated, error: updateError } = await supabase
-      .from('payment_runs')
-      .update({
-        status: 'rejected',
-        rejected_by: user.userId,
-        rejected_at: now,
-        rejection_reason: parseResult.data.reason,
-        version: run.version + 1,
-      })
-      .eq('id', id)
-      .eq('version', run.version)
-      .select()
-      .single()
-
-    if (updateError || !updated) {
-      return NextResponse.json({ error: 'version_conflict' }, { status: 409 })
-    }
-
-    // 2. Return all contained orders back to 'draft' and detach from run
-    //    (so they can be corrected and re-bundled into a new run)
-    const { error: ordersError } = await supabase
-      .from('payment_orders')
-      .update({
-        status: 'draft',
-        payment_run_id: null,
-        updated_by: user.userId,
-      })
-      .eq('payment_run_id', id)
-      .eq('status', 'in_payment_run')
-
-    if (ordersError) {
-      console.error('Error returning orders to draft:', ordersError)
-    }
-
-    await supabase.from('payment_run_events').insert({
-      payment_run_id: id,
-      event_type: 'rejected',
-      actor_id: user.userId,
-      payload: { reason: parseResult.data.reason },
+    // Atomic RPC: updates run + returns orders to draft + writes audit event in one transaction
+    const { data: rpcResult, error: rpcError } = await supabase.rpc('reject_payment_run', {
+      p_run_id: id,
+      p_actor_id: user.userId,
+      p_expected_version: run.version,
+      p_reason: parseResult.data.reason,
     })
 
-    return NextResponse.json(updated)
+    if (rpcError) {
+      const msg = rpcError.message ?? ''
+      if (msg.includes('version_conflict')) return NextResponse.json({ error: 'version_conflict' }, { status: 409 })
+      if (msg.includes('invalid_status')) return NextResponse.json({ error: 'Only in_review or visaed runs can be rejected' }, { status: 422 })
+      console.error('Error in reject_payment_run RPC:', rpcError)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
+
+    return NextResponse.json(rpcResult)
   } catch (err) {
     console.error('Unexpected error in POST /api/payment-runs/[id]/reject:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

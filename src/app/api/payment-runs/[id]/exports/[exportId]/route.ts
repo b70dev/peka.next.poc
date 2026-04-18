@@ -52,11 +52,14 @@ export async function GET(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Export not found' }, { status: 404 })
     }
 
+    const safeFilename = /^[\w.-]+\.xml$/.test(data.filename)
+      ? data.filename
+      : `pain001_export_${data.id}.xml`
     return new NextResponse(data.xml_content, {
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Content-Disposition': `attachment; filename="${data.filename}"`,
+        'Content-Disposition': `attachment; filename="${safeFilename}"`,
         'X-Export-Id': data.id,
         'X-Message-Id': data.message_id,
         'Cache-Control': 'no-store',

@@ -47,7 +47,7 @@ export default async function PaymentRunsPage({ params, searchParams }: Props) {
   let query = supabase.from('payment_runs').select('*', { count: 'exact' })
 
   if (searchTerm) {
-    const sanitized = searchTerm.replace(/[,()]/g, '')
+    const sanitized = searchTerm.replace(/[,()\%_]/g, '')
     query = query.ilike('name', `%${sanitized}%`)
   }
   if (statusFilter) {

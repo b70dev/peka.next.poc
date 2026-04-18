@@ -27,8 +27,8 @@ export default async function AccountsPage({ params, searchParams }: Props) {
 
   const t = await getTranslations('accounts');
 
-  // Parse search params
-  const searchTerm = search.search || '';
+  // Strip PostgREST injection chars and ILIKE wildcards (% _ would cause unintended broad matches)
+  const searchTerm = (search.search || '').replace(/[,()\%_]/g, '');
   const page = parseInt(search.page || '1', 10);
   const pageSize = parseInt(search.pageSize || '25', 10);
 

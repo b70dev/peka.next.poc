@@ -57,47 +57,23 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
-    const now = new Date().toISOString()
-
-    // 1. Update the payment run itself
-    const { data: updated, error: updateError } = await supabase
-      .from('payment_runs')
-      .update({
-        status: 'approved',
-        approved_by: user.userId,
-        approved_at: now,
-        version: run.version + 1,
-      })
-      .eq('id', id)
-      .eq('version', run.version)
-      .select()
-      .single()
-
-    if (updateError || !updated) {
-      return NextResponse.json({ error: 'version_conflict' }, { status: 409 })
-    }
-
-    // 2. Cascade: update all contained payment_orders to 'approved'
-    const { error: ordersError } = await supabase
-      .from('payment_orders')
-      .update({ status: 'approved', updated_by: user.userId })
-      .eq('payment_run_id', id)
-      .eq('status', 'in_payment_run')
-
-    if (ordersError) {
-      console.error('Error cascading approval to orders:', ordersError)
-      // Run is already approved — we log but don't rollback. Audit will show
-      // the inconsistency if it occurs.
-    }
-
-    await supabase.from('payment_run_events').insert({
-      payment_run_id: id,
-      event_type: 'approved',
-      actor_id: user.userId,
-      payload: null,
+    // Atomic RPC: updates run + cascades orders + writes audit event in one transaction
+    const { data: rpcResult, error: rpcError } = await supabase.rpc('approve_payment_run', {
+      p_run_id: id,
+      p_actor_id: user.userId,
+      p_expected_version: run.version,
     })
 
-    return NextResponse.json(updated)
+    if (rpcError) {
+      const msg = rpcError.message ?? ''
+      if (msg.includes('version_conflict')) return NextResponse.json({ error: 'version_conflict' }, { status: 409 })
+      if (msg.includes('four_eyes_violation')) return NextResponse.json({ error: 'four_eyes_violation' }, { status: 403 })
+      if (msg.includes('invalid_status')) return NextResponse.json({ error: 'Only visaed runs can be approved' }, { status: 422 })
+      console.error('Error in approve_payment_run RPC:', rpcError)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
+
+    return NextResponse.json(rpcResult)
   } catch (err) {
     console.error('Unexpected error in POST /api/payment-runs/[id]/approve:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

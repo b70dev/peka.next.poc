@@ -90,11 +90,12 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
-    // 5. Load contained orders
+    // 5. Load contained orders — exclude cancelled ones so they never appear in the XML
     const { data: orderRows, error: ordersError } = await supabase
       .from('payment_orders')
       .select('*')
       .eq('payment_run_id', id)
+      .in('status', ['approved', 'exported'])
       .order('created_at', { ascending: true })
 
     if (ordersError) {
@@ -205,11 +206,14 @@ export async function POST(request: Request, { params }: RouteParams) {
     }
 
     // 10. Stream XML as a download response
+    const safeFilename = /^[\w.-]+\.xml$/.test(result.filename)
+      ? result.filename
+      : `pain001_export_${exportRow.id}.xml`
     return new NextResponse(result.xml, {
       status: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Content-Disposition': `attachment; filename="${result.filename}"`,
+        'Content-Disposition': `attachment; filename="${safeFilename}"`,
         'X-Export-Id': exportRow.id,
         'X-Message-Id': result.message_id,
         'Cache-Control': 'no-store',

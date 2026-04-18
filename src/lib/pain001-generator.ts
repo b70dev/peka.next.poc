@@ -91,14 +91,16 @@ function formatDateTime(dateIso: string): string {
 
 /**
  * Erzeugt eine eindeutige MsgId im Format:
- *   [ORG]-[RUN-SHORT]-[TIMESTAMP]
+ *   [ORG]-[RUN-SHORT]-[TIMESTAMP][RANDOM]
  * Max. 35 Zeichen gemaess pain.001 Spezifikation.
+ * Random-Suffix verhindert Kollisionen bei raschen Re-Exporten.
  */
 function buildMessageId(orgId: string, runId: string): string {
   const org = sanitizeForPain001(orgId).replace(/\s+/g, '').slice(0, 8) || 'PEKA'
   const runShort = runId.replace(/-/g, '').slice(0, 10).toUpperCase()
   const ts = Date.now().toString(36).toUpperCase()
-  return `${org}-${runShort}-${ts}`.slice(0, 35)
+  const rnd = Math.random().toString(36).slice(2, 5).toUpperCase()
+  return `${org}-${runShort}-${ts}${rnd}`.slice(0, 35)
 }
 
 function buildFilename(runId: string, executionDate: string | null): string {
@@ -191,7 +193,9 @@ function buildXmlV03(
   messageId: string,
   createdAt: string
 ): string {
-  const totalAmount = orders.reduce((sum, o) => sum + Number(o.amount), 0)
+  // Sum in integer cents to avoid floating-point precision errors on large runs
+  const totalCents = orders.reduce((sum, o) => sum + Math.round(Number(o.amount) * 100), 0)
+  const totalAmount = totalCents / 100
   const executionDate = run.execution_date ? formatDate(run.execution_date) : formatDate(createdAt)
   const paymentInfoId = `PMT-${messageId}`.slice(0, 35)
 
@@ -315,7 +319,9 @@ function buildXmlV09(
   messageId: string,
   createdAt: string
 ): string {
-  const totalAmount = orders.reduce((sum, o) => sum + Number(o.amount), 0)
+  // Sum in integer cents to avoid floating-point precision errors on large runs
+  const totalCents = orders.reduce((sum, o) => sum + Math.round(Number(o.amount) * 100), 0)
+  const totalAmount = totalCents / 100
   const executionDate = run.execution_date ? formatDate(run.execution_date) : formatDate(createdAt)
   const paymentInfoId = `PMT-${messageId}`.slice(0, 35)
 
