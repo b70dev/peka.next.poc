@@ -1,8 +1,8 @@
 # PROJ-20: Zahlungsläufe & Freigabe (Payment Runs)
 
-## Status: In Review
+## Status: Deployed (2026-04-18)
 **Created:** 2026-04-13
-**Last Updated:** 2026-04-15
+**Last Updated:** 2026-04-18
 
 ## Dependencies
 - Requires: PROJ-19 (Zahlungsaufträge) - Zahlungsaufträge müssen existieren, um gebündelt zu werden
@@ -317,4 +317,8 @@ _To be added by /architecture_
 - **Production Ready:** **YES** -- Alle High-Severity-Bugs gefixt. Backlog-Bugs sind kosmetisch/Performance.
 
 ## Deployment
-_To be added by /deploy_
+
+- **Deployed:** 2026-04-18
+- **Commit:** `8452ffd` — fix(PROJ-20,PROJ-21): Security & financial integrity fixes pre-deploy
+- **SQL Migration:** `supabase/migrations/20260418_payment_run_cascade_rpcs.sql` — must be applied in Supabase before deploying
+- **New Env Var:** `MFA_BACKUP_SECRET` — must be added to Vercel environment variables

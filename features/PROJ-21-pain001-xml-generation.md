@@ -1,8 +1,8 @@
 # PROJ-21: pain.001 XML-Generierung (ISO 20022)
 
-## Status: Planned
+## Status: Deployed (2026-04-18)
 **Created:** 2026-04-13
-**Last Updated:** 2026-04-13
+**Last Updated:** 2026-04-18
 
 ## Dependencies
 - Requires: PROJ-20 (Zahlungsläufe & Freigabe) - nur freigegebene Zahlungsläufe können als XML exportiert werden
@@ -447,4 +447,8 @@ Neue SQL-Migrationsdatei: `supabase/migrations/20260413_create_payment_run_expor
 - **Production Ready:** **YES** -- Alle High/Medium-Severity-Bugs gefixt. MFA_BACKUP_SECRET separat gesichert.
 
 ## Deployment
-_To be added by /deploy_
+
+- **Deployed:** 2026-04-18
+- **Commit:** `8452ffd` — fix(PROJ-20,PROJ-21): Security & financial integrity fixes pre-deploy
+- **SQL Migration:** `supabase/migrations/20260418_payment_run_cascade_rpcs.sql` — must be applied in Supabase before deploying
+- **New Env Var:** `MFA_BACKUP_SECRET` — must be added to Vercel environment variables
