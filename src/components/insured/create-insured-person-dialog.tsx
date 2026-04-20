@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/routing'
 import { Button } from '@/components/ui/button'
@@ -72,19 +72,20 @@ export function CreateInsuredPersonDialog() {
     employment_rate: '100',
   })
 
-  // Load employers when dialog opens
-  useEffect(() => {
-    if (open) {
-      loadEmployers()
-    }
-  }, [open])
-
-  const loadEmployers = async () => {
+  const loadEmployers = useCallback(async () => {
     const result = await getEmployersForSelect()
     if (result.employers) {
       setEmployers(result.employers)
     }
-  }
+  }, [])
+
+  // Load employers when dialog opens
+  useEffect(() => {
+    if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- data fetch triggered by UI open event
+      loadEmployers()
+    }
+  }, [open, loadEmployers])
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))

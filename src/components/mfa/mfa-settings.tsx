@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
@@ -36,16 +36,12 @@ export function MfaSettings() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    loadMfaStatus()
-  }, [])
-
-  const getAccessToken = async (): Promise<string | null> => {
+  const getAccessToken = useCallback(async (): Promise<string | null> => {
     const { data: { session } } = await supabase.auth.getSession()
     return session?.access_token ?? null
-  }
+  }, [supabase])
 
-  const loadMfaStatus = async () => {
+  const loadMfaStatus = useCallback(async () => {
     try {
       const { data } = await supabase.auth.mfa.listFactors()
       const totpFactor = data?.totp?.[0]
@@ -75,7 +71,12 @@ export function MfaSettings() {
       // Factor loading failed
     }
     setIsLoading(false)
-  }
+  }, [supabase, getAccessToken])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data fetch on mount
+    loadMfaStatus()
+  }, [loadMfaStatus])
 
   const handleNewDevice = async () => {
     if (confirmCode.length !== 6) return

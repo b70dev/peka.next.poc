@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
@@ -197,10 +198,13 @@ export function EnrollMfa({ onComplete }: EnrollMfaProps) {
                 {/* QR Code */}
                 <div className="flex justify-center">
                   <div className="p-4 bg-white rounded-lg border">
-                    <img
+                    <Image
                       src={qrCode}
                       alt="MFA QR Code"
+                      width={192}
+                      height={192}
                       className="w-48 h-48"
+                      unoptimized
                     />
                   </div>
                 </div>

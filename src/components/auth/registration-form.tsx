@@ -52,6 +52,7 @@ export function RegistrationForm() {
     },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- react-hook-form's watch is not compatible with React Compiler
   const passwordValue = watch('password', '')
 
   const onSubmit = async (data: RegistrationFormData) => {

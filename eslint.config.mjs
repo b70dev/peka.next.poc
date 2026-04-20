@@ -1,6 +1,6 @@
 import nextConfig from "eslint-config-next"
 
-export default [
+const config = [
   // Ignore shadcn/ui generated components — never manually edited
   { ignores: ["src/components/ui/**"] },
 
@@ -19,3 +19,5 @@ export default [
     },
   },
 ]
+
+export default config

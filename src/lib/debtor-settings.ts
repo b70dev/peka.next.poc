@@ -29,7 +29,6 @@ function asString(value: unknown): string {
 }
 
 export async function loadDebtorSettings(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: SupabaseClient<any, any, any>
 ): Promise<DebtorSettings> {
   const { data, error } = await supabase

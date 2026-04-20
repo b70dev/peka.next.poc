@@ -125,15 +125,6 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
     zIndex: isDragging ? 1 : 0,
   };
 
-  const SortIcon = () => {
-    if (sortBy !== column.id) return null
-    return sortDirection === 'asc' ? (
-      <ChevronUp className="h-4 w-4 ml-1 inline" />
-    ) : (
-      <ChevronDown className="h-4 w-4 ml-1 inline" />
-    )
-  }
-
   return (
     <TableHead
       ref={setNodeRef}
@@ -164,7 +155,13 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
           }}
         >
           {t(column.labelKey)}
-          {column.sortable && <SortIcon />}
+          {column.sortable && sortBy === column.id && (
+            sortDirection === 'asc' ? (
+              <ChevronUp className="h-4 w-4 ml-1 inline" />
+            ) : (
+              <ChevronDown className="h-4 w-4 ml-1 inline" />
+            )
+          )}
         </span>
       </div>
     </TableHead>
@@ -195,6 +192,7 @@ export function InsuredPersonsTable({
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
 
   // Load preferences from localStorage on mount
+  // localStorage only available client-side, avoid SSR hydration mismatch
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
@@ -209,6 +207,7 @@ export function InsuredPersonsTable({
           const missingColumns = DEFAULT_COLUMNS
             .map(c => c.id)
             .filter(id => !validColumns.includes(id))
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
           setColumnOrder([...validColumns, ...missingColumns])
         }
         if (prefs.groupBy) {
@@ -300,6 +299,7 @@ export function InsuredPersonsTable({
   }, [columnOrder])
 
   // Group data
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler will handle memoization; manual useMemo kept as safety net
   const groupedData = useMemo(() => {
     if (groupBy === 'none') {
       return { all: insuredPersons }

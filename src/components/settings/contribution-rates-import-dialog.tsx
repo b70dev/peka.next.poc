@@ -375,6 +375,14 @@ interface ContributionRatesImportDialogProps {
   onImport: (rates: ContributionRateWithTotal[]) => void
 }
 
+const ACCEPTED_FORMATS = '.xlsx,.xls,.csv'
+const ACCEPTED_MIME_TYPES = [
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel',
+  'text/csv',
+  'application/csv',
+]
+
 export function ContributionRatesImportDialog({
   sameForAllGenders,
   onImport,
@@ -391,14 +399,6 @@ export function ContributionRatesImportDialog({
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const acceptedFormats = '.xlsx,.xls,.csv'
-  const acceptedMimeTypes = [
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
-    'text/csv',
-    'application/csv',
-  ]
-
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(true)
@@ -409,26 +409,9 @@ export function ContributionRatesImportDialog({
     setIsDragging(false)
   }, [])
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-
-    const droppedFile = e.dataTransfer.files[0]
-    if (droppedFile) {
-      await processFile(droppedFile)
-    }
-  }, [])
-
-  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      await processFile(selectedFile)
-    }
-  }, [])
-
-  const processFile = async (selectedFile: File) => {
+  const processFile = useCallback(async (selectedFile: File) => {
     // Validate file type
-    const isValidType = acceptedMimeTypes.includes(selectedFile.type) ||
+    const isValidType = ACCEPTED_MIME_TYPES.includes(selectedFile.type) ||
       selectedFile.name.match(/\.(xlsx|xls|csv)$/i)
 
     if (!isValidType) {
@@ -446,11 +429,38 @@ export function ContributionRatesImportDialog({
     const result = await parseFile(selectedFile)
     setImportResult(result)
     setIsLoading(false)
-  }
+  }, [t])
+
+  const handleDrop = useCallback(async (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    const droppedFile = e.dataTransfer.files[0]
+    if (droppedFile) {
+      await processFile(droppedFile)
+    }
+  }, [processFile])
+
+  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]
+    if (selectedFile) {
+      await processFile(selectedFile)
+    }
+  }, [processFile])
 
   const handleDownloadTemplate = useCallback(async () => {
     await generateTemplate(sameForAllGenders)
   }, [sameForAllGenders])
+
+  const handleClose = useCallback(() => {
+    setOpen(false)
+    setFile(null)
+    setImportResult(null)
+    setOverwriteExisting(false)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }, [])
 
   const handleImport = useCallback(() => {
     if (!importResult || importResult.errors.length > 0) return
@@ -470,17 +480,7 @@ export function ContributionRatesImportDialog({
 
     onImport(convertedRates)
     handleClose()
-  }, [importResult, sameForAllGenders, onImport])
-
-  const handleClose = useCallback(() => {
-    setOpen(false)
-    setFile(null)
-    setImportResult(null)
-    setOverwriteExisting(false)
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }, [])
+  }, [importResult, sameForAllGenders, onImport, handleClose])
 
   const validCount = importResult?.rates.filter(r => r.status === 'valid').length ?? 0
   const warningCount = importResult?.rates.filter(r => r.status === 'warning').length ?? 0
@@ -524,7 +524,7 @@ export function ContributionRatesImportDialog({
             <input
               ref={fileInputRef}
               type="file"
-              accept={acceptedFormats}
+              accept={ACCEPTED_FORMATS}
               onChange={handleFileSelect}
               className="hidden"
             />

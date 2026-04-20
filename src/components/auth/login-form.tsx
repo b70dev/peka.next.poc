@@ -56,6 +56,7 @@ export function LoginForm() {
     }
 
     if (authData.session) {
+      // eslint-disable-next-line react-hooks/immutability -- full page reload required after Supabase auth to pick up new session cookies
       window.location.href = '/dashboard'
     } else {
       setError('Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.')

@@ -124,7 +124,7 @@ export function ContributionRatesClient({
       setSameForAllGenders(fetchedVersion?.same_for_all_genders ?? true)
       // Also update age groups when version changes
       setAgeGroups(convertRatesToAgeGroups(fetchedRates || []))
-    } catch (error) {
+    } catch {
       toast.error(t('save.error'))
     } finally {
       setIsLoading(false)
@@ -336,12 +336,12 @@ export function ContributionRatesClient({
         setOriginalRates(rates)
       }
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error(t('save.error'))
     } finally {
       setIsSaving(false)
     }
-  }, [selectedVersion, isEditable, rates, t, router])
+  }, [selectedVersion, isEditable, rates, t, router, ageGroups, sameForAllGenders, viewMode])
 
   // Handle new version created
   const handleVersionCreated = useCallback(() => {
