@@ -8,12 +8,18 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings, Wallet, CreditCard } from 'lucide-react'
+import { ChevronLeft, User, Briefcase, FileText, History, Phone, Mail, MapPin, AlertCircle, Plus, Pencil, Settings, Wallet, CreditCard, Tag } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { EmploymentDialog } from './employment-dialog'
 import { EditInsuredPersonDialog } from './edit-insured-person-dialog'
 import { CreatePaymentOrderDialog } from '@/components/payments/create-payment-order-dialog'
+import { AttributesTab } from './attributes-tab'
 import { usePermissions } from '@/hooks/use-permissions'
+import {
+  AttributeType,
+  AttributeValue,
+  InsuredPersonAttribute,
+} from '@/app/[locale]/(protected)/insured/[id]/actions'
 
 type EmploymentWithEmployer = Employment & {
   employer: Employer | null;
@@ -23,6 +29,9 @@ interface InsuredPersonDetailProps {
   insuredPerson: InsuredPerson;
   employments: EmploymentWithEmployer[];
   accountSummaries: Record<string, AccountSummary>;
+  attributes: InsuredPersonAttribute[];
+  attributeTypes: AttributeType[];
+  attributeValues: AttributeValue[];
 }
 
 const statusColors: Record<string, string> = {
@@ -32,7 +41,7 @@ const statusColors: Record<string, string> = {
   deceased: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
 }
 
-export function InsuredPersonDetail({ insuredPerson, employments, accountSummaries }: InsuredPersonDetailProps) {
+export function InsuredPersonDetail({ insuredPerson, employments, accountSummaries, attributes, attributeTypes, attributeValues }: InsuredPersonDetailProps) {
   const t = useTranslations('insured')
   const tActions = useTranslations('actions')
   const { hasPermission } = usePermissions()
@@ -125,7 +134,7 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
         }}
         className="space-y-6"
       >
-        <TabsList className={`grid w-full ${canCreatePayment ? 'grid-cols-5' : 'grid-cols-4'} lg:w-auto lg:inline-grid`}>
+        <TabsList className={`grid w-full ${canCreatePayment ? 'grid-cols-6' : 'grid-cols-5'} lg:w-auto lg:inline-grid`}>
           <TabsTrigger value="masterData" className="flex items-center gap-2">
             <User className="h-4 w-4 hidden sm:inline" />
             {t('detail.tabs.masterData')}
@@ -143,6 +152,10 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
           <TabsTrigger value="documents" className="flex items-center gap-2">
             <FileText className="h-4 w-4 hidden sm:inline" />
             {t('detail.tabs.documents')}
+          </TabsTrigger>
+          <TabsTrigger value="attributes" className="flex items-center gap-2">
+            <Tag className="h-4 w-4 hidden sm:inline" />
+            {t('detail.tabs.attributes')}
           </TabsTrigger>
           <TabsTrigger value="history" className="flex items-center gap-2">
             <History className="h-4 w-4 hidden sm:inline" />
@@ -360,6 +373,17 @@ export function InsuredPersonDetail({ insuredPerson, employments, accountSummari
               <p className="text-muted-foreground">{t('detail.comingSoon')}</p>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Attributes Tab */}
+        <TabsContent value="attributes">
+          <AttributesTab
+            insuredPersonId={insuredPerson.id}
+            attributes={attributes}
+            attributeTypes={attributeTypes}
+            attributeValues={attributeValues}
+            canEdit={canEdit}
+          />
         </TabsContent>
 
         {/* History Tab */}

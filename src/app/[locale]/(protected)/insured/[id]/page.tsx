@@ -7,6 +7,7 @@ import { InsuredPersonDetail } from '@/components/insured/insured-person-detail'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { AccountSummary } from '@/lib/database.types'
+import { getAttributeMasterData, getInsuredPersonAttributes } from './actions'
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -54,6 +55,12 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
     }
   }
 
+  // Fetch attribute master data and person attributes in parallel
+  const [{ types: attributeTypes, values: attributeValues }, { attributes }] = await Promise.all([
+    getAttributeMasterData(),
+    getInsuredPersonAttributes(id),
+  ])
+
   if (error || !insuredPerson) {
     return (
       <div className="min-h-screen bg-muted/30">
@@ -85,6 +92,9 @@ export default async function InsuredPersonDetailPage({ params }: Props) {
           insuredPerson={insuredPerson}
           employments={employments || []}
           accountSummaries={accountSummariesMap}
+          attributes={attributes ?? []}
+          attributeTypes={attributeTypes}
+          attributeValues={attributeValues}
         />
       </main>
     </div>

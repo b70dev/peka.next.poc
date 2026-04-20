@@ -2,7 +2,34 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { EmploymentInsert, EmploymentUpdate, InsuredPersonUpdate } from '@/lib/database.types'
+import { z } from 'zod'
+import { EmploymentInsert, EmploymentUpdate, InsuredPersonUpdate, Database } from '@/lib/database.types'
+import { requireRole } from '@/lib/auth/require-role'
+
+export type AttributeType = Database["public"]["Tables"]["attribute_types"]["Row"]
+export type AttributeValue = Database["public"]["Tables"]["attribute_values"]["Row"]
+type InsuredPersonAttributeRow = Database["public"]["Tables"]["insured_person_attributes"]["Row"]
+
+export type InsuredPersonAttribute = InsuredPersonAttributeRow & {
+  attribute_type?: AttributeType
+  attribute_value?: AttributeValue
+}
+
+// =============================================================
+// PROJ-22: Zod-Schemas für Merkmal-Eingaben
+// =============================================================
+
+const AttributeMutationSchema = z.object({
+  attribute_type_id: z.string().uuid('Invalid attribute type ID'),
+  attribute_value_id: z.string().uuid('Invalid attribute value ID'),
+  note: z
+    .string()
+    .max(500, 'Note must be at most 500 characters')
+    .nullish()
+    .transform((v) => (v && v.trim().length > 0 ? v.trim() : null)),
+})
+
+const UuidSchema = z.string().uuid('Invalid ID')
 
 export async function addEmployment(
   insuredPersonId: string,
@@ -186,6 +213,194 @@ export async function changeStatus(
   if (historyError) {
     console.error('Error recording status history:', historyError)
     // Don't fail the whole operation for history error
+  }
+
+  revalidatePath(`/insured/${insuredPersonId}`)
+  return { success: true }
+}
+
+// -------------------------------------------------------------
+// PROJ-22: Merkmale - Read actions (jeder aktive Nutzer inkl. viewer)
+// -------------------------------------------------------------
+
+export async function getAttributeMasterData() {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return {
+      error: 'Unauthorized',
+      types: [] as AttributeType[],
+      values: [] as AttributeValue[],
+    }
+  }
+
+  const [typesRes, valuesRes] = await Promise.all([
+    supabase
+      .from('attribute_types')
+      .select('*')
+      .order('name')
+      .limit(500),
+    supabase
+      .from('attribute_values')
+      .select('*')
+      .order('sort_order')
+      .order('name')
+      .limit(5000),
+  ])
+
+  if (typesRes.error) console.error('Error fetching attribute types:', typesRes.error)
+  if (valuesRes.error) console.error('Error fetching attribute values:', valuesRes.error)
+
+  return {
+    types: (typesRes.data || []) as AttributeType[],
+    values: (valuesRes.data || []) as AttributeValue[],
+  }
+}
+
+export async function getInsuredPersonAttributes(insuredPersonId: string) {
+  const idCheck = UuidSchema.safeParse(insuredPersonId)
+  if (!idCheck.success) {
+    return { error: 'Invalid insured person ID', attributes: [] as InsuredPersonAttribute[] }
+  }
+
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized', attributes: [] as InsuredPersonAttribute[] }
+
+  const { data, error } = await supabase
+    .from('insured_person_attributes')
+    .select('*, attribute_type:attribute_types(*), attribute_value:attribute_values(*)')
+    .eq('insured_person_id', insuredPersonId)
+    .order('created_at')
+    .limit(500)
+
+  if (error) {
+    console.error('Error fetching attributes:', error)
+    return { error: error.message, attributes: [] as InsuredPersonAttribute[] }
+  }
+
+  return { attributes: (data || []) as InsuredPersonAttribute[] }
+}
+
+// -------------------------------------------------------------
+// PROJ-22: Merkmale - Write actions (nur admin/super_admin)
+// -------------------------------------------------------------
+
+export async function createAttribute(
+  insuredPersonId: string,
+  data: { attribute_type_id: string; attribute_value_id: string; note?: string | null }
+) {
+  // 1. Zod-Validation
+  const idCheck = UuidSchema.safeParse(insuredPersonId)
+  if (!idCheck.success) {
+    return { error: 'Invalid insured person ID' }
+  }
+
+  const parsed = AttributeMutationSchema.safeParse(data)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  }
+
+  // 2. Auth + Rolle (mindestens admin)
+  const roleResult = await requireRole('admin')
+  if (roleResult.error) {
+    return { error: roleResult.error.error }
+  }
+
+  // 3. Insert
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('insured_person_attributes')
+    .insert({
+      insured_person_id: insuredPersonId,
+      attribute_type_id: parsed.data.attribute_type_id,
+      attribute_value_id: parsed.data.attribute_value_id,
+      note: parsed.data.note,
+    })
+
+  if (error) {
+    if (error.code === '23505') return { error: 'duplicateAttribute' }
+    console.error('Error creating attribute:', error)
+    return { error: error.message }
+  }
+
+  revalidatePath(`/insured/${insuredPersonId}`)
+  return { success: true }
+}
+
+export async function updateAttribute(
+  attributeId: string,
+  insuredPersonId: string,
+  data: { attribute_type_id: string; attribute_value_id: string; note?: string | null }
+) {
+  // 1. Zod-Validation
+  const idCheck = UuidSchema.safeParse(attributeId)
+  const insuredIdCheck = UuidSchema.safeParse(insuredPersonId)
+  if (!idCheck.success || !insuredIdCheck.success) {
+    return { error: 'Invalid ID' }
+  }
+
+  const parsed = AttributeMutationSchema.safeParse(data)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  }
+
+  // 2. Auth + Rolle (mindestens admin)
+  const roleResult = await requireRole('admin')
+  if (roleResult.error) {
+    return { error: roleResult.error.error }
+  }
+
+  // 3. Update
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('insured_person_attributes')
+    .update({
+      attribute_type_id: parsed.data.attribute_type_id,
+      attribute_value_id: parsed.data.attribute_value_id,
+      note: parsed.data.note,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', attributeId)
+    .eq('insured_person_id', insuredPersonId)
+
+  if (error) {
+    if (error.code === '23505') return { error: 'duplicateAttribute' }
+    console.error('Error updating attribute:', error)
+    return { error: error.message }
+  }
+
+  revalidatePath(`/insured/${insuredPersonId}`)
+  return { success: true }
+}
+
+export async function deleteAttribute(attributeId: string, insuredPersonId: string) {
+  // 1. Zod-Validation
+  const idCheck = UuidSchema.safeParse(attributeId)
+  const insuredIdCheck = UuidSchema.safeParse(insuredPersonId)
+  if (!idCheck.success || !insuredIdCheck.success) {
+    return { error: 'Invalid ID' }
+  }
+
+  // 2. Auth + Rolle (mindestens admin)
+  const roleResult = await requireRole('admin')
+  if (roleResult.error) {
+    return { error: roleResult.error.error }
+  }
+
+  // 3. Delete (scoped auf insured_person_id für zusätzliche Sicherheit)
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('insured_person_attributes')
+    .delete()
+    .eq('id', attributeId)
+    .eq('insured_person_id', insuredPersonId)
+
+  if (error) {
+    console.error('Error deleting attribute:', error)
+    return { error: error.message }
   }
 
   revalidatePath(`/insured/${insuredPersonId}`)

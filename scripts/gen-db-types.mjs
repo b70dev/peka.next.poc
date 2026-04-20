@@ -101,6 +101,13 @@ export type UserProfileUpdate = Database["public"]["Tables"]["user_profiles"]["U
 export type UserRoleAuditLog = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
 export type UserRoleAuditLogRow = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
 export type UserRoleAuditLogInsert = Database["public"]["Tables"]["user_role_audit_log"]["Insert"]
+
+// Attributes (PROJ-22)
+export type AttributeType = Database["public"]["Tables"]["attribute_types"]["Row"]
+export type AttributeValue = Database["public"]["Tables"]["attribute_values"]["Row"]
+export type InsuredPersonAttributeRow = Database["public"]["Tables"]["insured_person_attributes"]["Row"]
+export type InsuredPersonAttributeInsert = Database["public"]["Tables"]["insured_person_attributes"]["Insert"]
+export type InsuredPersonAttributeUpdate = Database["public"]["Tables"]["insured_person_attributes"]["Update"]
 `
 
 const isWindows = process.platform === "win32"

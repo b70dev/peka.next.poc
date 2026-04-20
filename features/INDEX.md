@@ -34,6 +34,7 @@
 | PROJ-19 | Zahlungsaufträge (Payment Orders) | Deployed (2026-04-13) | [PROJ-19-payment-orders.md](./PROJ-19-payment-orders.md) |
 | PROJ-20 | Zahlungsläufe & Freigabe (Payment Runs) | Deployed (2026-04-18) | [PROJ-20-payment-runs.md](./PROJ-20-payment-runs.md) |
 | PROJ-21 | pain.001 XML-Generierung (ISO 20022) | Deployed (2026-04-18) | [PROJ-21-pain001-xml-generation.md](./PROJ-21-pain001-xml-generation.md) |
+| PROJ-22 | Versicherten-Merkmale (Attribut-Verwaltung) | Complete | [PROJ-22-insured-person-attributes.md](./PROJ-22-insured-person-attributes.md) |
 
 <!-- Add features above this line -->
 
@@ -46,10 +47,10 @@
 
 ## Summary
 
-- **Total Features:** 21
+- **Total Features:** 22
 - **Deployed/Complete:** 8 (PROJ-3, PROJ-8, PROJ-9, PROJ-10, PROJ-17, PROJ-19, PROJ-20, PROJ-21)
 - **Done (MVP):** 5 (PROJ-1, PROJ-4, PROJ-5, PROJ-6, PROJ-7)
-- **In Progress:** 0
-- **Planned:** 10 (PROJ-2, PROJ-11, PROJ-12, PROJ-13, PROJ-14, PROJ-15, PROJ-16, PROJ-18, PROJ-20, PROJ-21)
+- **In Progress:** 1 (PROJ-22)
+- **Planned:** 8 (PROJ-2, PROJ-11, PROJ-12, PROJ-13, PROJ-14, PROJ-15, PROJ-16, PROJ-18)
 
-## Next Available ID: PROJ-22
+## Next Available ID: PROJ-23

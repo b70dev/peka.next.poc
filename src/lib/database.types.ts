@@ -136,6 +136,56 @@ export type Database = {
           },
         ]
       }
+      attribute_types: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      attribute_values: {
+        Row: {
+          attribute_type_id: string
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          attribute_type_id: string
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          attribute_type_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attribute_values_attribute_type_id_fkey"
+            columns: ["attribute_type_id"]
+            isOneToOne: false
+            referencedRelation: "attribute_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employer_contribution_rate_versions: {
         Row: {
           created_at: string
@@ -390,6 +440,58 @@ export type Database = {
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      insured_person_attributes: {
+        Row: {
+          attribute_type_id: string
+          attribute_value_id: string
+          created_at: string
+          id: string
+          insured_person_id: string
+          note: string | null
+          updated_at: string
+        }
+        Insert: {
+          attribute_type_id: string
+          attribute_value_id: string
+          created_at?: string
+          id?: string
+          insured_person_id: string
+          note?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attribute_type_id?: string
+          attribute_value_id?: string
+          created_at?: string
+          id?: string
+          insured_person_id?: string
+          note?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insured_person_attributes_attribute_type_id_fkey"
+            columns: ["attribute_type_id"]
+            isOneToOne: false
+            referencedRelation: "attribute_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insured_person_attributes_attribute_value_id_fkey"
+            columns: ["attribute_value_id"]
+            isOneToOne: false
+            referencedRelation: "attribute_values"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insured_person_attributes_insured_person_id_fkey"
+            columns: ["insured_person_id"]
+            isOneToOne: false
+            referencedRelation: "insured_persons"
             referencedColumns: ["id"]
           },
         ]
@@ -1559,6 +1661,8 @@ export type Database = {
         }[]
       }
       hash_backup_code: { Args: { plain_code: string }; Returns: string }
+      is_active_admin: { Args: never; Returns: boolean }
+      is_active_user: { Args: never; Returns: boolean }
       is_admin_or_above: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       is_authenticated_active_user: { Args: never; Returns: boolean }
@@ -1879,3 +1983,10 @@ export type UserProfileUpdate = Database["public"]["Tables"]["user_profiles"]["U
 export type UserRoleAuditLog = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
 export type UserRoleAuditLogRow = Database["public"]["Tables"]["user_role_audit_log"]["Row"]
 export type UserRoleAuditLogInsert = Database["public"]["Tables"]["user_role_audit_log"]["Insert"]
+
+// Attributes (PROJ-22)
+export type AttributeType = Database["public"]["Tables"]["attribute_types"]["Row"]
+export type AttributeValue = Database["public"]["Tables"]["attribute_values"]["Row"]
+export type InsuredPersonAttributeRow = Database["public"]["Tables"]["insured_person_attributes"]["Row"]
+export type InsuredPersonAttributeInsert = Database["public"]["Tables"]["insured_person_attributes"]["Insert"]
+export type InsuredPersonAttributeUpdate = Database["public"]["Tables"]["insured_person_attributes"]["Update"]

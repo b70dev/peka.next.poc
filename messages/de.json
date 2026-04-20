@@ -292,6 +292,7 @@
         "insurance": "Versicherung",
         "payments": "Zahlungen",
         "documents": "Dokumente",
+        "attributes": "Merkmale",
         "history": "Historie"
       },
       "sections": {
@@ -432,6 +433,40 @@
       },
       "success": "Versicherte Person wurde erfolgreich erfasst",
       "error": "Fehler beim Erfassen der versicherten Person"
+    },
+    "attributes": {
+      "title": "Merkmale",
+      "addButton": "Merkmal hinzufügen",
+      "empty": "Keine Merkmale erfasst",
+      "emptyDescription": "Klicken Sie auf 'Merkmal hinzufügen', um ein erstes Merkmal zu erfassen.",
+      "columns": {
+        "type": "Merkmals-Art",
+        "value": "Ausprägung",
+        "note": "Bemerkung",
+        "actions": "Aktionen"
+      },
+      "create": {
+        "title": "Merkmal hinzufügen",
+        "description": "Erfassen Sie ein neues Merkmal für diese versicherte Person.",
+        "typeLabel": "Merkmals-Art",
+        "typePlaceholder": "Merkmals-Art wählen...",
+        "valueLabel": "Ausprägung",
+        "valuePlaceholder": "Ausprägung wählen...",
+        "noteLabel": "Bemerkung",
+        "notePlaceholder": "Optionale Bemerkung (max. 500 Zeichen)",
+        "noTypes": "Keine Merkmals-Arten konfiguriert",
+        "noValues": "Keine Ausprägungen verfügbar",
+        "duplicateError": "Diese Merkmals-Art ist für diese Person bereits vorhanden."
+      },
+      "edit": {
+        "title": "Merkmal bearbeiten",
+        "description": "Ändern Sie die Angaben zu diesem Merkmal."
+      },
+      "delete": {
+        "title": "Merkmal löschen",
+        "description": "Möchten Sie dieses Merkmal wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "confirm": "Löschen"
+      }
     }
   },
   "accounts": {

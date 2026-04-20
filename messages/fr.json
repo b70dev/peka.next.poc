@@ -292,6 +292,7 @@
         "insurance": "Assurance",
         "payments": "Paiements",
         "documents": "Documents",
+        "attributes": "Attributs",
         "history": "Historique"
       },
       "sections": {
@@ -432,6 +433,40 @@
       },
       "success": "La personne assurée a été enregistrée avec succès",
       "error": "Erreur lors de l'enregistrement de la personne assurée"
+    },
+    "attributes": {
+      "title": "Attributs",
+      "addButton": "Ajouter un attribut",
+      "empty": "Aucun attribut enregistré",
+      "emptyDescription": "Cliquez sur 'Ajouter un attribut' pour enregistrer le premier attribut.",
+      "columns": {
+        "type": "Type d'attribut",
+        "value": "Valeur",
+        "note": "Remarque",
+        "actions": "Actions"
+      },
+      "create": {
+        "title": "Ajouter un attribut",
+        "description": "Enregistrez un nouvel attribut pour cette personne assurée.",
+        "typeLabel": "Type d'attribut",
+        "typePlaceholder": "Sélectionner le type d'attribut...",
+        "valueLabel": "Valeur",
+        "valuePlaceholder": "Sélectionner la valeur...",
+        "noteLabel": "Remarque",
+        "notePlaceholder": "Remarque optionnelle (max. 500 caractères)",
+        "noTypes": "Aucun type d'attribut configuré",
+        "noValues": "Aucune valeur disponible",
+        "duplicateError": "Ce type d'attribut existe déjà pour cette personne."
+      },
+      "edit": {
+        "title": "Modifier l'attribut",
+        "description": "Modifiez les détails de cet attribut."
+      },
+      "delete": {
+        "title": "Supprimer l'attribut",
+        "description": "Voulez-vous vraiment supprimer cet attribut? Cette action est irréversible.",
+        "confirm": "Supprimer"
+      }
     }
   },
   "accounts": {

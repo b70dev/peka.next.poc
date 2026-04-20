@@ -292,6 +292,7 @@
         "insurance": "Insurance",
         "payments": "Payments",
         "documents": "Documents",
+        "attributes": "Attributes",
         "history": "History"
       },
       "sections": {
@@ -432,6 +433,40 @@
       },
       "success": "Insured person has been successfully registered",
       "error": "Error registering insured person"
+    },
+    "attributes": {
+      "title": "Attributes",
+      "addButton": "Add attribute",
+      "empty": "No attributes recorded",
+      "emptyDescription": "Click 'Add attribute' to record the first attribute.",
+      "columns": {
+        "type": "Attribute type",
+        "value": "Value",
+        "note": "Note",
+        "actions": "Actions"
+      },
+      "create": {
+        "title": "Add attribute",
+        "description": "Record a new attribute for this insured person.",
+        "typeLabel": "Attribute type",
+        "typePlaceholder": "Select attribute type...",
+        "valueLabel": "Value",
+        "valuePlaceholder": "Select value...",
+        "noteLabel": "Note",
+        "notePlaceholder": "Optional note (max. 500 characters)",
+        "noTypes": "No attribute types configured",
+        "noValues": "No values available",
+        "duplicateError": "This attribute type already exists for this person."
+      },
+      "edit": {
+        "title": "Edit attribute",
+        "description": "Update the details of this attribute."
+      },
+      "delete": {
+        "title": "Delete attribute",
+        "description": "Do you really want to delete this attribute? This action cannot be undone.",
+        "confirm": "Delete"
+      }
     }
   },
   "accounts": {

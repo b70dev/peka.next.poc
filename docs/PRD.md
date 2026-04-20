@@ -44,6 +44,7 @@ Ziel ist eine schlanke, barrierefreie Anwendung (WCAG 2.1 AA), die BVG-Verwaltun
 | P1 | Zahlungsaufträge (Payment Orders) | [PROJ-19](../features/PROJ-19-payment-orders.md) | Planned |
 | P1 | Zahlungsläufe & Freigabe (Payment Runs) | [PROJ-20](../features/PROJ-20-payment-runs.md) | Planned |
 | P1 | pain.001 XML-Generierung (ISO 20022) | [PROJ-21](../features/PROJ-21-pain001-xml-generation.md) | Planned |
+| P1 | Versicherten-Merkmale (Attribut-Verwaltung) | [PROJ-22](../features/PROJ-22-insured-person-attributes.md) | Planned |
 
 ### P2 - Versicherten-Portal - Planned
 
