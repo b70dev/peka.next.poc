@@ -104,6 +104,38 @@ export type Database = {
           },
         ]
       }
+      app_settings: {
+        Row: {
+          description: string | null
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employer_contribution_rate_versions: {
         Row: {
           created_at: string
@@ -112,6 +144,7 @@ export type Database = {
           id: string
           same_for_all_genders: boolean
           updated_at: string
+          updated_by: string | null
           valid_from: string
           valid_to: string | null
         }
@@ -122,6 +155,7 @@ export type Database = {
           id?: string
           same_for_all_genders?: boolean
           updated_at?: string
+          updated_by?: string | null
           valid_from: string
           valid_to?: string | null
         }
@@ -132,6 +166,7 @@ export type Database = {
           id?: string
           same_for_all_genders?: boolean
           updated_at?: string
+          updated_by?: string | null
           valid_from?: string
           valid_to?: string | null
         }
@@ -633,6 +668,364 @@ export type Database = {
           },
         ]
       }
+      mfa_audit_log: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: Database["public"]["Enums"]["mfa_event_type"]
+          id: string
+          ip_address: unknown
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: Database["public"]["Enums"]["mfa_event_type"]
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: Database["public"]["Enums"]["mfa_event_type"]
+          id?: string
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mfa_backup_codes: {
+        Row: {
+          code_hash: string
+          created_at: string
+          id: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          code_hash: string
+          created_at?: string
+          id?: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          code_hash?: string
+          created_at?: string
+          id?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mfa_failed_attempts: {
+        Row: {
+          attempt_count: number
+          created_at: string
+          id: string
+          last_attempt_at: string | null
+          locked_until: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempt_count?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          locked_until?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempt_count?: number
+          created_at?: string
+          id?: string
+          last_attempt_at?: string | null
+          locked_until?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_orders: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string
+          currency: string
+          employment_id: string | null
+          execution_date: string | null
+          iban: string
+          id: string
+          insured_person_id: string | null
+          note: string | null
+          payment_run_id: string | null
+          purpose: string
+          recipient_name: string
+          reference_number: string | null
+          status: Database["public"]["Enums"]["payment_order_status"]
+          updated_at: string
+          updated_by: string
+          version: number
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by: string
+          currency?: string
+          employment_id?: string | null
+          execution_date?: string | null
+          iban: string
+          id?: string
+          insured_person_id?: string | null
+          note?: string | null
+          payment_run_id?: string | null
+          purpose: string
+          recipient_name: string
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["payment_order_status"]
+          updated_at?: string
+          updated_by: string
+          version?: number
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string
+          currency?: string
+          employment_id?: string | null
+          execution_date?: string | null
+          iban?: string
+          id?: string
+          insured_person_id?: string | null
+          note?: string | null
+          payment_run_id?: string | null
+          purpose?: string
+          recipient_name?: string
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["payment_order_status"]
+          updated_at?: string
+          updated_by?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_orders_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_orders_payment_run_id_fkey"
+            columns: ["payment_run_id"]
+            isOneToOne: false
+            referencedRelation: "payment_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_orders_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_run_events: {
+        Row: {
+          actor_id: string
+          created_at: string
+          event_type: Database["public"]["Enums"]["payment_run_event_type"]
+          id: string
+          payload: Json | null
+          payment_run_id: string
+        }
+        Insert: {
+          actor_id: string
+          created_at?: string
+          event_type: Database["public"]["Enums"]["payment_run_event_type"]
+          id?: string
+          payload?: Json | null
+          payment_run_id: string
+        }
+        Update: {
+          actor_id?: string
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["payment_run_event_type"]
+          id?: string
+          payload?: Json | null
+          payment_run_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_run_events_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_run_events_payment_run_id_fkey"
+            columns: ["payment_run_id"]
+            isOneToOne: false
+            referencedRelation: "payment_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_run_exports: {
+        Row: {
+          created_at: string
+          exported_at: string
+          exported_by: string
+          filename: string
+          id: string
+          message_id: string
+          pain_version: Database["public"]["Enums"]["pain001_version"]
+          payment_run_id: string
+          xml_content: string
+        }
+        Insert: {
+          created_at?: string
+          exported_at?: string
+          exported_by: string
+          filename: string
+          id?: string
+          message_id: string
+          pain_version: Database["public"]["Enums"]["pain001_version"]
+          payment_run_id: string
+          xml_content: string
+        }
+        Update: {
+          created_at?: string
+          exported_at?: string
+          exported_by?: string
+          filename?: string
+          id?: string
+          message_id?: string
+          pain_version?: Database["public"]["Enums"]["pain001_version"]
+          payment_run_id?: string
+          xml_content?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_run_exports_exported_by_fkey"
+            columns: ["exported_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_run_exports_payment_run_id_fkey"
+            columns: ["payment_run_id"]
+            isOneToOne: false
+            referencedRelation: "payment_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_runs: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          created_by: string
+          execution_date: string | null
+          id: string
+          name: string
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["payment_run_status"]
+          submitted_at: string | null
+          submitted_by: string | null
+          updated_at: string
+          version: number
+          visaed_at: string | null
+          visaed_by: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by: string
+          execution_date?: string | null
+          id?: string
+          name: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["payment_run_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
+          updated_at?: string
+          version?: number
+          visaed_at?: string | null
+          visaed_by?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string
+          execution_date?: string | null
+          id?: string
+          name?: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["payment_run_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
+          updated_at?: string
+          version?: number
+          visaed_at?: string | null
+          visaed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_runs_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_runs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_runs_rejected_by_fkey"
+            columns: ["rejected_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_runs_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_runs_visaed_by_fkey"
+            columns: ["visaed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projection_parameters: {
         Row: {
           created_at: string
@@ -1105,6 +1498,14 @@ export type Database = {
       }
     }
     Functions: {
+      approve_payment_run: {
+        Args: {
+          p_actor_id: string
+          p_expected_version: number
+          p_run_id: string
+        }
+        Returns: Json
+      }
       get_account_balance_at_date: {
         Args: { p_account_id: string; p_date: string }
         Returns: number
@@ -1157,11 +1558,26 @@ export type Database = {
           value_date: string
         }[]
       }
+      hash_backup_code: { Args: { plain_code: string }; Returns: string }
       is_admin_or_above: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       is_authenticated_active_user: { Args: never; Returns: boolean }
+      is_payment_admin: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      reject_payment_run: {
+        Args: {
+          p_actor_id: string
+          p_expected_version: number
+          p_reason: string
+          p_run_id: string
+        }
+        Returns: Json
+      }
       update_last_login: { Args: never; Returns: undefined }
+      verify_backup_code: {
+        Args: { hashed_code: string; plain_code: string }
+        Returns: boolean
+      }
     }
     Enums: {
       balance_effect: "positive" | "negative" | "neutral"
@@ -1173,6 +1589,39 @@ export type Database = {
         | "divorced"
         | "widowed"
         | "registered_partnership"
+      mfa_event_type:
+        | "setup_completed"
+        | "code_verified"
+        | "code_failed"
+        | "device_changed"
+        | "backup_code_used"
+        | "backup_codes_regenerated"
+        | "account_locked"
+        | "account_unlocked"
+      pain001_version: "pain.001.001.03.ch.02" | "pain.001.001.09.ch.03"
+      payment_order_status:
+        | "draft"
+        | "in_payment_run"
+        | "approved"
+        | "exported"
+        | "cancelled"
+      payment_run_event_type:
+        | "created"
+        | "order_added"
+        | "order_removed"
+        | "submitted"
+        | "visaed"
+        | "approved"
+        | "rejected"
+        | "exported"
+        | "renamed"
+      payment_run_status:
+        | "draft"
+        | "in_review"
+        | "visaed"
+        | "approved"
+        | "rejected"
+        | "exported"
       sort_direction: "asc" | "desc"
       transaction_effect: "credit" | "debit"
     }
@@ -1311,6 +1760,43 @@ export const Constants = {
         "divorced",
         "widowed",
         "registered_partnership",
+      ],
+      mfa_event_type: [
+        "setup_completed",
+        "code_verified",
+        "code_failed",
+        "device_changed",
+        "backup_code_used",
+        "backup_codes_regenerated",
+        "account_locked",
+        "account_unlocked",
+      ],
+      pain001_version: ["pain.001.001.03.ch.02", "pain.001.001.09.ch.03"],
+      payment_order_status: [
+        "draft",
+        "in_payment_run",
+        "approved",
+        "exported",
+        "cancelled",
+      ],
+      payment_run_event_type: [
+        "created",
+        "order_added",
+        "order_removed",
+        "submitted",
+        "visaed",
+        "approved",
+        "rejected",
+        "exported",
+        "renamed",
+      ],
+      payment_run_status: [
+        "draft",
+        "in_review",
+        "visaed",
+        "approved",
+        "rejected",
+        "exported",
       ],
       sort_direction: ["asc", "desc"],
       transaction_effect: ["credit", "debit"],
