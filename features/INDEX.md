@@ -34,7 +34,7 @@
 | PROJ-19 | Zahlungsaufträge (Payment Orders) | Deployed (2026-04-13) | [PROJ-19-payment-orders.md](./PROJ-19-payment-orders.md) |
 | PROJ-20 | Zahlungsläufe & Freigabe (Payment Runs) | Deployed (2026-04-18) | [PROJ-20-payment-runs.md](./PROJ-20-payment-runs.md) |
 | PROJ-21 | pain.001 XML-Generierung (ISO 20022) | Deployed (2026-04-18) | [PROJ-21-pain001-xml-generation.md](./PROJ-21-pain001-xml-generation.md) |
-| PROJ-22 | Versicherten-Merkmale (Attribut-Verwaltung) | Complete | [PROJ-22-insured-person-attributes.md](./PROJ-22-insured-person-attributes.md) |
+| PROJ-22 | Versicherten-Merkmale (Attribut-Verwaltung) | Deployed (2026-04-20) | [PROJ-22-insured-person-attributes.md](./PROJ-22-insured-person-attributes.md) |
 
 <!-- Add features above this line -->
 

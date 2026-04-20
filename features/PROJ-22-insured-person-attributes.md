@@ -325,4 +325,8 @@ Alle benötigten UI-Komponenten (`Select`, `Dialog`, `Table`, `AlertDialog`, `Te
 - **Recommendation:** Ready to deploy. BUG-1 accepted as product decision. Remaining findings (BUG-2–5) are low-priority and can be addressed in a follow-up sprint.
 
 ## Deployment
-_To be added by /deploy_
+
+- **Deployed:** 2026-04-20
+- **Tag:** v1.22.0-PROJ-22
+- **Branch:** main → Vercel auto-deploy
+- **Migration:** `supabase/migrations/20260420_create_insured_person_attributes.sql` (applied manually via Supabase Dashboard)
