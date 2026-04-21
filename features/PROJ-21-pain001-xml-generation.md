@@ -1,6 +1,6 @@
 # PROJ-21: pain.001 XML-Generierung (ISO 20022)
 
-## Status: In Progress (SPS-2026-Compliance)
+## Status: Deployed (2026-04-21)
 **Created:** 2026-04-13
 **Last Updated:** 2026-04-21
 
@@ -469,7 +469,13 @@ Neu umgesetzt: offizielles SIX-XSD-Schema-Validation + Verzicht auf veraltete Ve
 
 ## Deployment
 
-- **Deployed:** 2026-04-18
+### Initial Deploy — 2026-04-18
 - **Commit:** `8452ffd` — fix(PROJ-20,PROJ-21): Security & financial integrity fixes pre-deploy
 - **SQL Migration:** `supabase/migrations/20260418_payment_run_cascade_rpcs.sql` — must be applied in Supabase before deploying
 - **New Env Var:** `MFA_BACKUP_SECRET` — must be added to Vercel environment variables
+
+### SPS-2026-Compliance Deploy — 2026-04-21
+- **Commit:** `bf0b8da` — feat(PROJ-21): SPS 2026 compliance — offizielle XSD-Validation, Drop 03.ch.02
+- **Keine neue DB-Migration** (DB-Enum `pain.001.001.03.ch.02` bleibt für historische Rows)
+- **Keine neuen Env Vars**
+- **Neue npm-Abhängigkeit:** `xmllint-wasm@^5.2.0` (ersetzt `fast-xml-parser`)
