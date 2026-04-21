@@ -6,7 +6,7 @@ import { PaymentRunDetail } from '@/components/payment-runs/payment-run-detail'
 import { SETTING_HIGH_AMOUNT_THRESHOLD } from '@/lib/payment-runs.types'
 import type { PaymentRun, PaymentRunEvent } from '@/lib/payment-runs.types'
 import type { PaymentOrder } from '@/lib/payment-orders.types'
-import type { PaymentRunExport, Pain001Version } from '@/lib/payment-run-exports.types'
+import type { PaymentRunExport, KnownPain001Version } from '@/lib/payment-run-exports.types'
 import { loadDebtorSettings } from '@/lib/debtor-settings'
 import { isDebtorConfigured } from '@/lib/payment-run-exports.types'
 
@@ -127,7 +127,7 @@ export default async function PaymentRunDetailPage({ params }: Props) {
     payment_run_id: e.payment_run_id,
     exported_at: e.exported_at,
     exported_by: e.exported_by,
-    pain_version: e.pain_version as Pain001Version,
+    pain_version: e.pain_version as KnownPain001Version,
     filename: e.filename,
     message_id: e.message_id,
     created_at: e.created_at,

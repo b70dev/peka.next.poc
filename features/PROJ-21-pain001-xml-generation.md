@@ -1,8 +1,8 @@
 # PROJ-21: pain.001 XML-Generierung (ISO 20022)
 
-## Status: Deployed (2026-04-18)
+## Status: In Progress (SPS-2026-Compliance)
 **Created:** 2026-04-13
-**Last Updated:** 2026-04-18
+**Last Updated:** 2026-04-21
 
 ## Dependencies
 - Requires: PROJ-20 (Zahlungsläufe & Freigabe) - nur freigegebene Zahlungsläufe können als XML exportiert werden
@@ -11,16 +11,16 @@
 
 ## User Stories
 
-### US-1: pain.001-Version wählen
-Als **Admin** möchte ich beim Export die pain.001-Version wählen können (pain.001.001.03.ch.02 oder pain.001.001.09.ch.03), damit ich die Datei passend für meine Bank generieren kann.
+### US-1: pain.001 nach SPS 2026 erzeugen
+Als **Admin** möchte ich, dass der Export ausschliesslich die aktuelle SPS-2026-Version (pain.001.001.09.ch.03) erzeugt, damit meine Bank die Datei gemäss geltenden SIX Swiss Payment Standards akzeptiert. Die ältere Version 03.ch.02 wird gemäss SIX-Migrationsplan nicht mehr unterstützt.
 
 ### US-2: XML-Datei generieren
 Als **Admin** möchte ich aus einem freigegebenen Zahlungslauf eine pain.001-XML-Datei generieren, damit ich diese in mein E-Banking hochladen kann.
 
-### US-3: XML validieren
-Als **Admin** möchte ich, dass die generierte XML-Datei automatisch validiert wird (strukturelle Vorprüfung + XML-Wohlgeformtheit), damit offensichtliche Fehler vor dem Download abgefangen werden.
+### US-3: XML gegen offizielles SPS-XSD validieren
+Als **Admin** möchte ich, dass die generierte XML-Datei automatisch gegen das offizielle SIX-SPS-XSD-Schema (`pain.001.001.09.ch.03.xsd`) validiert wird, damit Schemaverletzungen vor dem Download erkannt werden und die Bank die Datei sicher akzeptiert.
 
-> **Implementierungs-Hinweis:** Vollständige XSD-Schema-Validierung gegen die offiziellen SIX-Schemata ist im Vercel-Edge-Runtime-Kompatiblen pure-JS-Umfeld nicht machbar (kein libxml2 / DOM-Parser). Die Lösung kombiniert strenge strukturelle Vorvalidierung (Pflichtfelder, IBAN, Betrag, Währung, Zeichensatz) mit XML-Wohlgeformtheitscheck via `fast-xml-parser`. Diese Abdeckung schließt die kritischsten Fehlerquellen aus.
+> **Implementierung:** Das offizielle XSD liegt versioniert in `src/lib/pain001/schemas/` und wird über `xmllint-wasm` (WebAssembly-Port von libxml2, Vercel-Node-Runtime-kompatibel) geprüft. Zusätzlich wird eine strenge strukturelle Vorvalidierung durchgeführt (Pflichtfelder, IBAN, Betrag, Währung, Zeichensatz), damit Fachfehler direkt am Feld gemeldet werden können.
 
 ### US-4: XML herunterladen
 Als **Admin** möchte ich die generierte und validierte XML-Datei herunterladen, damit ich sie im E-Banking-System meiner Bank importieren kann.
@@ -33,11 +33,10 @@ Als **Super-Admin** möchte ich die Auftraggeber-Informationen (Name der Pension
 
 ## Acceptance Criteria
 
-### Versions-Auswahl
-- [ ] Dropdown zur Auswahl der pain.001-Version vor dem Export
-- [ ] pain.001.001.03.ch.02 (SIX-Standard, aktuell verbreitet)
-- [ ] pain.001.001.09.ch.03 (neueste Version)
-- [ ] Letzte Auswahl wird als Benutzer-Präferenz gespeichert
+### Versionsstrategie (SPS 2026)
+- [x] Nur pain.001.001.09.ch.03 wird als neues Export-Format erzeugt
+- [x] DB-Enum behält `pain.001.001.03.ch.02` für historische Exporte (readonly)
+- [x] Keine Versions-Auswahl im UI — Version wird konstant angezeigt
 
 ### XML-Generierung
 - [ ] Generierung startet nur bei freigegebenen Zahlungsläufen (Status "Freigegeben")
@@ -51,11 +50,11 @@ Als **Super-Admin** möchte ich die Auftraggeber-Informationen (Name der Pension
 - [ ] Dateiname-Format: pain001_[YYYY-MM-DD]_[Lauf-ID].xml
 
 ### XML-Validierung
-- [ ] Strukturelle Vorvalidierung: Pflichtfelder (Name, IBAN, Betrag, Verwendungszweck, Währung CHF)
-- [ ] IBAN-Validierung für Debtor (CH/LI-IBAN) und Creditor (jede gültige IBAN)
-- [ ] XML-Wohlgeformtheitscheck via `fast-xml-parser` (kein XSD — nicht Vercel-kompatibel)
-- [ ] Bei Validierungsfehler: Fehlermeldung mit Details (welches Feld, welcher Auftrag)
-- [ ] Download ist nur möglich, wenn die Validierung erfolgreich war
+- [x] Strukturelle Vorvalidierung: Pflichtfelder (Name, IBAN, Betrag, Verwendungszweck, Währung CHF)
+- [x] IBAN-Validierung für Debtor (CH/LI-IBAN) und Creditor (jede gültige IBAN)
+- [x] XSD-Validierung gegen das offizielle SIX-Schema `pain.001.001.09.ch.03.xsd` via `xmllint-wasm`
+- [x] Bei Validierungsfehler: Fehlermeldung mit Details (Feld/Auftrag bei Pre-Checks, Zeile + Schema-Message bei XSD-Fehlern)
+- [x] Download ist nur möglich, wenn sowohl strukturelle als auch XSD-Validierung erfolgreich sind
 
 ### Download & Historie
 - [ ] Download als .xml-Datei im Browser
@@ -438,6 +437,28 @@ Neue SQL-Migrationsdatei: `supabase/migrations/20260413_create_payment_run_expor
 | BUG-21-8 (Low) | `isDebtorConfigured` prueft `organisation_id` — bereits korrekt implementiert | ✅ False Positive |
 | BUG-21-10 (Low) | Re-Download ohne Audit-Event | ⏳ Backlog |
 | BUG-21-11 (Low) | Seed setzt leeren `organisation_id` — durch `isDebtorConfigured` gecovered | ⏳ Backlog |
+
+### SPS-2026-Compliance Pass (2026-04-21)
+
+Neu umgesetzt: offizielles SIX-XSD-Schema-Validation + Verzicht auf veraltete Version.
+
+| Change | Detail |
+|---|---|
+| XSD-Validierung (ehem. BUG-21-1) | `xmllint-wasm` (WebAssembly) validiert gegen offizielles SIX-XSD `pain.001.001.09.ch.03.xsd`. XSD im Repo unter `src/lib/pain001/schemas/`, per `outputFileTracingIncludes` für die Export-Route getract. ✅ Closed |
+| Drop pain.001.001.03.ch.02 | Von SIX per SPS 2026 abgelöst (Migrationsdeadline 11/2026). Generator + UI-Dropdown + i18n-Hints entfernt; DB-Enum bleibt für historische Rows. |
+| Namespace-Fix | `<Document xmlns>` geändert auf Base-ISO-Namespace `urn:iso:std:iso:20022:tech:xsd:pain.001.001.09` (das `.ch.03` steckt nur im Dateinamen, nicht im TargetNamespace). |
+| DbtrAgt-Fix (IBAN-only) | SPS 2026 verbietet `<Othr><Id>NOTPROVIDED</Id></Othr>` in DbtrAgt. Generator emittiert jetzt `<FinInstnId/>` — die Bank leitet den Agent über die IBAN ab. |
+| Dependency-Cleanup | `fast-xml-parser` entfernt (XSD-Validator prüft Well-formedness implizit). |
+
+**Files geändert:**
+- `src/lib/pain001-generator.ts` — nur noch 09.ch.03, Namespace + DbtrAgt gefixt
+- `src/lib/pain001/xsd-validator.ts` (neu) — WASM-basierte XSD-Validierung
+- `src/lib/pain001/schemas/pain.001.001.09.ch.03.xsd` (neu) — offizielles SIX-Schema (SPS 2026 Download)
+- `src/lib/payment-run-exports.types.ts` — `SUPPORTED_PAIN001_VERSIONS` (neue Exporte) + `KNOWN_PAIN001_VERSIONS` (inkl. Legacy-Enum-Wert)
+- `src/app/api/payment-runs/[id]/export/route.ts` — XSD-Validation-Schritt, Code `xsd_validation_failed`
+- `src/components/payment-runs/export-xml-dialog.tsx` — Dropdown → konstante Anzeige
+- `messages/{de,en,fr}.json` — Hints aktualisiert
+- `next.config.ts` — `serverExternalPackages: ['xmllint-wasm']` + `outputFileTracingIncludes` für XSD
 
 ### Summary
 - **Acceptance Criteria:** 20/20 passed (1 partial gesondert -- User-Praeferenz fuer Version)

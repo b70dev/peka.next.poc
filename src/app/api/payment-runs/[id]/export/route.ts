@@ -5,8 +5,9 @@ import { requireRole } from '@/lib/auth/require-role'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 import { loadDebtorSettings } from '@/lib/debtor-settings'
 import { generatePain001Xml } from '@/lib/pain001-generator'
+import { validatePain001AgainstXsd } from '@/lib/pain001/xsd-validator'
 import {
-  PAIN001_VERSIONS,
+  SUPPORTED_PAIN001_VERSIONS,
   isDebtorConfigured,
   type Pain001Version,
 } from '@/lib/payment-run-exports.types'
@@ -24,7 +25,7 @@ import type { PaymentOrder } from '@/lib/payment-orders.types'
 type RouteParams = { params: Promise<{ id: string }> }
 
 const ExportRequestSchema = z.object({
-  pain_version: z.enum(PAIN001_VERSIONS as unknown as [string, ...string[]]),
+  pain_version: z.enum(SUPPORTED_PAIN001_VERSIONS as unknown as [string, ...string[]]),
 })
 
 export async function POST(request: Request, { params }: RouteParams) {
@@ -123,11 +124,24 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
-    // 7. Generate + validate XML
+    // 7. Generate XML (structural pre-check)
     const result = generatePain001Xml({ run, orders, debtor, version: painVersion })
     if (!result.success || !result.xml || !result.message_id || !result.filename) {
       return NextResponse.json(
         { error: 'XML validation failed', code: 'validation_failed', errors: result.errors ?? [] },
+        { status: 422 }
+      )
+    }
+
+    // 7b. XSD validation against the official SIX Swiss Payment Standards schema
+    const xsdResult = await validatePain001AgainstXsd(result.xml)
+    if (!xsdResult.valid) {
+      return NextResponse.json(
+        {
+          error: 'XML does not conform to the SIX pain.001 schema',
+          code: 'xsd_validation_failed',
+          errors: xsdResult.errors,
+        },
         { status: 422 }
       )
     }

@@ -12,17 +12,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { AlertTriangle, Download } from 'lucide-react'
-import { PAIN001_VERSIONS, DEFAULT_PAIN001_VERSION } from '@/lib/payment-run-exports.types'
-import type { Pain001Version, Pain001ValidationError } from '@/lib/payment-run-exports.types'
+import { DEFAULT_PAIN001_VERSION } from '@/lib/payment-run-exports.types'
+import type { Pain001ValidationError } from '@/lib/payment-run-exports.types'
 
 interface ExportXmlDialogProps {
   open: boolean
@@ -31,8 +23,6 @@ interface ExportXmlDialogProps {
   /** If true, the debtor settings have all mandatory fields filled in. */
   debtorConfigured: boolean
 }
-
-const LAST_VERSION_STORAGE_KEY = 'peka:pain001:lastVersion'
 
 export function ExportXmlDialog({
   open,
@@ -44,22 +34,12 @@ export function ExportXmlDialog({
   const tActions = useTranslations('actions')
   const router = useRouter()
 
-  const [version, setVersion] = useState<Pain001Version>(DEFAULT_PAIN001_VERSION)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<Pain001ValidationError[]>([])
 
-  // Load last selected version from localStorage when opening
   useEffect(() => {
     if (!open) return
-    try {
-      const stored = localStorage.getItem(LAST_VERSION_STORAGE_KEY)
-      if (stored && (PAIN001_VERSIONS as readonly string[]).includes(stored)) {
-        setVersion(stored as Pain001Version)
-      }
-    } catch {
-      // localStorage unavailable — ignore
-    }
     setError(null)
     setValidationErrors([])
   }, [open])
@@ -72,26 +52,21 @@ export function ExportXmlDialog({
       const response = await fetch(`/api/payment-runs/${runId}/export`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pain_version: version }),
+        body: JSON.stringify({ pain_version: DEFAULT_PAIN001_VERSION }),
       })
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-        if (data.code === 'validation_failed' && Array.isArray(data.errors)) {
+        if (
+          (data.code === 'validation_failed' || data.code === 'xsd_validation_failed') &&
+          Array.isArray(data.errors)
+        ) {
           setValidationErrors(data.errors)
         }
         setError(data.error || t('genericError'))
         return
       }
 
-      // Persist last chosen version
-      try {
-        localStorage.setItem(LAST_VERSION_STORAGE_KEY, version)
-      } catch {
-        // ignore storage errors
-      }
-
-      // Stream download
       const blob = await response.blob()
       const filename =
         response.headers
@@ -114,7 +89,7 @@ export function ExportXmlDialog({
     } finally {
       setLoading(false)
     }
-  }, [runId, version, onOpenChange, router, t])
+  }, [runId, onOpenChange, router, t])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -139,24 +114,11 @@ export function ExportXmlDialog({
           </div>
         )}
 
-        <div className="space-y-2">
-          <Label htmlFor="pain-version">{t('versionLabel')}</Label>
-          <Select
-            value={version}
-            onValueChange={(v) => setVersion(v as Pain001Version)}
-            disabled={loading}
-          >
-            <SelectTrigger id="pain-version">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {PAIN001_VERSIONS.map((v) => (
-                <SelectItem key={v} value={v}>
-                  {v}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="space-y-1 rounded-md border bg-muted/30 p-3 text-sm">
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('versionLabel')}
+          </p>
+          <p className="font-mono">{DEFAULT_PAIN001_VERSION}</p>
           <p className="text-xs text-muted-foreground">{t('versionHint')}</p>
         </div>
 
@@ -171,7 +133,8 @@ export function ExportXmlDialog({
                 {validationErrors.slice(0, 10).map((e, idx) => (
                   <li key={idx} className="text-xs">
                     <span className="font-mono">{e.field}</span>
-                    {e.recipient_name && ` [${e.recipient_name}]`}: {e.message}
+                    {e.recipient_name && ` [${e.recipient_name}]`}
+                    {e.line ? ` (line ${e.line})` : ''}: {e.message}
                   </li>
                 ))}
                 {validationErrors.length > 10 && (

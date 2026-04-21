@@ -1372,9 +1372,9 @@
     },
     "export": {
       "title": "Export pain.001 XML",
-      "description": "Select the pain.001 version and generate the XML file to import into your e-banking.",
+      "description": "The XML file is generated according to the SIX Swiss Payment Standards and validated against the official XSD schema.",
       "versionLabel": "pain.001 version",
-      "versionHint": "The version depends on your bank. pain.001.001.03.ch.02 is currently the most widely used standard.",
+      "versionHint": "peka.next only produces the SPS 2026 version (pain.001.001.09.ch.03). Older versions are no longer supported.",
       "debtorMissing": "Debtor details are not yet fully configured. Please set them up under Settings → Debtor.",
       "submit": "Generate & Download",
       "genericError": "Export failed. Please try again.",
