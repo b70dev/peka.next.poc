@@ -20,7 +20,17 @@
     "nextPage": "Naechste Seite",
     "exportExcel": "Als Excel exportieren",
     "clearSearch": "Suche loeschen",
-    "tableCaption": "Liste der versicherten Personen"
+    "tableCaption": "Liste der versicherten Personen",
+    "dragToReorder": "{column} - Zum Neuanordnen ziehen",
+    "selectDate": "Datum auswaehlen",
+    "editItem": "{name} bearbeiten",
+    "cancelItem": "{name} stornieren",
+    "reverseTransaction": "Transaktion stornieren",
+    "sortByAgeAsc": "Nach Alter aufsteigend sortieren",
+    "sortByAgeDesc": "Nach Alter absteigend sortieren",
+    "userActionsFor": "Aktionen fuer {name}",
+    "saveSuccess": "Erfolgreich gespeichert",
+    "saveError": "Fehler beim Speichern"
   },
   "common": {
     "appName": "peka.next",
@@ -567,6 +577,7 @@
     "description": "Alle Transaktionen für {accountName}",
     "newTransaction": "Neue Transaktion",
     "noTransactions": "Noch keine Transaktionen auf diesem Konto",
+    "reversed": "Storniert",
     "columns": {
       "date": "Datum",
       "valueDate": "Valuta",

@@ -55,6 +55,7 @@ export function ContributionRatesTable({
 }: ContributionRatesTableProps) {
   const t = useTranslations('settings.contributionRates.table')
   const tValidation = useTranslations('settings.contributionRates.validation')
+  const tA11y = useTranslations('accessibility')
 
   // Filter and sort state
   const [genderFilter, setGenderFilter] = useState<GenderFilter>('all')
@@ -211,18 +212,27 @@ export function ContributionRatesTable({
           <TableHeader>
             <TableRow>
               <TableHead
-                className="w-16 text-center cursor-pointer hover:bg-muted/50 select-none sticky top-0 bg-card z-10"
-                onClick={toggleSortDirection}
-                aria-label={sortDirection === 'asc' ? t('sort.ageAsc') : t('sort.ageDesc')}
+                scope="col"
+                className="w-16 text-center sticky top-0 bg-card z-10"
+                aria-sort={sortDirection === 'asc' ? 'ascending' : 'descending'}
               >
-                <div className="flex items-center justify-center gap-1">
+                <button
+                  type="button"
+                  onClick={toggleSortDirection}
+                  className="flex w-full items-center justify-center gap-1 cursor-pointer hover:bg-muted/50 select-none py-1"
+                  aria-label={
+                    sortDirection === 'asc'
+                      ? tA11y('sortByAgeDesc')
+                      : tA11y('sortByAgeAsc')
+                  }
+                >
                   {t('age')}
                   {sortDirection === 'asc' ? (
-                    <ArrowUp className="h-4 w-4" />
+                    <ArrowUp className="h-4 w-4" aria-hidden="true" />
                   ) : (
-                    <ArrowDown className="h-4 w-4" />
+                    <ArrowDown className="h-4 w-4" aria-hidden="true" />
                   )}
-                </div>
+                </button>
               </TableHead>
             {!sameForAllGenders && (
               <TableHead className="w-20 text-center sticky top-0 bg-card z-10">{t('gender')}</TableHead>

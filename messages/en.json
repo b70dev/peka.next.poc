@@ -20,7 +20,17 @@
     "nextPage": "Next page",
     "exportExcel": "Export as Excel",
     "clearSearch": "Clear search",
-    "tableCaption": "List of insured persons"
+    "tableCaption": "List of insured persons",
+    "dragToReorder": "{column} - Drag to reorder",
+    "selectDate": "Select date",
+    "editItem": "Edit {name}",
+    "cancelItem": "Cancel {name}",
+    "reverseTransaction": "Reverse transaction",
+    "sortByAgeAsc": "Sort by age ascending",
+    "sortByAgeDesc": "Sort by age descending",
+    "userActionsFor": "Actions for {name}",
+    "saveSuccess": "Saved successfully",
+    "saveError": "Save failed"
   },
   "common": {
     "appName": "peka.next",
@@ -567,6 +577,7 @@
     "description": "All transactions for {accountName}",
     "newTransaction": "New Transaction",
     "noTransactions": "No transactions on this account yet",
+    "reversed": "Reversed",
     "columns": {
       "date": "Date",
       "valueDate": "Value Date",

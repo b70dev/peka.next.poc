@@ -44,6 +44,7 @@ export function TransactionsTable({
 }: TransactionsTableProps) {
   const t = useTranslations('transactions')
   const tPagination = useTranslations('insured.pagination')
+  const tA11y = useTranslations('accessibility')
   const { hasPermission } = usePermissions()
   const canManageTransactions = hasPermission('transactions.create')
   const router = useRouter()
@@ -124,15 +125,15 @@ export function TransactionsTable({
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {transaction.effect === 'credit' ? (
-                      <ArrowUpCircle className="h-4 w-4 text-green-600" />
+                      <ArrowUpCircle className="h-4 w-4 text-green-600" aria-hidden="true" />
                     ) : (
-                      <ArrowDownCircle className="h-4 w-4 text-red-600" />
+                      <ArrowDownCircle className="h-4 w-4 text-red-600" aria-hidden="true" />
                     )}
                     <span>{transaction.transaction_type_name}</span>
                     {transaction.is_reversed && (
                       <Badge variant="outline" className="text-xs">
-                        <RotateCcw className="h-3 w-3 mr-1" />
-                        Storniert
+                        <RotateCcw className="h-3 w-3 mr-1" aria-hidden="true" />
+                        {t('reversed')}
                       </Badge>
                     )}
                   </div>
@@ -200,7 +201,10 @@ export function TransactionsTable({
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <nav
+            aria-label={tA11y('pageOf', { current: currentPage, total: totalPages })}
+            className="flex items-center gap-2"
+          >
             <Button
               variant="outline"
               size="sm"
@@ -214,10 +218,11 @@ export function TransactionsTable({
               size="icon"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
+              aria-label={tA11y('previousPage')}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
-            <span className="text-sm px-2">
+            <span className="text-sm px-2" aria-current="page">
               {t('pagination.page', { page: currentPage, totalPages })}
             </span>
             <Button
@@ -225,8 +230,9 @@ export function TransactionsTable({
               size="icon"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
+              aria-label={tA11y('nextPage')}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="outline"
@@ -236,7 +242,7 @@ export function TransactionsTable({
             >
               {tPagination('last')}
             </Button>
-          </div>
+          </nav>
         </div>
       )}
     </div>

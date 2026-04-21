@@ -24,6 +24,7 @@ interface DebtorSettingsFormProps {
 export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps) {
   const t = useTranslations('paymentRuns.debtorSettings')
   const tActions = useTranslations('actions')
+  const tA11y = useTranslations('accessibility')
   const router = useRouter()
 
   const [form, setForm] = useState<DebtorSettings>(initialSettings)
@@ -98,33 +99,46 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-2">
-            <Label htmlFor="debtor-name">{t('fields.name')}</Label>
+            <Label htmlFor="debtor-name">
+              {t('fields.name')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
+            </Label>
             <Input
               id="debtor-name"
               value={form.name}
               onChange={(e) => update('name', e.target.value)}
               maxLength={140}
+              required
+              aria-required="true"
               aria-invalid={!!fieldErrors.name}
               aria-describedby={fieldErrors.name ? 'debtor-name-error' : undefined}
             />
             {fieldErrors.name && (
-              <p id="debtor-name-error" className="text-sm text-destructive" role="alert">
+              <p id="debtor-name-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                 {fieldErrors.name}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="debtor-street">{t('fields.street')}</Label>
+            <Label htmlFor="debtor-street">
+              {t('fields.street')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
+            </Label>
             <Input
               id="debtor-street"
               value={form.street}
               onChange={(e) => update('street', e.target.value)}
               maxLength={140}
+              required
+              aria-required="true"
               aria-invalid={!!fieldErrors.street}
+              aria-describedby={fieldErrors.street ? 'debtor-street-error' : undefined}
             />
             {fieldErrors.street && (
-              <p className="text-sm text-destructive" role="alert">
+              <p id="debtor-street-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                 {fieldErrors.street}
               </p>
             )}
@@ -132,31 +146,45 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="debtor-postal">{t('fields.postalCode')}</Label>
+              <Label htmlFor="debtor-postal">
+                {t('fields.postalCode')}{' '}
+                <span className="text-destructive" aria-hidden="true">*</span>
+                <span className="sr-only">({tA11y('requiredField')})</span>
+              </Label>
               <Input
                 id="debtor-postal"
                 value={form.postal_code}
                 onChange={(e) => update('postal_code', e.target.value)}
                 maxLength={16}
+                required
+                aria-required="true"
                 aria-invalid={!!fieldErrors.postal_code}
+                aria-describedby={fieldErrors.postal_code ? 'debtor-postal-error' : undefined}
               />
               {fieldErrors.postal_code && (
-                <p className="text-sm text-destructive" role="alert">
+                <p id="debtor-postal-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                   {fieldErrors.postal_code}
                 </p>
               )}
             </div>
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="debtor-city">{t('fields.city')}</Label>
+              <Label htmlFor="debtor-city">
+                {t('fields.city')}{' '}
+                <span className="text-destructive" aria-hidden="true">*</span>
+                <span className="sr-only">({tA11y('requiredField')})</span>
+              </Label>
               <Input
                 id="debtor-city"
                 value={form.city}
                 onChange={(e) => update('city', e.target.value)}
                 maxLength={70}
+                required
+                aria-required="true"
                 aria-invalid={!!fieldErrors.city}
+                aria-describedby={fieldErrors.city ? 'debtor-city-error' : undefined}
               />
               {fieldErrors.city && (
-                <p className="text-sm text-destructive" role="alert">
+                <p id="debtor-city-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                   {fieldErrors.city}
                 </p>
               )}
@@ -164,12 +192,21 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
           </div>
 
           <div className="space-y-2 max-w-xs">
-            <Label htmlFor="debtor-country">{t('fields.country')}</Label>
+            <Label htmlFor="debtor-country">
+              {t('fields.country')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
+            </Label>
             <Select
               value={form.country || 'CH'}
               onValueChange={(v) => update('country', v)}
             >
-              <SelectTrigger id="debtor-country">
+              <SelectTrigger
+                id="debtor-country"
+                aria-required="true"
+                aria-invalid={!!fieldErrors.country}
+                aria-describedby={fieldErrors.country ? 'debtor-country-error' : undefined}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -178,14 +215,18 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
               </SelectContent>
             </Select>
             {fieldErrors.country && (
-              <p className="text-sm text-destructive" role="alert">
+              <p id="debtor-country-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                 {fieldErrors.country}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="debtor-iban">{t('fields.iban')}</Label>
+            <Label htmlFor="debtor-iban">
+              {t('fields.iban')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
+            </Label>
             <Input
               id="debtor-iban"
               value={form.iban}
@@ -193,31 +234,41 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
               maxLength={34}
               placeholder="CH93 0076 2011 6238 5295 7"
               className="font-mono"
+              required
+              aria-required="true"
               aria-invalid={!!fieldErrors.iban}
+              aria-describedby={`debtor-iban-hint${fieldErrors.iban ? ' debtor-iban-error' : ''}`}
             />
             {fieldErrors.iban && (
-              <p className="text-sm text-destructive" role="alert">
+              <p id="debtor-iban-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                 {fieldErrors.iban}
               </p>
             )}
-            <p className="text-xs text-muted-foreground">{t('fields.ibanHint')}</p>
+            <p id="debtor-iban-hint" className="text-xs text-muted-foreground">{t('fields.ibanHint')}</p>
           </div>
 
           <div className="space-y-2 max-w-xs">
-            <Label htmlFor="debtor-org-id">{t('fields.organisationId')}</Label>
+            <Label htmlFor="debtor-org-id">
+              {t('fields.organisationId')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
+            </Label>
             <Input
               id="debtor-org-id"
               value={form.organisation_id}
               onChange={(e) => update('organisation_id', e.target.value)}
               maxLength={35}
+              required
+              aria-required="true"
               aria-invalid={!!fieldErrors.organisation_id}
+              aria-describedby={`debtor-org-id-hint${fieldErrors.organisation_id ? ' debtor-org-id-error' : ''}`}
             />
             {fieldErrors.organisation_id && (
-              <p className="text-sm text-destructive" role="alert">
+              <p id="debtor-org-id-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
                 {fieldErrors.organisation_id}
               </p>
             )}
-            <p className="text-xs text-muted-foreground">{t('fields.organisationIdHint')}</p>
+            <p id="debtor-org-id-hint" className="text-xs text-muted-foreground">{t('fields.organisationIdHint')}</p>
           </div>
 
           {message && (
@@ -228,6 +279,7 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
                   : 'text-sm text-green-700 dark:text-green-400'
               }
               role={message.kind === 'error' ? 'alert' : 'status'}
+              aria-live={message.kind === 'error' ? 'assertive' : 'polite'}
             >
               {message.text}
             </p>
@@ -235,7 +287,10 @@ export function DebtorSettingsForm({ initialSettings }: DebtorSettingsFormProps)
 
           <Button type="submit" disabled={loading}>
             {loading && (
-              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              <span
+                className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                aria-hidden="true"
+              />
             )}
             {tActions('save')}
           </Button>

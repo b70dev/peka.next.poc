@@ -39,6 +39,7 @@ export function EditInsuredPersonDialog({
 }: EditInsuredPersonDialogProps) {
   const t = useTranslations('insured')
   const tActions = useTranslations('actions')
+  const tA11y = useTranslations('accessibility')
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -111,7 +112,12 @@ export function EditInsuredPersonDialog({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-950 rounded-md">
+            <div
+              id="edit-insured-error"
+              className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-950 rounded-md"
+              role="alert"
+              aria-live="assertive"
+            >
               {error}
             </div>
           )}
@@ -121,31 +127,46 @@ export function EditInsuredPersonDialog({
             <h3 className="font-medium">{t('detail.sections.personalData')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="first_name">{t('detail.fields.firstName')} *</Label>
+                <Label htmlFor="first_name">
+                  {t('detail.fields.firstName')}{' '}
+                  <span className="text-destructive" aria-hidden="true">*</span>
+                  <span className="sr-only">({tA11y('requiredField')})</span>
+                </Label>
                 <Input
                   id="first_name"
                   value={formData.first_name}
                   onChange={(e) => handleChange('first_name', e.target.value)}
                   required
+                  aria-required="true"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="last_name">{t('detail.fields.lastName')} *</Label>
+                <Label htmlFor="last_name">
+                  {t('detail.fields.lastName')}{' '}
+                  <span className="text-destructive" aria-hidden="true">*</span>
+                  <span className="sr-only">({tA11y('requiredField')})</span>
+                </Label>
                 <Input
                   id="last_name"
                   value={formData.last_name}
                   onChange={(e) => handleChange('last_name', e.target.value)}
                   required
+                  aria-required="true"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="date_of_birth">{t('detail.fields.dateOfBirth')} *</Label>
+                <Label htmlFor="date_of_birth">
+                  {t('detail.fields.dateOfBirth')}{' '}
+                  <span className="text-destructive" aria-hidden="true">*</span>
+                  <span className="sr-only">({tA11y('requiredField')})</span>
+                </Label>
                 <Input
                   id="date_of_birth"
                   type="date"
                   value={formData.date_of_birth}
                   onChange={(e) => handleChange('date_of_birth', e.target.value)}
                   required
+                  aria-required="true"
                 />
               </div>
               <div className="space-y-2">
@@ -308,7 +329,7 @@ export function EditInsuredPersonDialog({
               {tActions('cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
               {tActions('save')}
             </Button>
           </DialogFooter>

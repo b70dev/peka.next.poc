@@ -33,6 +33,7 @@ export function CreatePaymentRunDialog({
 }: CreatePaymentRunDialogProps) {
   const t = useTranslations('paymentRuns')
   const tActions = useTranslations('actions')
+  const tA11y = useTranslations('accessibility')
   const router = useRouter()
 
   const [name, setName] = useState('')
@@ -107,7 +108,9 @@ export function CreatePaymentRunDialog({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="run-name">
-              {t('create.name')} <span className="text-destructive">*</span>
+              {t('create.name')}{' '}
+              <span className="text-destructive" aria-hidden="true">*</span>
+              <span className="sr-only">({tA11y('requiredField')})</span>
             </Label>
             <Input
               id="run-name"
@@ -116,7 +119,10 @@ export function CreatePaymentRunDialog({
               placeholder={t('create.namePlaceholder')}
               maxLength={200}
               autoFocus
+              required
+              aria-required="true"
               aria-invalid={!!error}
+              aria-describedby={error ? 'run-name-error' : undefined}
             />
           </div>
 
@@ -129,6 +135,9 @@ export function CreatePaymentRunDialog({
                   type="button"
                   variant="outline"
                   className={cn('w-full justify-start text-left font-normal', !executionDate && 'text-muted-foreground')}
+                  aria-label={tA11y('selectDate')}
+                  aria-haspopup="dialog"
+                  aria-expanded={calendarOpen}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" aria-hidden="true" />
                   {executionDate ? executionDate.toLocaleDateString() : t('create.executionDatePlaceholder')}
@@ -149,7 +158,12 @@ export function CreatePaymentRunDialog({
           </div>
 
           {error && (
-            <p className="text-sm text-destructive" role="alert">
+            <p
+              id="run-name-error"
+              className="text-sm text-destructive"
+              role="alert"
+              aria-live="assertive"
+            >
               {error}
             </p>
           )}
@@ -160,7 +174,10 @@ export function CreatePaymentRunDialog({
             </Button>
             <Button type="submit" disabled={loading}>
               {loading && (
-                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                <span
+                  className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                  aria-hidden="true"
+                />
               )}
               {t('create.submit')}
             </Button>

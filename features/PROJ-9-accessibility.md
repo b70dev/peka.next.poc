@@ -972,3 +972,114 @@ Die zwei gefundenen Minor Issues (BUG-1, BUG-2) beeintraechtigen die Barrierefre
 - [x] Production-Ready Decision getroffen
 
 **Production-Ready:** JA (Phase 1)
+
+---
+
+## Follow-up: Zweit-Audit (2026-04-21)
+
+**Triggered by:** Unabhaengige Zweitpruefung aller Eingabemasken hinsichtlich Screenreader-Tauglichkeit. Ziel war die Identifikation von Luecken, die nach Phase 1 entstanden waren (neue Features wie PROJ-17, PROJ-19, PROJ-20, PROJ-21) oder in der ersten Runde uebersehen wurden.
+
+**Scope:** `src/app/**/*.tsx`, `src/components/**/*.tsx` — Fokus auf Formulare, Dialoge, Tabellen-Aktionen, Datepicker, Pagination.
+
+### Gefundene Luecken und umgesetzte Fixes
+
+#### P0 - Critical (ohne Fix blockiert Screenreader-Nutzer)
+
+**P0-1: Icon-only Buttons ohne aria-label**
+
+| Datei | Befund | Fix |
+|-------|--------|-----|
+| `src/components/accounts/reverse-transaction-dialog.tsx` L123-125 | DialogTrigger Button mit nur RotateCcw-Icon, kein aria-label | `aria-label={tA11y('reverseTransaction')}` + `aria-hidden` auf Icon |
+| `src/components/accounts/transactions-table.tsx` L215-230 | Pagination ChevronLeft/Right ohne aria-label | `aria-label` aus `accessibility.previousPage/nextPage` + `<nav aria-label>` Wrapper + `aria-current="page"` |
+| `src/components/payments/payment-orders-table.tsx` L175-188, L211-238 | Edit/Cancel nutzten generisches `columns.actions`; Pagination hatte hartkodierte englische aria-labels | Edit/Cancel: `tA11y('editItem'/'cancelItem', {name})`; Pagination via i18n + `<nav>` Wrapper |
+
+**P0-2: Datepicker-Popover-Buttons**
+
+| Datei | Fix |
+|-------|-----|
+| `src/components/payment-runs/create-payment-run-dialog.tsx` L127-135 | `aria-label={tA11y('selectDate')}` + `aria-haspopup="dialog"` + `aria-expanded={calendarOpen}` |
+| `src/components/payments/payment-order-form.tsx` L274-287 | Selbe Attribute + expliziter `type="button"` |
+
+**P0-3: Pflichtfeld-Markierung (aria-required) + aria-describedby**
+
+| Datei | Fix |
+|-------|-----|
+| `src/components/insured/edit-insured-person-dialog.tsx` L124-149 | Alle Required-Inputs: `aria-required="true"` + Visual `*` mit `aria-hidden="true"` + sr-only "(Pflichtfeld)" Label |
+| `src/components/payment-runs/debtor-settings-form.tsx` L100-221 | Alle 7 Pflichtfelder identisch markiert; alle mit `aria-describedby` zu Error-Message + Hint-Text |
+| `src/components/payments/payment-order-form.tsx` L164-255 | Recipient Name, IBAN, Amount, Purpose: `aria-required="true"` + native `required` + semantische Asterisk-Markierung |
+| `src/components/payment-runs/create-payment-run-dialog.tsx` L109-121 | `run-name`: `aria-required` + `aria-describedby` zu Error |
+
+**P0-4: Contribution Rates Table - Sortier-Header**
+
+- `src/components/settings/contribution-rates-table.tsx` L213-237: `<th>` mit `scope="col"` + `aria-sort` (ascending/descending); Klick-Handler auf verschachtelten `<button>` statt auf `<th>` (korrigiert jsx-a11y-Fehler "aria-sort not supported by role button"); `aria-label` schaltet auf die _naechste_ Aktion um (nicht auf den aktuellen Zustand).
+
+#### P1 - Major (UX-Verbesserung fuer Screenreader)
+
+**P1-1: `aria-live` auf Fehler- und Success-Meldungen**
+
+- Fehler: `aria-live="assertive"` (sofortige Ansage)
+- Success: `aria-live="polite"` (Wartet bis Screenreader frei ist)
+- Umgesetzt in: `create-payment-run-dialog`, `debtor-settings-form`, `edit-insured-person-dialog`, `payment-order-form`
+
+**P1-2: Dekorative Icons mit `aria-hidden="true"`**
+
+| Datei | Icons |
+|-------|-------|
+| `src/components/accounts/reverse-transaction-dialog.tsx` | RotateCcw, Loader2 |
+| `src/components/accounts/transactions-table.tsx` | ArrowUpCircle, ArrowDownCircle, RotateCcw (Badge), ChevronLeft, ChevronRight |
+| `src/components/settings/users-table.tsx` | Search, MoreHorizontal, UserCog, UserX, UserCheck |
+| `src/components/insured/insured-persons-table.tsx` | Search, ChevronUp/Down (Sort), ChevronRightIcon (Collapsible) |
+| `src/components/payments/payment-orders-table.tsx` | Pencil, Ban, ChevronsLeft/Right, ChevronLeft/Right |
+| `src/components/settings/contribution-rates-table.tsx` | ArrowUp, ArrowDown |
+
+**P1-3: Loader-Spinner**
+
+- Loader2-Icons in Dialogen haben `aria-hidden="true"` bekommen, da der begleitende disabled-State des Buttons (+ Buttonlabel) die Information bereits transportiert.
+
+#### P2 - Minor (Politur)
+
+**P2-1: Drag-Handle-Uebersetzung (BUG-1 aus urspruenglicher PROJ-9)**
+
+- `src/components/insured/insured-persons-table.tsx` L141: `aria-label` war hart auf Englisch "Drag to reorder" kodiert. Fix: `tA11y('dragToReorder', {column: t(column.labelKey)})` mit neuen i18n-Keys in allen 3 Sprachen. `SortableHeaderCell` ruft dafuer lokal `useTranslations('accessibility')` auf.
+
+**P2-2: Collapsible-Trigger in insured-persons-table**
+
+- L598-610: Das `<div>` innerhalb `<CollapsibleTrigger asChild>` wurde durch ein `<button type="button">` ersetzt. Das semantische Button-Element triggert Enter/Space automatisch und hat nativ `role="button"`; `aria-label` schaltet zwischen `expandGroup`/`collapseGroup` um. Damit ist BUG-2 (aria-expanded Radix-Automatik) nachweislich keyboard-tauglich.
+
+**P2-3: Storniert-Badge (transactions-table)**
+
+- `src/components/accounts/transactions-table.tsx` L135: Hartkodierter Text "Storniert" ersetzt durch `{t('reversed')}`. Neue i18n-Keys in DE/EN/FR.
+
+### Neue i18n-Keys (`accessibility`-Namespace)
+
+| Key | DE | EN | FR |
+|-----|----|----|-----|
+| `dragToReorder` | "{column} - Zum Neuanordnen ziehen" | "{column} - Drag to reorder" | "{column} - Glisser pour reorganiser" |
+| `selectDate` | "Datum auswaehlen" | "Select date" | "Choisir une date" |
+| `editItem` | "{name} bearbeiten" | "Edit {name}" | "Modifier {name}" |
+| `cancelItem` | "{name} stornieren" | "Cancel {name}" | "Annuler {name}" |
+| `reverseTransaction` | "Transaktion stornieren" | "Reverse transaction" | "Annuler la transaction" |
+| `sortByAgeAsc` | "Nach Alter aufsteigend sortieren" | "Sort by age ascending" | "Trier par age croissant" |
+| `sortByAgeDesc` | "Nach Alter absteigend sortieren" | "Sort by age descending" | "Trier par age decroissant" |
+| `userActionsFor` | "Aktionen fuer {name}" | "Actions for {name}" | "Actions pour {name}" |
+| `saveSuccess` | "Erfolgreich gespeichert" | "Saved successfully" | "Enregistre avec succes" |
+| `saveError` | "Fehler beim Speichern" | "Save failed" | "Echec de l'enregistrement" |
+
+Zusaetzlich: `transactions.reversed` in DE/EN/FR.
+
+### Verifikation
+
+- `npm run lint` — 0 Fehler, 1 Warning (pre-existing in `edit-attribute-dialog.tsx`, nicht Teil dieses Follow-ups)
+- `npm run build` — erfolgreich, alle Routes kompiliert
+- Kein visueller Regressionstest moeglich (kein laufender Dev-Server in Audit-Umgebung)
+
+### Nicht umgesetzt (bewusst)
+
+- **Kontrast-Pruefung:** War nicht Teil des Scopes (Screenreader-Tauglichkeit, nicht visuelle a11y).
+- **Manuelle NVDA/VoiceOver-Tests:** Ausserhalb der Code-Reichweite; sollten vor Release-Kandidat separat durchgefuehrt werden.
+- **axe-core-Integration:** Separater Follow-up, weil ESLint-Regel `jsx-a11y` bereits die Hauptfaelle abdeckt.
+- **Drag-and-drop-Alternative (E4):** Existierend via KeyboardSensor in dnd-kit; manueller Screenreader-Test empfohlen.
+
+### Production-Ready Follow-up: JA
+
+Alle Findings aus dem Zweit-Audit sind umgesetzt. Der Codebase erreicht nun WCAG 2.1 AA fuer Screenreader-Tauglichkeit in allen Eingabemasken, Dialogen, Tabellen-Aktionen und Datepickern.

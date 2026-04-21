@@ -109,6 +109,7 @@ interface SortableHeaderCellProps {
 }
 
 function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: SortableHeaderCellProps) {
+  const tA11y = useTranslations('accessibility')
   const {
     attributes,
     listeners,
@@ -138,7 +139,7 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
           {...attributes}
           {...listeners}
           className="cursor-grab hover:text-foreground text-muted-foreground hidden md:inline-flex"
-          aria-label={`${t(column.labelKey)} - Drag to reorder`}
+          aria-label={tA11y('dragToReorder', { column: t(column.labelKey) })}
         >
           <GripVertical className="h-4 w-4" aria-hidden="true" />
         </span>
@@ -157,9 +158,9 @@ function SortableHeaderCell({ column, sortBy, sortDirection, onSort, t }: Sortab
           {t(column.labelKey)}
           {column.sortable && sortBy === column.id && (
             sortDirection === 'asc' ? (
-              <ChevronUp className="h-4 w-4 ml-1 inline" />
+              <ChevronUp className="h-4 w-4 ml-1 inline" aria-hidden="true" />
             ) : (
-              <ChevronDown className="h-4 w-4 ml-1 inline" />
+              <ChevronDown className="h-4 w-4 ml-1 inline" aria-hidden="true" />
             )
           )}
         </span>
@@ -460,7 +461,10 @@ export function InsuredPersonsTable({
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+              aria-hidden="true"
+            />
             <Input
               placeholder={t('searchPlaceholder')}
               value={localSearch}
@@ -596,17 +600,26 @@ export function InsuredPersonsTable({
                 onOpenChange={() => toggleGroupCollapse(groupKey)}
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex items-center gap-3 p-4 hover:bg-muted/50 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-3 p-4 text-left hover:bg-muted/50"
+                    aria-label={
+                      collapsedGroups.has(groupKey)
+                        ? tA11y('expandGroup')
+                        : tA11y('collapseGroup')
+                    }
+                  >
                     <ChevronRightIcon
                       className={`h-4 w-4 transition-transform ${
                         !collapsedGroups.has(groupKey) ? 'rotate-90' : ''
                       }`}
+                      aria-hidden="true"
                     />
                     <span className="font-medium">{getGroupLabel(groupKey)}</span>
                     <Badge variant="secondary" className="ml-2">
                       {persons.length}
                     </Badge>
-                  </div>
+                  </button>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <DndContext

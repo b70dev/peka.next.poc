@@ -51,6 +51,7 @@ export function PaymentOrdersTable({
   isPending,
 }: PaymentOrdersTableProps) {
   const t = useTranslations('paymentOrders')
+  const tA11y = useTranslations('accessibility')
   const format = useFormatter()
 
   // Loading skeleton
@@ -172,9 +173,9 @@ export function PaymentOrdersTable({
                           variant="ghost"
                           size="icon"
                           onClick={() => onEdit(order)}
-                          aria-label={`${t('columns.actions')}: ${order.recipient_name}`}
+                          aria-label={tA11y('editItem', { name: order.recipient_name })}
                         >
-                          <Pencil className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" aria-hidden="true" />
                         </Button>
                       )}
                       {CANCELLABLE_STATUSES.includes(order.status) && (
@@ -182,9 +183,9 @@ export function PaymentOrdersTable({
                           variant="ghost"
                           size="icon"
                           onClick={() => onCancel(order)}
-                          aria-label={`${t('cancel.title')}: ${order.recipient_name}`}
+                          aria-label={tA11y('cancelItem', { name: order.recipient_name })}
                         >
-                          <Ban className="h-4 w-4" />
+                          <Ban className="h-4 w-4" aria-hidden="true" />
                         </Button>
                       )}
                     </PermissionGate>
@@ -199,47 +200,50 @@ export function PaymentOrdersTable({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground" aria-current="page">
             {currentPage} / {totalPages}
           </p>
-          <div className="flex items-center gap-1">
+          <nav
+            aria-label={tA11y('pageOf', { current: currentPage, total: totalPages })}
+            className="flex items-center gap-1"
+          >
             <Button
               variant="outline"
               size="icon"
               onClick={() => onPageChange(1)}
               disabled={currentPage <= 1}
-              aria-label="First page"
+              aria-label={tA11y('firstPage')}
             >
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="outline"
               size="icon"
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              aria-label="Previous page"
+              aria-label={tA11y('previousPage')}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="outline"
               size="icon"
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              aria-label="Next page"
+              aria-label={tA11y('nextPage')}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="outline"
               size="icon"
               onClick={() => onPageChange(totalPages)}
               disabled={currentPage >= totalPages}
-              aria-label="Last page"
+              aria-label={tA11y('lastPage')}
             >
-              <ChevronsRight className="h-4 w-4" />
+              <ChevronsRight className="h-4 w-4" aria-hidden="true" />
             </Button>
-          </div>
+          </nav>
         </div>
       )}
     </div>

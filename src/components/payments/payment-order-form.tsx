@@ -51,6 +51,7 @@ export function PaymentOrderForm({
   const t = useTranslations('paymentOrders.create')
   const tValidation = useTranslations('paymentOrders.validation')
   const tActions = useTranslations('actions')
+  const tA11y = useTranslations('accessibility')
 
   const [formData, setFormData] = useState<PaymentOrderFormData>(
     initialData || {
@@ -164,7 +165,9 @@ export function PaymentOrderForm({
       {/* Recipient Name */}
       <div className="space-y-2">
         <Label htmlFor="recipient-name">
-          {t('recipientName')} <span className="text-destructive">*</span>
+          {t('recipientName')}{' '}
+          <span className="text-destructive" aria-hidden="true">*</span>
+          <span className="sr-only">({tA11y('requiredField')})</span>
         </Label>
         <Input
           id="recipient-name"
@@ -172,11 +175,13 @@ export function PaymentOrderForm({
           onChange={(e) => updateField('recipientName', e.target.value)}
           placeholder={t('recipientNamePlaceholder')}
           maxLength={140}
+          required
+          aria-required="true"
           aria-invalid={!!combinedErrors.recipientName}
           aria-describedby={combinedErrors.recipientName ? 'recipient-name-error' : undefined}
         />
         {combinedErrors.recipientName && (
-          <p id="recipient-name-error" className="text-sm text-destructive" role="alert">
+          <p id="recipient-name-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
             {combinedErrors.recipientName}
           </p>
         )}
@@ -185,7 +190,9 @@ export function PaymentOrderForm({
       {/* IBAN */}
       <div className="space-y-2">
         <Label htmlFor="iban">
-          {t('iban')} <span className="text-destructive">*</span>
+          {t('iban')}{' '}
+          <span className="text-destructive" aria-hidden="true">*</span>
+          <span className="sr-only">({tA11y('requiredField')})</span>
         </Label>
         <Input
           id="iban"
@@ -195,11 +202,13 @@ export function PaymentOrderForm({
           placeholder={t('ibanPlaceholder')}
           maxLength={42}
           className="font-mono"
+          required
+          aria-required="true"
           aria-invalid={!!(ibanError || combinedErrors.iban)}
           aria-describedby={ibanError || combinedErrors.iban ? 'iban-error' : undefined}
         />
         {(ibanError || combinedErrors.iban) && (
-          <p id="iban-error" className="text-sm text-destructive" role="alert">
+          <p id="iban-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
             {ibanError || combinedErrors.iban}
           </p>
         )}
@@ -208,7 +217,9 @@ export function PaymentOrderForm({
       {/* Amount */}
       <div className="space-y-2">
         <Label htmlFor="amount">
-          {t('amount')} <span className="text-destructive">*</span>
+          {t('amount')}{' '}
+          <span className="text-destructive" aria-hidden="true">*</span>
+          <span className="sr-only">({tA11y('requiredField')})</span>
         </Label>
         <Input
           id="amount"
@@ -219,11 +230,13 @@ export function PaymentOrderForm({
           onChange={(e) => updateField('amount', e.target.value)}
           placeholder={t('amountPlaceholder')}
           className="tabular-nums"
+          required
+          aria-required="true"
           aria-invalid={!!combinedErrors.amount}
           aria-describedby={combinedErrors.amount ? 'amount-error' : undefined}
         />
         {combinedErrors.amount && (
-          <p id="amount-error" className="text-sm text-destructive" role="alert">
+          <p id="amount-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
             {combinedErrors.amount}
           </p>
         )}
@@ -232,7 +245,9 @@ export function PaymentOrderForm({
       {/* Purpose */}
       <div className="space-y-2">
         <Label htmlFor="purpose">
-          {t('purpose')} <span className="text-destructive">*</span>
+          {t('purpose')}{' '}
+          <span className="text-destructive" aria-hidden="true">*</span>
+          <span className="sr-only">({tA11y('requiredField')})</span>
         </Label>
         <Textarea
           id="purpose"
@@ -241,14 +256,16 @@ export function PaymentOrderForm({
           placeholder={t('purposePlaceholder')}
           maxLength={140}
           rows={2}
+          required
+          aria-required="true"
           aria-invalid={!!combinedErrors.purpose}
-          aria-describedby="purpose-char-count"
+          aria-describedby={`purpose-char-count${combinedErrors.purpose ? ' purpose-error' : ''}`}
         />
         <p id="purpose-char-count" className="text-xs text-muted-foreground">
           {t('purposeCharCount', { count: formData.purpose.length })}
         </p>
         {combinedErrors.purpose && (
-          <p className="text-sm text-destructive" role="alert">
+          <p id="purpose-error" className="text-sm text-destructive" role="alert" aria-live="assertive">
             {combinedErrors.purpose}
           </p>
         )}
@@ -273,11 +290,15 @@ export function PaymentOrderForm({
           <PopoverTrigger asChild>
             <Button
               id="execution-date"
+              type="button"
               variant="outline"
               className={cn(
                 'w-full justify-start text-left font-normal',
                 !formData.executionDate && 'text-muted-foreground'
               )}
+              aria-label={tA11y('selectDate')}
+              aria-haspopup="dialog"
+              aria-expanded={calendarOpen}
             >
               <CalendarIcon className="mr-2 h-4 w-4" aria-hidden="true" />
               {formData.executionDate
@@ -318,7 +339,10 @@ export function PaymentOrderForm({
         </Button>
         <Button type="submit" disabled={loading}>
           {loading && (
-            <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span
+              className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              aria-hidden="true"
+            />
           )}
           {submitLabel}
         </Button>

@@ -48,6 +48,7 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
   const t = useTranslations('settings.userManagement')
   const tRoles = useTranslations('roles')
   const tStatus = useTranslations('status')
+  const tA11y = useTranslations('accessibility')
 
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('all')
@@ -109,7 +110,10 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            aria-hidden="true"
+          />
           <Input
             placeholder={t('searchPlaceholder')}
             value={searchTerm}
@@ -203,13 +207,18 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
                   {!isCurrentUser(user.id) && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={t('columns.actions')}>
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          aria-label={tA11y('userActionsFor', { name: user.full_name || user.email || '-' })}
+                        >
+                          <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setChangeRoleUser(user)}>
-                          <UserCog className="h-4 w-4 mr-2" />
+                          <UserCog className="h-4 w-4 mr-2" aria-hidden="true" />
                           {t('changeRole.title')}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -218,12 +227,12 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
                             onClick={() => setDeactivateUser(user)}
                             className="text-destructive focus:text-destructive"
                           >
-                            <UserX className="h-4 w-4 mr-2" />
+                            <UserX className="h-4 w-4 mr-2" aria-hidden="true" />
                             {t('deactivate.confirm')}
                           </DropdownMenuItem>
                         ) : (
                           <DropdownMenuItem onClick={() => setActivateUser(user)}>
-                            <UserCheck className="h-4 w-4 mr-2" />
+                            <UserCheck className="h-4 w-4 mr-2" aria-hidden="true" />
                             {t('activate.confirm')}
                           </DropdownMenuItem>
                         )}

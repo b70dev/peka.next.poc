@@ -117,11 +117,18 @@ export function ReverseTransactionDialog({
     }
   }
 
+  const tA11y = useTranslations('accessibility')
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          aria-label={tA11y('reverseTransaction')}
+        >
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -189,7 +196,7 @@ export function ReverseTransactionDialog({
               variant="destructive"
               disabled={loading || !reason.trim()}
             >
-              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />}
               {t('confirm')}
             </Button>
           </DialogFooter>
