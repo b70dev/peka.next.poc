@@ -100,6 +100,17 @@ function buildMessageId(orgId: string, runId: string): string {
   return `${org}-${runShort}-${ts}${rnd}`.slice(0, 35)
 }
 
+/**
+ * Extracts the Swiss BC-Nr (Bankclearing number) from a CH/LI IBAN.
+ * IBAN structure: {CC}{2 check}{5 BC-Nr}{12 account} — BC-Nr is at positions 4-8.
+ * Leading zeros are stripped as per SIX SPS guideline examples (e.g. "9000" not "09000").
+ */
+function bcNrFromSwissIban(normalizedIban: string): string {
+  const bc = normalizedIban.slice(4, 9)
+  const stripped = bc.replace(/^0+/, '')
+  return stripped || bc
+}
+
 function buildFilename(runId: string, executionDate: string | null): string {
   const datePart = executionDate
     ? formatDate(executionDate)
@@ -231,16 +242,25 @@ function buildXmlV09(
   lines.push(`          <Ctry>${xmlEscape(debtor.country)}</Ctry>`)
   lines.push('        </PstlAdr>')
   lines.push('      </Dbtr>')
+  const debtorIbanNormalized = normalizeIBAN(debtor.iban)
   lines.push('      <DbtrAcct>')
   lines.push('        <Id>')
-  lines.push(`          <IBAN>${xmlEscape(normalizeIBAN(debtor.iban))}</IBAN>`)
+  lines.push(`          <IBAN>${xmlEscape(debtorIbanNormalized)}</IBAN>`)
   lines.push('        </Id>')
   lines.push('      </DbtrAcct>')
-  // SPS 2026 IBAN-only rule: Debtor agent is derived from the IBAN by the bank.
-  // The FinancialInstitutionIdentification18_pain001_ch_2 restriction only allows
-  // BICFI / ClrSysMmbId / LEI (all optional) — no <Othr>, no NOTPROVIDED.
+  // DbtrAgt is mandatory (no minOccurs=0). The XSD would allow an empty
+  // <FinInstnId/>, but SIX business validation requires at least one child.
+  // Standard SPS-2026 pattern for Swiss/LI IBAN without BIC: ClrSysMmbId with
+  // the BC-Nr (Swiss Bankclearing, code "CHBCC") extracted from the IBAN.
   lines.push('      <DbtrAgt>')
-  lines.push('        <FinInstnId/>')
+  lines.push('        <FinInstnId>')
+  lines.push('          <ClrSysMmbId>')
+  lines.push('            <ClrSysId>')
+  lines.push('              <Cd>CHBCC</Cd>')
+  lines.push('            </ClrSysId>')
+  lines.push(`            <MmbId>${xmlEscape(bcNrFromSwissIban(debtorIbanNormalized))}</MmbId>`)
+  lines.push('          </ClrSysMmbId>')
+  lines.push('        </FinInstnId>')
   lines.push('      </DbtrAgt>')
 
   for (const [idx, o] of orders.entries()) {
