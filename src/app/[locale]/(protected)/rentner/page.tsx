@@ -85,6 +85,7 @@ export default async function RentnerListPage({ params, searchParams }: Props) {
        )`
     )
     .eq('is_active', true)
+    .limit(5000)
     .returns<PensionAccountJoin[]>()
 
   if (error) {

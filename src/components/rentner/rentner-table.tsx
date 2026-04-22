@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition, useCallback } from 'react'
 import { useTranslations, useFormatter } from 'next-intl'
-import { useRouter, usePathname, Link } from '@/i18n/routing'
+import { useRouter, usePathname } from '@/i18n/routing'
 import { useSearchParams } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -18,30 +18,12 @@ import {
 import { Search, X } from 'lucide-react'
 import { useDebouncedCallback } from 'use-debounce'
 import { RentnerExcelExportButton } from './rentner-excel-export-button'
-import type { PensionerRow } from '@/lib/pensioners'
+import { formatAhvNumber, calculateAge, type PensionerRow } from '@/lib/pensioners'
 
 interface RentnerTableProps {
   pensioners: PensionerRow[]
   totalCount: number
   searchTerm: string
-}
-
-function formatAhvNumber(ahv: string): string {
-  if (ahv.length === 13 && !ahv.includes('.')) {
-    return `${ahv.slice(0, 3)}.${ahv.slice(3, 7)}.${ahv.slice(7, 11)}.${ahv.slice(11)}`
-  }
-  return ahv
-}
-
-function calculateAge(dateOfBirth: string): number {
-  const birth = new Date(dateOfBirth)
-  const today = new Date()
-  let age = today.getFullYear() - birth.getFullYear()
-  const monthDelta = today.getMonth() - birth.getMonth()
-  if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < birth.getDate())) {
-    age--
-  }
-  return age
 }
 
 export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTableProps) {
@@ -167,13 +149,24 @@ export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTabl
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {formattedPensioners.map((p) => (
-                  <TableRow key={p.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <Link href={`/rentner/${p.id}`} className="hover:underline font-medium">
-                        {p.last_name}
-                      </Link>
-                    </TableCell>
+                {formattedPensioners.map((p) => {
+                  const navigate = () => router.push(`/rentner/${p.id}`)
+                  return (
+                  <TableRow
+                    key={p.id}
+                    className="hover:bg-muted/50 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring"
+                    role="button"
+                    tabIndex={0}
+                    onClick={navigate}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        navigate()
+                      }
+                    }}
+                    aria-label={`${p.last_name}, ${p.first_name}`}
+                  >
+                    <TableCell className="font-medium">{p.last_name}</TableCell>
                     <TableCell>{p.first_name}</TableCell>
                     <TableCell>
                       <span className="font-mono text-sm">{p.formattedAhv}</span>
@@ -206,7 +199,8 @@ export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTabl
                         : t('notAvailable')}
                     </TableCell>
                   </TableRow>
-                ))}
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

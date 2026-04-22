@@ -79,6 +79,7 @@ export default async function RentnerDetailPage({ params }: Props) {
     .from('employments')
     .select('id')
     .eq('insured_person_id', id)
+    .limit(100)
 
   const employmentIds = (employments || []).map((e) => e.id)
 

@@ -26,7 +26,7 @@ import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 const PensionAmountSchema = z.object({
   monthly_pension_amount: z
     .number()
-    .nonnegative('Amount must be zero or greater')
+    .positive('Amount must be greater than zero')
     .max(9_999_999.99, 'Amount exceeds maximum of 9,999,999.99')
     .refine((v) => Number.isFinite(v), { message: 'Amount must be a finite number' })
     .refine((v) => Math.round(v * 100) === v * 100, {

@@ -1483,7 +1483,6 @@
       "empty": "Aucun paiement enregistré pour le moment.",
       "columns": {
         "date": "Date",
-        "montant": "Montant",
         "amount": "Montant",
         "status": "Statut",
         "reference": "Référence"
