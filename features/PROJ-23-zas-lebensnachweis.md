@@ -113,15 +113,31 @@ UPIServices V2 bietet mit **eCH-0212** ein Broadcast-Modell: Die PK abonniert Mu
 
 Ein späterer Umstieg auf eCH-0212 ist möglich, wenn sich der Anwendungsfall verändert.
 
-### Offene externe Abklärungen (vor /backend notwendig)
+### Externe Abklärungen (alle geklärt)
 
-- [x] **Sedex-Teilnehmer-ID** der Pensionskasse: `4-613196-9`
+- [x] **Sedex-Teilnehmer-ID der PK (Produktion):** `4-613196-9` → im Sedex-Umschlag `sedex://4-613196-9`
+- [x] **Sedex-Teilnehmer-ID der PK (Test):** `sedex://T4-613196-9` (T-Präfix-Konvention)
 - [x] **Sedex-Zertifikat** vorhanden und installiert
 - [x] **UPIServices-Zugang** (Vertrag) vorhanden
 - [x] **Aktuelle WSDL- und XSD-Dateien** von ZAS im Repo unter `docs/ech-schemas/` (Stand 2026-01-29; letzte Dateiversion 2023-05-23)
-- [ ] **UPI-Interface-Spezifikation V2.04D** (Stand 2025-11-13) und **UPI-Handbuch V3.2D** durchlesen (URLs siehe `docs/ech-schemas/README.md`)
-- [ ] **Test-Endpoint der ZAS** (abn/integration) identifizieren für Entwicklung und QA — steht im UPI-Handbuch
-- [ ] **Sedex-Message-Type** für eCH-0086-Nachrichten bestätigen — steht im UPI-Handbuch
+- [x] **UPI-Interface-Spezifikation V2.04D** und **UPI-Handbuch V3.2D** gelesen (URLs siehe `docs/ech-schemas/README.md`)
+- [x] **ZAS Sedex-ID (Empfänger):** Produktion `sedex://3-CH-24`, Test `sedex://T3-CH-24`
+- [x] **Sedex-Message-Type für eCH-0086:** `86` (aus offiziellen Beispiel-XMLs der eCH-0086-Spezifikation)
+
+### Betriebs-Parameter aus UPI-Handbuch V3.2D
+
+**Asynchroner Modus (via Sedex)** — für PROJ-23 verwendet, da Batch-Abgleich:
+- Max. Paketgrösse: **100'000 Abfragen pro Lauf**
+- Max. Gesamtvolumen: **300'000 Abfragen / 24h** (ohne vorherige Absprache mit ZAS)
+- Fire-and-Forget-Modell (Antwort asynchron, separate Rückmeldedatei)
+
+**Empfohlene Frequenz für Lebensnachweis** (lt. Handbuch Abschnitt 5.1.3.2.3):
+- Bestand < 10'000 Personen, **ohne eCH-0212-Abo**: maximal **1x pro Jahr** (ZAS-Toleranzgrenze)
+- Bestand mit eCH-0212-Abo + eCH-0086: **quartalsweise** möglich
+- Vollständige Neusynchronisation: **alle 3–4 Jahre** empfohlen
+
+**Schema-Besonderheit für Lebensnachweis:**
+Im eCH-0086-Request wird `comparedMissingElement=DATE_OF_DEATH` gesetzt, damit die UPI in der Response bei Todesfällen das Sterbedatum zurückliefert. Dies ist der primäre Use-Case für PROJ-23.
 
 ## Datenbankstruktur (Orientierung)
 
