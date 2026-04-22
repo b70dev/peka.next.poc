@@ -115,13 +115,13 @@ Ein späterer Umstieg auf eCH-0212 ist möglich, wenn sich der Anwendungsfall ve
 
 ### Offene externe Abklärungen (vor /backend notwendig)
 
-- [ ] **Sedex-Teilnehmer-ID** der Pensionskasse bei der Bundeskanzlei beantragen (sofern noch nicht vorhanden)
-- [ ] **Sedex-Zertifikat** beschaffen und installieren (Produktion und Test)
-- [ ] **UPIServices-Zugang** bei der ZAS beantragen (Vertrag / Anschluss-Erklärung)
-- [ ] **Aktuelle WSDL- und XSD-Dateien** von ZAS beziehen (Stand 2026-01-29) und im Repo unter `docs/ech-schemas/` ablegen
-- [ ] **UPI-Interface-Spezifikation V1.10D** (Stand 2025-11-13) und Handbuch einholen
-- [ ] **Test-Endpoint der ZAS** (abn/integration) identifizieren für Entwicklung und QA
-- [ ] **Sedex-Message-Type** für eCH-0086-Nachrichten bestätigen (aus ZAS-Handbuch)
+- [x] **Sedex-Teilnehmer-ID** der Pensionskasse: `4-613196-9`
+- [x] **Sedex-Zertifikat** vorhanden und installiert
+- [x] **UPIServices-Zugang** (Vertrag) vorhanden
+- [x] **Aktuelle WSDL- und XSD-Dateien** von ZAS im Repo unter `docs/ech-schemas/` (Stand 2026-01-29; letzte Dateiversion 2023-05-23)
+- [ ] **UPI-Interface-Spezifikation V2.04D** (Stand 2025-11-13) und **UPI-Handbuch V3.2D** durchlesen (URLs siehe `docs/ech-schemas/README.md`)
+- [ ] **Test-Endpoint der ZAS** (abn/integration) identifizieren für Entwicklung und QA — steht im UPI-Handbuch
+- [ ] **Sedex-Message-Type** für eCH-0086-Nachrichten bestätigen — steht im UPI-Handbuch
 
 ## Datenbankstruktur (Orientierung)
 
