@@ -224,6 +224,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "insuredPersons": "Insured Persons",
+    "pensioners": "Pensioners",
     "accounts": "Accounts",
     "payments": "Payments",
     "paymentRuns": "Payment Runs",
@@ -1419,6 +1420,80 @@
       },
       "saveSuccess": "Debtor data saved",
       "saveError": "Save failed"
+    }
+  },
+  "pensioners": {
+    "title": "Pensioners",
+    "description": "Overview of all active pensioners of the pension fund",
+    "count": "{count} active pensioners",
+    "searchPlaceholder": "Search name or AHV number...",
+    "searchAriaLabel": "Search pensioners by name or AHV number",
+    "emptyState": "No active pensioners are currently recorded.",
+    "emptyStateSearch": "No pensioners found for '{search}'",
+    "tableCaption": "List of all active pensioners",
+    "columns": {
+      "name": "Name",
+      "lastName": "Last name",
+      "firstName": "First name",
+      "ahvNumber": "AHV no.",
+      "dateOfBirth": "Date of birth",
+      "age": "Age",
+      "retirementDate": "Retirement start",
+      "monthlyAmount": "Monthly pension amount",
+      "email": "Email"
+    },
+    "ageYears": "{age} yrs",
+    "notAvailable": "—",
+    "export": {
+      "button": "Excel export",
+      "tooltip": "Export pensioner list as Excel file",
+      "tooltipEmpty": "No data available to export",
+      "filename": "pensioners",
+      "sheetName": "Pensioners"
+    },
+    "detail": {
+      "backToList": "Back to pensioner list",
+      "breadcrumbList": "Pensioners",
+      "openInInsuredProfile": "Open in insured person profile",
+      "notFound": "Pensioner not found",
+      "notFoundDescription": "The requested pensioner does not exist or was removed.",
+      "masterData": "Master data",
+      "pensionBlock": "Pension details",
+      "paymentHistory": "Payment history",
+      "fields": {
+        "dateOfBirth": "Date of birth",
+        "gender": "Gender",
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone",
+        "retirementDate": "Retirement start",
+        "monthlyAmount": "Monthly pension amount",
+        "accountId": "Account ID"
+      },
+      "editAmount": "Edit amount",
+      "editAmountTitle": "Edit monthly pension amount",
+      "editAmountDescription": "Enter the new monthly pension amount in CHF.",
+      "amountLabel": "Monthly pension amount (CHF)",
+      "amountPlaceholder": "e.g. 2500.00",
+      "amountInvalid": "Please enter a valid amount greater than 0.",
+      "saveSuccess": "Pension amount was saved.",
+      "saveError": "Pension amount could not be saved."
+    },
+    "payments": {
+      "empty": "No payments recorded yet.",
+      "columns": {
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "reference": "Reference"
+      },
+      "statuses": {
+        "draft": "Draft",
+        "in_payment_run": "In payment run",
+        "approved": "Approved",
+        "exported": "Exported",
+        "cancelled": "Cancelled"
+      }
     }
   }
 }

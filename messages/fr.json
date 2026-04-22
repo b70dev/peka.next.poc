@@ -224,6 +224,7 @@
   "navigation": {
     "dashboard": "Tableau de bord",
     "insuredPersons": "Assurés",
+    "pensioners": "Rentiers",
     "accounts": "Comptes",
     "payments": "Paiements",
     "paymentRuns": "Cycles de paiement",
@@ -1419,6 +1420,81 @@
       },
       "saveSuccess": "Données du donneur d'ordre enregistrées",
       "saveError": "Échec de l'enregistrement"
+    }
+  },
+  "pensioners": {
+    "title": "Rentiers",
+    "description": "Vue d'ensemble de tous les rentiers actifs de la caisse de pension",
+    "count": "{count} rentiers actifs",
+    "searchPlaceholder": "Rechercher par nom ou numéro AVS...",
+    "searchAriaLabel": "Rechercher les rentiers par nom ou numéro AVS",
+    "emptyState": "Aucun rentier actif n'est actuellement enregistré.",
+    "emptyStateSearch": "Aucun rentier trouvé pour «{search}»",
+    "tableCaption": "Liste de tous les rentiers actifs",
+    "columns": {
+      "name": "Nom",
+      "lastName": "Nom de famille",
+      "firstName": "Prénom",
+      "ahvNumber": "N° AVS",
+      "dateOfBirth": "Date de naissance",
+      "age": "Âge",
+      "retirementDate": "Début de la rente",
+      "monthlyAmount": "Rente mensuelle",
+      "email": "E-mail"
+    },
+    "ageYears": "{age} ans",
+    "notAvailable": "—",
+    "export": {
+      "button": "Export Excel",
+      "tooltip": "Exporter la liste des rentiers au format Excel",
+      "tooltipEmpty": "Aucune donnée à exporter",
+      "filename": "rentiers",
+      "sheetName": "Rentiers"
+    },
+    "detail": {
+      "backToList": "Retour à la liste des rentiers",
+      "breadcrumbList": "Rentiers",
+      "openInInsuredProfile": "Ouvrir dans le profil assuré",
+      "notFound": "Rentier introuvable",
+      "notFoundDescription": "Le rentier demandé n'existe pas ou a été supprimé.",
+      "masterData": "Données personnelles",
+      "pensionBlock": "Détails de la rente",
+      "paymentHistory": "Historique des paiements",
+      "fields": {
+        "dateOfBirth": "Date de naissance",
+        "gender": "Sexe",
+        "address": "Adresse",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "retirementDate": "Début de la rente",
+        "monthlyAmount": "Rente mensuelle",
+        "accountId": "N° de compte"
+      },
+      "editAmount": "Modifier le montant",
+      "editAmountTitle": "Modifier la rente mensuelle",
+      "editAmountDescription": "Saisissez le nouveau montant mensuel de la rente en CHF.",
+      "amountLabel": "Rente mensuelle (CHF)",
+      "amountPlaceholder": "ex. 2500.00",
+      "amountInvalid": "Veuillez saisir un montant valide supérieur à 0.",
+      "saveSuccess": "Le montant de la rente a été enregistré.",
+      "saveError": "Le montant n'a pas pu être enregistré."
+    },
+    "payments": {
+      "empty": "Aucun paiement enregistré pour le moment.",
+      "columns": {
+        "date": "Date",
+        "montant": "Montant",
+        "amount": "Montant",
+        "status": "Statut",
+        "reference": "Référence"
+      },
+      "statuses": {
+        "draft": "Brouillon",
+        "in_payment_run": "Dans le cycle de paiement",
+        "approved": "Approuvé",
+        "exported": "Exporté",
+        "cancelled": "Annulé"
+      }
     }
   }
 }

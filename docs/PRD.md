@@ -45,6 +45,8 @@ Ziel ist eine schlanke, barrierefreie Anwendung (WCAG 2.1 AA), die BVG-Verwaltun
 | P1 | Zahlungsläufe & Freigabe (Payment Runs) | [PROJ-20](../features/PROJ-20-payment-runs.md) | Planned |
 | P1 | pain.001 XML-Generierung (ISO 20022) | [PROJ-21](../features/PROJ-21-pain001-xml-generation.md) | Planned |
 | P1 | Versicherten-Merkmale (Attribut-Verwaltung) | [PROJ-22](../features/PROJ-22-insured-person-attributes.md) | Planned |
+| P1 | ZAS Lebensnachweis (Sedex) | [PROJ-23](../features/PROJ-23-zas-lebensnachweis.md) | Planned |
+| P1 | Rentner-Liste & Übersicht | [PROJ-24](../features/PROJ-24-pensioner-list.md) | Planned |
 
 ### P2 - Versicherten-Portal - Planned
 

@@ -224,6 +224,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "insuredPersons": "Versicherte",
+    "pensioners": "Rentner",
     "accounts": "Konten",
     "payments": "Zahlungen",
     "paymentRuns": "Zahlungsläufe",
@@ -1419,6 +1420,80 @@
       },
       "saveSuccess": "Auftraggeber-Daten gespeichert",
       "saveError": "Speichern fehlgeschlagen"
+    }
+  },
+  "pensioners": {
+    "title": "Rentner",
+    "description": "Übersicht aller aktiven Rentner der Pensionskasse",
+    "count": "{count} aktive Rentner",
+    "searchPlaceholder": "Name oder AHV-Nummer suchen...",
+    "searchAriaLabel": "Rentner nach Name oder AHV-Nummer suchen",
+    "emptyState": "Aktuell sind keine aktiven Rentner erfasst.",
+    "emptyStateSearch": "Keine Rentner für «{search}» gefunden",
+    "tableCaption": "Liste aller aktiven Rentner",
+    "columns": {
+      "name": "Name",
+      "lastName": "Nachname",
+      "firstName": "Vorname",
+      "ahvNumber": "AHV-Nr.",
+      "dateOfBirth": "Geburtsdatum",
+      "age": "Alter",
+      "retirementDate": "Rentenbeginn",
+      "monthlyAmount": "Monatlicher Rentenbetrag",
+      "email": "E-Mail"
+    },
+    "ageYears": "{age} J.",
+    "notAvailable": "—",
+    "export": {
+      "button": "Excel-Export",
+      "tooltip": "Rentnerliste als Excel exportieren",
+      "tooltipEmpty": "Keine Daten zum Exportieren vorhanden",
+      "filename": "rentner",
+      "sheetName": "Rentner"
+    },
+    "detail": {
+      "backToList": "Zurück zur Rentner-Liste",
+      "breadcrumbList": "Rentner",
+      "openInInsuredProfile": "Im Versicherten-Profil öffnen",
+      "notFound": "Rentner nicht gefunden",
+      "notFoundDescription": "Der angeforderte Rentner existiert nicht oder wurde entfernt.",
+      "masterData": "Stammdaten",
+      "pensionBlock": "Rentenbezug",
+      "paymentHistory": "Zahlungshistorie",
+      "fields": {
+        "dateOfBirth": "Geburtsdatum",
+        "gender": "Geschlecht",
+        "address": "Adresse",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "retirementDate": "Rentenbeginn",
+        "monthlyAmount": "Monatlicher Rentenbetrag",
+        "accountId": "Konto-ID"
+      },
+      "editAmount": "Betrag bearbeiten",
+      "editAmountTitle": "Monatlichen Rentenbetrag bearbeiten",
+      "editAmountDescription": "Geben Sie den neuen monatlichen Rentenbetrag in CHF ein.",
+      "amountLabel": "Monatlicher Rentenbetrag (CHF)",
+      "amountPlaceholder": "z.B. 2500.00",
+      "amountInvalid": "Bitte einen gültigen Betrag grösser als 0 eingeben.",
+      "saveSuccess": "Rentenbetrag wurde gespeichert.",
+      "saveError": "Rentenbetrag konnte nicht gespeichert werden."
+    },
+    "payments": {
+      "empty": "Noch keine Zahlungen erfasst.",
+      "columns": {
+        "date": "Datum",
+        "amount": "Betrag",
+        "status": "Status",
+        "reference": "Referenz"
+      },
+      "statuses": {
+        "draft": "Entwurf",
+        "in_payment_run": "Im Zahlungslauf",
+        "approved": "Freigegeben",
+        "exported": "Exportiert",
+        "cancelled": "Storniert"
+      }
     }
   }
 }
