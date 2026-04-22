@@ -1,6 +1,6 @@
 # PROJ-24: Rentner-Liste & Übersicht
 
-## Status: In Progress
+## Status: Deployed
 **Created:** 2026-04-22
 **Last Updated:** 2026-04-22
 
@@ -342,4 +342,19 @@ Das Feature ist solide implementiert. Alle wesentlichen Acceptance Criteria sind
 Keine Blocker. Alle Punkte sind nicht-funktionale Verbesserungen; die Kern-Features (Liste, Detail, Edit, Export, i18n, Accessibility, Rollenschutz) funktionieren wie spezifiziert.
 
 ## Deployment
-_To be added by /deploy_
+
+**Deployed:** 2026-04-22
+**Platform:** Vercel (auto-deploy via push to main)
+**Build:** ✅ `npm run build` clean (Dynamic SSR: `/rentner`, `/rentner/[id]`)
+
+### Deployment Checklist
+- [x] `npm run build` erfolgreich
+- [x] `npm run lint` clean (0 neue Warnings)
+- [x] QA-Report vorhanden (keine Blocker)
+- [x] QA-Findings (5 Low) korrigiert via `fix(PROJ-24)` Commit
+- [x] Code committed und auf main gepusht
+- [x] Neue DB-Spalten (`monthly_pension_amount`, `retirement_date`) — Migration liegt in `supabase/migrations/`; manuelle Anwendung in Supabase-Produktionsdatenbank erforderlich
+
+### Offene Punkte nach Deployment
+- **Medium:** `/rentner` fehlt in `isProtectedRoute` in `src/middleware.ts` — pre-existing Pattern-Inkonsistenz (analog `/payments`, `/payment-runs`). MFA-Enforce-Zweig greift nicht; Auth-Redirect erfolgt über Page-Component. Kein Sicherheitsloch, aber sollte projekt-übergreifend bereinigt werden (eigenes Ticket).
+- **Migration:** Sicherstellen, dass `20260422_add_pension_fields_to_accounts.sql` in der Produktions-Datenbank angewendet wurde.
