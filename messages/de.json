@@ -228,6 +228,7 @@
     "accounts": "Konten",
     "payments": "Zahlungen",
     "paymentRuns": "Zahlungsläufe",
+    "zasLifeVerification": "ZAS Lebensnachweis",
     "employers": "Arbeitgeber",
     "settings": "Einstellungen",
     "admin": "Administration",
@@ -1494,6 +1495,113 @@
         "exported": "Exportiert",
         "cancelled": "Storniert"
       }
+    }
+  },
+  "zasLifeVerification": {
+    "title": "ZAS Lebensnachweis",
+    "description": "Periodischer Abgleich der Rentnerdaten mit der Zentralen Ausgleichsstelle (ZAS) via Sedex / eCH-0086.",
+    "newRun": "Neuen Lauf starten",
+    "empty": "Noch keine Lebensnachweis-Läufe vorhanden",
+    "emptyDescription": "Starten Sie einen neuen Lauf, um den Rentnerbestand mit der ZAS abzugleichen.",
+    "loadError": "Läufe konnten nicht geladen werden.",
+    "columns": {
+      "createdAt": "Datum",
+      "pensionerCount": "Rentner",
+      "deathCount": "Todesfälle",
+      "status": "Status",
+      "createdBy": "Erstellt von",
+      "actions": "Aktionen"
+    },
+    "statuses": {
+      "request_created": "Anfrage erstellt",
+      "response_imported": "Rückmeldung importiert",
+      "completed": "Abgeschlossen",
+      "completed_without_response": "Abgeschlossen (ohne Rückmeldung)"
+    },
+    "create": {
+      "title": "Neuen Lebensnachweis-Lauf starten",
+      "description": "Es werden alle aktiven Rentner mit Rentenkonto in die Anfrage einbezogen. Die Anfragedatei wird im eCH-0086-Format generiert.",
+      "info": "Sobald Sie bestätigen, wird ein neuer Lauf angelegt und ein Dateiname für die Sedex-Übermittlung reserviert.",
+      "submit": "Lauf starten",
+      "noPensioners": "Es wurden keine aktiven Rentner gefunden. Es kann kein Lauf erstellt werden.",
+      "error": "Lauf konnte nicht erstellt werden."
+    },
+    "detail": {
+      "backToList": "Zurück zur Übersicht",
+      "breadcrumbList": "ZAS Lebensnachweis",
+      "headingPrefix": "Lauf vom",
+      "createdAt": "Erstellt am",
+      "createdBy": "Erstellt von",
+      "requestFilename": "Anfragedatei",
+      "filenamePending": "Wird beim Generieren vergeben",
+      "summary": {
+        "pensioners": "Einbezogene Rentner",
+        "deaths": "Gemeldete Todesfälle",
+        "openVsProcessed": "Offen / Bearbeitet",
+        "openVsProcessedFormat": "{open} offen / {processed} bearbeitet"
+      },
+      "actions": {
+        "title": "Aktionen",
+        "downloadAgain": "Anfragedatei erneut herunterladen",
+        "downloadNotImplemented": "Noch nicht implementiert: Der eCH-0086 XML-Generator steht aus.",
+        "importResponse": "ZAS-Rückmeldung hochladen",
+        "completeWithoutResponse": "Abschliessen ohne Rückmeldung",
+        "complete": "Lauf abschliessen",
+        "completeBlockedByOpenDeaths": "Bitte zuerst alle offenen Todesfälle als bearbeitet markieren.",
+        "readOnlyHint": "Dieser Lauf ist abgeschlossen und kann nicht mehr verändert werden.",
+        "actionError": "Aktion fehlgeschlagen. Bitte versuchen Sie es erneut."
+      },
+      "completeConfirm": {
+        "title": "Lauf abschliessen?",
+        "description": "Mit dem Abschluss wird der Lauf endgültig markiert. Diese Aktion ist nicht umkehrbar.",
+        "submit": "Abschliessen"
+      },
+      "completeWithoutResponseConfirm": {
+        "title": "Ohne Rückmeldung abschliessen?",
+        "description": "Verwenden Sie diese Option, wenn von der ZAS keine Rückmeldung erwartet oder eingegangen ist. Der Lauf wird endgültig markiert.",
+        "submit": "Abschliessen ohne Rückmeldung"
+      }
+    },
+    "deaths": {
+      "title": "Gemeldete Todesfälle",
+      "empty": "Bisher wurden keine Todesfälle aus einer ZAS-Rückmeldung importiert.",
+      "columns": {
+        "name": "Name",
+        "ahvNumber": "AHV-Nr.",
+        "dateOfDeath": "Sterbedatum",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "statuses": {
+        "open": "Offen",
+        "processed": "Bearbeitet",
+        "already_known": "Bereits bekannt"
+      },
+      "openInProfile": "Im Profil öffnen",
+      "noProfileLink": "Kein Profil verknüpft",
+      "markProcessed": "Als bearbeitet markieren",
+      "markAlreadyKnown": "Als bereits bekannt markieren",
+      "patchError": "Status konnte nicht aktualisiert werden."
+    },
+    "import": {
+      "title": "ZAS-Rückmeldung hochladen",
+      "description": "Wählen Sie die von der ZAS erhaltene eCH-0086-Antwortdatei (XML, max. 10 MB) aus. Die Datei wird serverseitig validiert und ausgewertet.",
+      "fileLabel": "Antwortdatei (XML)",
+      "fileHelp": "Akzeptiert wird ausschliesslich das eCH-0086-Antwortformat von ZAS.",
+      "fileRequired": "Bitte eine Datei auswählen.",
+      "fileTooLarge": "Die Datei überschreitet die maximale Grösse von 10 MB.",
+      "fileWrongType": "Es werden nur XML-Dateien akzeptiert.",
+      "submit": "Hochladen",
+      "notImplementedTitle": "Funktion noch nicht aktiv",
+      "notImplementedHint": "Der eCH-0086-Antwort-Parser ist noch nicht implementiert. Die Datei wird angenommen, jedoch noch nicht ausgewertet.",
+      "genericError": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
+    },
+    "toasts": {
+      "runCreated": "Lauf erstellt.",
+      "completed": "Lauf abgeschlossen.",
+      "deathUpdated": "Todesfall aktualisiert.",
+      "downloadNotImplemented": "Download nicht verfügbar: XML-Generator noch nicht implementiert.",
+      "importNotImplemented": "Import nicht verfügbar: Parser noch nicht implementiert."
     }
   }
 }

@@ -228,6 +228,7 @@
     "accounts": "Accounts",
     "payments": "Payments",
     "paymentRuns": "Payment Runs",
+    "zasLifeVerification": "ZAS Life Verification",
     "employers": "Employers",
     "settings": "Settings",
     "admin": "Administration",
@@ -1494,6 +1495,113 @@
         "exported": "Exported",
         "cancelled": "Cancelled"
       }
+    }
+  },
+  "zasLifeVerification": {
+    "title": "ZAS Life Verification",
+    "description": "Periodic reconciliation of pensioner data with the Central Compensation Office (ZAS) via Sedex / eCH-0086.",
+    "newRun": "Start new run",
+    "empty": "No life verification runs yet",
+    "emptyDescription": "Start a new run to reconcile your pensioner roster with ZAS.",
+    "loadError": "Failed to load runs.",
+    "columns": {
+      "createdAt": "Date",
+      "pensionerCount": "Pensioners",
+      "deathCount": "Deaths",
+      "status": "Status",
+      "createdBy": "Created by",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "request_created": "Request created",
+      "response_imported": "Response imported",
+      "completed": "Completed",
+      "completed_without_response": "Completed (no response)"
+    },
+    "create": {
+      "title": "Start new life verification run",
+      "description": "All active pensioners with a pension account will be included in the request. The request file is generated in eCH-0086 format.",
+      "info": "Once you confirm, a new run is created and a filename for the Sedex transmission is reserved.",
+      "submit": "Start run",
+      "noPensioners": "No active pensioners found. The run cannot be created.",
+      "error": "Failed to create the run."
+    },
+    "detail": {
+      "backToList": "Back to overview",
+      "breadcrumbList": "ZAS Life Verification",
+      "headingPrefix": "Run from",
+      "createdAt": "Created at",
+      "createdBy": "Created by",
+      "requestFilename": "Request file",
+      "filenamePending": "Will be assigned on generation",
+      "summary": {
+        "pensioners": "Included pensioners",
+        "deaths": "Reported deaths",
+        "openVsProcessed": "Open / Processed",
+        "openVsProcessedFormat": "{open} open / {processed} processed"
+      },
+      "actions": {
+        "title": "Actions",
+        "downloadAgain": "Re-download request file",
+        "downloadNotImplemented": "Not implemented yet: the eCH-0086 XML generator is still pending.",
+        "importResponse": "Upload ZAS response",
+        "completeWithoutResponse": "Close without response",
+        "complete": "Complete run",
+        "completeBlockedByOpenDeaths": "Please mark all open deaths as processed first.",
+        "readOnlyHint": "This run is closed and can no longer be modified.",
+        "actionError": "Action failed. Please try again."
+      },
+      "completeConfirm": {
+        "title": "Complete this run?",
+        "description": "Closing the run marks it as final. This action cannot be undone.",
+        "submit": "Complete"
+      },
+      "completeWithoutResponseConfirm": {
+        "title": "Close without response?",
+        "description": "Use this option when no response from ZAS is expected or has been received. The run will be marked as final.",
+        "submit": "Close without response"
+      }
+    },
+    "deaths": {
+      "title": "Reported deaths",
+      "empty": "No deaths have been imported from a ZAS response yet.",
+      "columns": {
+        "name": "Name",
+        "ahvNumber": "AHV no.",
+        "dateOfDeath": "Date of death",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "open": "Open",
+        "processed": "Processed",
+        "already_known": "Already known"
+      },
+      "openInProfile": "Open in profile",
+      "noProfileLink": "No linked profile",
+      "markProcessed": "Mark as processed",
+      "markAlreadyKnown": "Mark as already known",
+      "patchError": "Failed to update status."
+    },
+    "import": {
+      "title": "Upload ZAS response",
+      "description": "Select the eCH-0086 response file (XML, max 10 MB) you received from ZAS. The file is validated and processed server-side.",
+      "fileLabel": "Response file (XML)",
+      "fileHelp": "Only the eCH-0086 response format from ZAS is accepted.",
+      "fileRequired": "Please choose a file.",
+      "fileTooLarge": "The file exceeds the 10 MB limit.",
+      "fileWrongType": "Only XML files are accepted.",
+      "submit": "Upload",
+      "notImplementedTitle": "Feature not yet active",
+      "notImplementedHint": "The eCH-0086 response parser is not implemented yet. The file is accepted but not yet evaluated.",
+      "genericError": "Upload failed. Please try again."
+    },
+    "toasts": {
+      "runCreated": "Run created.",
+      "completed": "Run completed.",
+      "deathUpdated": "Death updated.",
+      "downloadNotImplemented": "Download unavailable: XML generator not implemented yet.",
+      "importNotImplemented": "Import unavailable: parser not implemented yet."
     }
   }
 }

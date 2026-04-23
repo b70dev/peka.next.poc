@@ -39,6 +39,7 @@ export const PERMISSIONS = {
   'transactions.create': 'admin',
   'payment_orders.create': 'admin',
   'payment_orders.edit': 'admin',
+  'zas.manage': 'admin',
 
   // Read-only access
   'insured.view': 'viewer',

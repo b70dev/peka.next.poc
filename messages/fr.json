@@ -228,6 +228,7 @@
     "accounts": "Comptes",
     "payments": "Paiements",
     "paymentRuns": "Cycles de paiement",
+    "zasLifeVerification": "Vérification de vie ZAS",
     "employers": "Employeurs",
     "settings": "Paramètres",
     "admin": "Administration",
@@ -1494,6 +1495,113 @@
         "exported": "Exporté",
         "cancelled": "Annulé"
       }
+    }
+  },
+  "zasLifeVerification": {
+    "title": "Vérification de vie ZAS",
+    "description": "Réconciliation périodique des données des rentiers avec la Centrale de compensation (CdC) via Sedex / eCH-0086.",
+    "newRun": "Démarrer un nouveau cycle",
+    "empty": "Aucun cycle de vérification de vie pour l'instant",
+    "emptyDescription": "Démarrez un nouveau cycle pour réconcilier l'effectif des rentiers avec la CdC.",
+    "loadError": "Échec du chargement des cycles.",
+    "columns": {
+      "createdAt": "Date",
+      "pensionerCount": "Rentiers",
+      "deathCount": "Décès",
+      "status": "Statut",
+      "createdBy": "Créé par",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "request_created": "Demande créée",
+      "response_imported": "Réponse importée",
+      "completed": "Terminé",
+      "completed_without_response": "Terminé (sans réponse)"
+    },
+    "create": {
+      "title": "Démarrer un nouveau cycle de vérification",
+      "description": "Tous les rentiers actifs avec un compte de rente seront inclus dans la demande. Le fichier de demande est généré au format eCH-0086.",
+      "info": "Une fois confirmé, un nouveau cycle est créé et un nom de fichier pour la transmission Sedex est réservé.",
+      "submit": "Démarrer le cycle",
+      "noPensioners": "Aucun rentier actif trouvé. Le cycle ne peut pas être créé.",
+      "error": "Échec de la création du cycle."
+    },
+    "detail": {
+      "backToList": "Retour à la liste",
+      "breadcrumbList": "Vérification de vie ZAS",
+      "headingPrefix": "Cycle du",
+      "createdAt": "Créé le",
+      "createdBy": "Créé par",
+      "requestFilename": "Fichier de demande",
+      "filenamePending": "Sera attribué lors de la génération",
+      "summary": {
+        "pensioners": "Rentiers inclus",
+        "deaths": "Décès signalés",
+        "openVsProcessed": "Ouverts / Traités",
+        "openVsProcessedFormat": "{open} ouverts / {processed} traités"
+      },
+      "actions": {
+        "title": "Actions",
+        "downloadAgain": "Télécharger à nouveau le fichier de demande",
+        "downloadNotImplemented": "Pas encore implémenté : le générateur XML eCH-0086 est en attente.",
+        "importResponse": "Téléverser la réponse ZAS",
+        "completeWithoutResponse": "Clôturer sans réponse",
+        "complete": "Clôturer le cycle",
+        "completeBlockedByOpenDeaths": "Veuillez d'abord marquer tous les décès ouverts comme traités.",
+        "readOnlyHint": "Ce cycle est clôturé et ne peut plus être modifié.",
+        "actionError": "Action échouée. Veuillez réessayer."
+      },
+      "completeConfirm": {
+        "title": "Clôturer ce cycle ?",
+        "description": "La clôture rend le cycle définitif. Cette action est irréversible.",
+        "submit": "Clôturer"
+      },
+      "completeWithoutResponseConfirm": {
+        "title": "Clôturer sans réponse ?",
+        "description": "Utilisez cette option si aucune réponse de la ZAS n'est attendue ou n'a été reçue. Le cycle sera marqué comme définitif.",
+        "submit": "Clôturer sans réponse"
+      }
+    },
+    "deaths": {
+      "title": "Décès signalés",
+      "empty": "Aucun décès n'a encore été importé depuis une réponse ZAS.",
+      "columns": {
+        "name": "Nom",
+        "ahvNumber": "N° AVS",
+        "dateOfDeath": "Date du décès",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "open": "Ouvert",
+        "processed": "Traité",
+        "already_known": "Déjà connu"
+      },
+      "openInProfile": "Ouvrir dans le profil",
+      "noProfileLink": "Aucun profil lié",
+      "markProcessed": "Marquer comme traité",
+      "markAlreadyKnown": "Marquer comme déjà connu",
+      "patchError": "Échec de la mise à jour du statut."
+    },
+    "import": {
+      "title": "Téléverser la réponse ZAS",
+      "description": "Sélectionnez le fichier de réponse eCH-0086 (XML, max 10 Mo) reçu de la ZAS. Le fichier est validé et traité côté serveur.",
+      "fileLabel": "Fichier de réponse (XML)",
+      "fileHelp": "Seul le format de réponse eCH-0086 de la ZAS est accepté.",
+      "fileRequired": "Veuillez choisir un fichier.",
+      "fileTooLarge": "Le fichier dépasse la limite de 10 Mo.",
+      "fileWrongType": "Seuls les fichiers XML sont acceptés.",
+      "submit": "Téléverser",
+      "notImplementedTitle": "Fonctionnalité pas encore active",
+      "notImplementedHint": "Le parseur de réponse eCH-0086 n'est pas encore implémenté. Le fichier est accepté mais pas encore évalué.",
+      "genericError": "Échec du téléversement. Veuillez réessayer."
+    },
+    "toasts": {
+      "runCreated": "Cycle créé.",
+      "completed": "Cycle clôturé.",
+      "deathUpdated": "Décès mis à jour.",
+      "downloadNotImplemented": "Téléchargement indisponible : le générateur XML n'est pas encore implémenté.",
+      "importNotImplemented": "Import indisponible : le parseur n'est pas encore implémenté."
     }
   }
 }

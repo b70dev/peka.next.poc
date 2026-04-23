@@ -7,7 +7,15 @@ import { getTranslations } from 'next-intl/server'
 
 interface AppHeaderProps {
   userEmail?: string
-  activeRoute: 'dashboard' | 'insured' | 'pensioners' | 'accounts' | 'payments' | 'payment-runs' | 'settings'
+  activeRoute:
+    | 'dashboard'
+    | 'insured'
+    | 'pensioners'
+    | 'accounts'
+    | 'payments'
+    | 'payment-runs'
+    | 'zas-lebensnachweis'
+    | 'settings'
 }
 
 export async function AppHeader({ userEmail, activeRoute }: AppHeaderProps) {
@@ -20,6 +28,11 @@ export async function AppHeader({ userEmail, activeRoute }: AppHeaderProps) {
     { href: '/accounts' as const, label: tNav('accounts'), active: activeRoute === 'accounts' },
     { href: '/payments' as const, label: tNav('payments'), active: activeRoute === 'payments' },
     { href: '/payment-runs' as const, label: tNav('paymentRuns'), active: activeRoute === 'payment-runs' },
+    {
+      href: '/zas-lebensnachweis' as const,
+      label: tNav('zasLifeVerification'),
+      active: activeRoute === 'zas-lebensnachweis',
+    },
     { href: '/settings' as const, label: tNav('settings'), active: activeRoute === 'settings' },
   ]
 
