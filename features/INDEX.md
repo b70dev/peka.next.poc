@@ -35,7 +35,7 @@
 | PROJ-20 | Zahlungsläufe & Freigabe (Payment Runs) | Deployed (2026-04-18) | [PROJ-20-payment-runs.md](./PROJ-20-payment-runs.md) |
 | PROJ-21 | pain.001 XML-Generierung (ISO 20022) | Deployed (2026-04-21) | [PROJ-21-pain001-xml-generation.md](./PROJ-21-pain001-xml-generation.md) |
 | PROJ-22 | Versicherten-Merkmale (Attribut-Verwaltung) | Deployed (2026-04-20) | [PROJ-22-insured-person-attributes.md](./PROJ-22-insured-person-attributes.md) |
-| PROJ-23 | ZAS Lebensnachweis (Sedex) | In Progress | [PROJ-23-zas-lebensnachweis.md](./PROJ-23-zas-lebensnachweis.md) |
+| PROJ-23 | ZAS Lebensnachweis (Sedex) | Deployed (2026-04-23) | [PROJ-23-zas-lebensnachweis.md](./PROJ-23-zas-lebensnachweis.md) |
 | PROJ-24 | Rentner-Liste & Übersicht | Deployed (2026-04-22) | [PROJ-24-pensioner-list.md](./PROJ-24-pensioner-list.md) |
 
 <!-- Add features above this line -->
@@ -50,9 +50,9 @@
 ## Summary
 
 - **Total Features:** 24
-- **Deployed/Complete:** 10 (PROJ-3, PROJ-8, PROJ-9, PROJ-10, PROJ-17, PROJ-19, PROJ-20, PROJ-21, PROJ-22, PROJ-24)
+- **Deployed/Complete:** 11 (PROJ-3, PROJ-8, PROJ-9, PROJ-10, PROJ-17, PROJ-19, PROJ-20, PROJ-21, PROJ-22, PROJ-23, PROJ-24)
 - **Done (MVP):** 5 (PROJ-1, PROJ-4, PROJ-5, PROJ-6, PROJ-7)
-- **In Progress:** 1 (PROJ-23)
-- **Planned:** 9 (PROJ-2, PROJ-11, PROJ-12, PROJ-13, PROJ-14, PROJ-15, PROJ-16, PROJ-18)
+- **In Progress:** 0
+- **Planned:** 8 (PROJ-2, PROJ-11, PROJ-12, PROJ-13, PROJ-14, PROJ-15, PROJ-16, PROJ-18)
 
 ## Next Available ID: PROJ-25

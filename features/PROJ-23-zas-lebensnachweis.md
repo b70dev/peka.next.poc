@@ -1,8 +1,8 @@
 # PROJ-23: ZAS Lebensnachweis
 
-## Status: Planned
+## Status: Deployed (2026-04-23)
 **Created:** 2026-04-22
-**Last Updated:** 2026-04-22
+**Last Updated:** 2026-04-23
 
 ## Dependencies
 - Requires: PROJ-1 (Authentication) — Admin-Login für Zugriff
@@ -341,7 +341,72 @@ Keine neuen npm-Pakete erforderlich. Die bestehenden XML-Verarbeitungsmöglichke
 - **Audit-Trail:** Alle Statusänderungen werden mit Benutzer-ID und Timestamp gespeichert (direkt in den Run-/Death-Tabellen, kein separates Event-Log nötig)
 
 ## QA Test Results
-_To be added by /qa_
+
+**Tested:** 2026-04-23
+**Result:** PASS WITH ISSUES
+
+### Summary
+Focused security and correctness audit of API routes, RLS, file upload, eCH-0086 generator/parser, i18n and navigation. All API routes enforce auth + role + Zod validation; RLS is enabled with admin-only writes; eCH-0086 sender/recipient IDs and `comparedMissingElement=DATE_OF_DEATH` are correct. Main concerns are a regex-based XML parser that does not validate well-formedness, an AHV validator without checksum verification, and a minor RLS/spec drift on SELECT.
+
+### Security
+| Area | Status | Notes |
+|------|--------|-------|
+| Auth on all routes | PASS | Every route calls `requireRole(...)` before DB access. |
+| RBAC (admin for mutations) | PASS | GETs require `viewer`; POST/PATCH/download require `admin`. |
+| Zod input validation | PASS | UUIDs, `mode` enum, death PATCH body, upload metadata all Zod-validated. |
+| Rate limiting | PASS | Per-IP limits on all routes (list 120/10min, create 10/h, import 20/h, download 30/10min). |
+| RLS enabled on both tables | PASS | `zas_life_verification_runs` + `zas_life_verification_deaths` have `ENABLE ROW LEVEL SECURITY`. |
+| RLS policies cover INSERT/UPDATE | PASS | Admin-only via `is_active_admin()`; no DELETE policy (audit). |
+| RLS SELECT scope | DRIFT | Policy allows `is_active_user()` (viewers). Spec line 338 says "nur Admins können lesen/schreiben". Update spec or tighten policy. |
+| File upload size limit | PASS | `MAX_UPLOAD_BYTES = 10 MB` enforced via Zod before `file.text()`. |
+| File upload MIME/ext | PASS | Accepts `application/xml`, `text/xml` or `.xml` extension. |
+| XML parse error handling | PASS | `ZasResponseParseError` caught, returns 422 with message. |
+| XXE / SSRF | N/A | Regex-based parser does no entity resolution or network I/O — XXE not possible. |
+| Secrets | PASS | SEDEX IDs via env vars; test defaults (`T`-prefix) are safe fallbacks; documented in `.env.local.example`. |
+
+### eCH-0086 / Sedex
+- `comparedMissingElement` = `DATE_OF_DEATH` — correct (`src/lib/zas-request-generator.ts:248`).
+- `messageType` = `86` — correct (line 32, 227).
+- Test defaults: sender `sedex://T4-613196-9`, recipient `sedex://T3-CH-24`; production values `sedex://4-613196-9` / `sedex://3-CH-24` documented in `.env.local.example`.
+- `testDeliveryFlag` auto-set to `true` when either ID has `T`-prefix — sound defensive default.
+- AHV regex `^756\d{10}$` validates shape but NOT the EAN-13 checksum digit.
+- Namespaces `eCH-0086/2`, `eCH-0058/5`, `eCH-0044/4`, `eCH-0011/8` consistent with schemas in `docs/ech-schemas/`.
+
+### i18n & Navigation
+- `messages/de.json`, `en.json`, `fr.json` all include `navigation.zasLifeVerification` (line 231) and `zasLifeVerification` namespace (line 1500). DE/EN/FR coverage complete.
+- Nav entry in `src/components/layout/app-header.tsx:32-34` wired to `/zas-lebensnachweis` with active-state highlighting.
+
+### Build & Lint
+- Lint: 0 errors, 1 warning (pre-existing in `edit-attribute-dialog.tsx`, unrelated to PROJ-23).
+- TypeCheck (`tsc --noEmit`): PASS, 0 errors.
+
+### Bugs Found
+1. **[Medium]** Regex-based XML parser is not a true parser — `src/lib/zas-response-parser.ts:86-177` — `tagRegex` / `findAllBlocks` rely on regex matching. Fails on CDATA-wrapped text, comment-embedded pseudo-tags, attribute-only content, or unusual whitespace. Spec line 340 requires "XML-Wohlgeformtheit"; current check is only `/<...response[\s>]/`. Suggest using `fast-xml-parser` or `@xmldom/xmldom` with entity resolution disabled, or at minimum wrap parsing in a stricter well-formedness pre-check.
+2. **[Low]** AHV number validator does not verify EAN-13 checksum — `src/lib/zas-request-generator.ts:44,181` — `/^756\d{10}$/` accepts syntactically-valid but checksum-invalid VN. ZAS will reject such records; better to fail fast locally. Suggest adding mod-10/EAN-13 check.
+3. **[Low]** RLS SELECT drift from spec — `supabase/migrations/20260422_create_zas_life_verification.sql:137-140,160-163` — Policies use `is_active_user()` (viewer+), but spec line 338 states "nur authentifizierte Admins können lesen/schreiben". Update spec to match (viewer read is intentional per API contract) or tighten RLS.
+4. **[Low]** Unknown-AHV deaths are stored with `insured_person_id = NULL` but no operator workflow — `src/app/api/zas-runs/[id]/import-response/route.ts:237-244` — These rows surface only as warnings; there's no dedicated UI path to triage them later. Document as a known gap or add a filter in the detail page.
+5. **[Info]** `request_xml` stored unencrypted at the DB layer — `supabase/migrations/20260423_add_zas_request_xml.sql:20` — Contains AHV numbers of all active pensioners. Acceptable given RLS + at-rest encryption, but note it is sensitive PII. Consider a retention/cleanup policy for old runs.
+6. **[Info]** Generator test-default IDs are applied when env vars are unset — `src/lib/zas-request-generator.ts:115-119` — In production, missing `SEDEX_SENDER_ID` silently produces a test-flagged file. Consider failing hard if `NODE_ENV === 'production'` and env is missing.
+
+### Recommendation
+Ready for `/deploy` with caveats. The regex XML parser (Medium) and missing AHV checksum (Low) should ideally be fixed before going live against the real ZAS endpoint, because bad input will be rejected by UPI and is cheaper to catch locally. All other findings are documentation / hardening items that can ship and be addressed in a follow-up. No Critical or High blockers.
 
 ## Deployment
-_To be added by /deploy_
+
+**Deployed:** 2026-04-23
+**Platform:** Vercel (auto-deploy via GitHub push to `main`)
+
+### Applied Migrations
+- `supabase/migrations/20260422_create_zas_life_verification.sql` — Tabellen + RLS
+- `supabase/migrations/20260423_add_zas_request_xml.sql` — `request_xml`-Feld
+
+### Environment Variables (Vercel Dashboard)
+| Variable | Beschreibung |
+|----------|-------------|
+| `SEDEX_SENDER_ID` | Sedex-Teilnehmer-ID der PK (`sedex://4-613196-9` prod, `sedex://T4-613196-9` test) |
+| `ZAS_RECIPIENT_ID` | Sedex-ID der ZAS (`sedex://3-CH-24` prod, `sedex://T3-CH-24` test) |
+
+### Known Issues (post-deploy follow-up)
+- **Medium:** Response-Parser ist regex-basiert — sollte auf `fast-xml-parser` umgestellt werden (QA Bug #1)
+- **Low:** AHV-Validator prüft keine EAN-13-Prüfziffer (QA Bug #2)
+- **Low:** RLS SELECT erlaubt Viewer; Spec-Drift klären (QA Bug #3)
