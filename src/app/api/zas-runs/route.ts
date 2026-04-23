@@ -201,19 +201,37 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to create run' }, { status: 500 })
     }
 
-    // 4. Stub-Generator aufrufen (wirft aktuell nicht — liefert
-    //    Platzhalter). Dateinamen persistieren, damit das
-    //    Frontend eine konsistente Benennung anzeigen kann.
-    // TODO(PROJ-23): Sobald das eCH-0086-XML echt generiert wird,
-    // kann hier zusätzlich eine XSD-Validierung erfolgen.
-    const { filename } = generateZasRequestXml({
-      runId: inserted.id,
-      pensioners,
-    })
+    // 4. eCH-0086-XML generieren und mit Dateinamen persistieren.
+    //    Wir speichern das XML als Blob (request_xml), damit der
+    //    Download-Endpunkt deterministisch dieselbe Datei liefert
+    //    und das Audit nachvollziehbar bleibt. Generierungsfehler
+    //    (z.B. ungültige AHV-Nr.) sind hart und führen zum Rollback
+    //    via DELETE des soeben angelegten Runs.
+    // TODO(zas): Optional eine XSD-Validierung gegen
+    //   docs/ech-schemas/.../eCH-0086-2-0.xsd via xmllint-wasm.
+    let xml: string
+    let filename: string
+    try {
+      const generated = generateZasRequestXml({
+        runId: inserted.id,
+        pensioners,
+      })
+      xml = generated.xml
+      filename = generated.filename
+    } catch (genError) {
+      console.error('Error generating ZAS request XML:', genError)
+      // Best-effort cleanup des angelegten Run-Datensatzes.
+      await supabase.from('zas_life_verification_runs').delete().eq('id', inserted.id)
+      const message = genError instanceof Error ? genError.message : 'Generator failed'
+      return NextResponse.json(
+        { error: 'generator_failed', message },
+        { status: 500 }
+      )
+    }
 
     const { data: updated, error: updateError } = await supabase
       .from('zas_life_verification_runs')
-      .update({ request_filename: filename })
+      .update({ request_filename: filename, request_xml: xml })
       .eq('id', inserted.id)
       .select()
       .single()

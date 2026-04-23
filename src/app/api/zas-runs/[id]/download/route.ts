@@ -5,19 +5,16 @@ import { requireRole } from '@/lib/auth/require-role'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 // =============================================================
-// PROJ-23: GET /api/zas-runs/[id]/download — STUB (HTTP 501)
+// PROJ-23: GET /api/zas-runs/[id]/download
 //
-// Der eCH-0086-XML-Generator ist noch nicht implementiert
-// (Stub: src/lib/zas-request-generator.ts). Diese Route antwortet
-// deshalb absichtlich mit 501 Not Implemented, liefert aber
-// bereits den korrekten Dateinamen, damit das Frontend die
-// Fehlermeldung kontextualisieren kann.
+// Liefert das beim POST /api/zas-runs gespeicherte eCH-0086-
+// Anfrage-XML als Datei-Download. Die Datei enthält AHV-Nummern
+// aller aktiven Rentner — Zugriff ist daher auf admin/super_admin
+// beschränkt.
 //
-// Sobald der Generator steht:
-//  1. Aktive Rentner laden (wie in POST /api/zas-runs)
-//  2. generateZasRequestXml() aufrufen
-//  3. xsd-Validierung durchführen
-//  4. XML als Download streamen (Content-Disposition: attachment)
+// Wenn ein Lauf vor der Migration 20260423_add_zas_request_xml
+// angelegt wurde, fehlt request_xml. In dem Fall geben wir 422
+// zurück mit klarer Anweisung (neuen Lauf erstellen).
 // =============================================================
 
 type RouteParams = { params: Promise<{ id: string }> }
@@ -59,9 +56,14 @@ export async function GET(request: Request, { params }: RouteParams) {
     const supabase = await createClient()
     const { data: run, error: runError } = await supabase
       .from('zas_life_verification_runs')
-      .select('id, request_filename, status')
+      .select('id, request_filename, request_xml, status')
       .eq('id', id)
-      .maybeSingle()
+      .maybeSingle<{
+        id: string
+        request_filename: string | null
+        request_xml: string | null
+        status: string
+      }>()
 
     if (runError) {
       console.error('Error loading zas run for download:', runError)
@@ -71,23 +73,41 @@ export async function GET(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Run not found' }, { status: 404 })
     }
 
-    // Fallback-Dateiname, falls der Run-Datensatz aus Alt-Zeiten
-    // ohne gesetzten request_filename existiert.
+    // Pre-Migration Run ohne persistiertes XML — wir können die
+    // Datei nicht mehr deterministisch reproduzieren (die Rentner-
+    // Liste hat sich evtl. geändert). Klare Fehlermeldung statt
+    // möglicherweise inkorrekter Re-Generierung.
+    if (!run.request_xml) {
+      return NextResponse.json(
+        {
+          error: 'request_xml_missing',
+          message:
+            'Dieser Lauf wurde vor der Generator-Implementierung angelegt ' +
+            'und hat keine gespeicherte Anfragedatei. Bitte einen neuen Lauf erstellen.',
+        },
+        { status: 422 }
+      )
+    }
+
     const filename =
       run.request_filename && typeof run.request_filename === 'string'
         ? run.request_filename
         : `zas-lebensnachweis_${id.slice(0, 8)}.xml`
 
-    return NextResponse.json(
-      {
-        error: 'not_implemented',
-        message:
-          'eCH-0086 XML-Generator steht aus, siehe feature spec (features/PROJ-23-zas-lebensnachweis.md). ' +
-          'Blocked on Sedex certificate, UPI contract and official XSD files.',
-        filename,
+    // Sanitize the filename for the Content-Disposition header
+    // (entferne Anführungszeichen, die das Header-Parsing brechen).
+    const safeFilename = filename.replace(/["\r\n]/g, '_')
+
+    return new NextResponse(run.request_xml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${safeFilename}"`,
+        // Verhindere zwischenspeichern in geteilten Caches —
+        // die Datei enthält sensible Daten.
+        'Cache-Control': 'private, no-store',
       },
-      { status: 501 }
-    )
+    })
   } catch (err) {
     console.error('Unexpected error in GET /api/zas-runs/[id]/download:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
