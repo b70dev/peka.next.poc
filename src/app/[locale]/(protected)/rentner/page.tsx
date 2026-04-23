@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { AppHeader } from '@/components/layout/app-header'
 import { RentnerTable } from '@/components/rentner/rentner-table'
+import type { SelectablePerson } from '@/components/rentner/create-rentner-dialog'
+import { getCurrentUserRole } from '@/lib/auth/require-role'
+import { hasMinimumRole } from '@/lib/auth/roles'
 import type { PensionerRow } from '@/lib/pensioners'
 
 // =============================================================
@@ -164,6 +167,63 @@ export default async function RentnerListPage({ params, searchParams }: Props) {
 
   const totalCount = pensioners.length
 
+  // --- 5. Load selectable persons for "Neu"-Dialog (admins only) ---
+  // The dialog renders a searchable combobox of insured persons with their
+  // employments. Only fetched when the current user is allowed to create
+  // pensioners (admin/super_admin).
+  const roleResult = await getCurrentUserRole()
+  const canCreate = roleResult.data
+    ? hasMinimumRole(roleResult.data.role, 'admin')
+    : false
+
+  let selectablePersons: SelectablePerson[] = []
+  if (canCreate) {
+    interface PersonWithEmployments {
+      id: string
+      first_name: string
+      last_name: string
+      ahv_number: string
+      employments: Array<{
+        id: string
+        entry_date: string
+        exit_date: string | null
+        employer: { name: string | null } | null
+      }> | null
+    }
+
+    const { data: rawPersons, error: personsError } = await supabase
+      .from('insured_persons')
+      .select(
+        `id, first_name, last_name, ahv_number,
+         employments:employments(
+           id, entry_date, exit_date,
+           employer:employers(name)
+         )`
+      )
+      .order('last_name', { ascending: true })
+      .limit(2000)
+      .returns<PersonWithEmployments[]>()
+
+    if (personsError) {
+      console.error('Error fetching insured persons for dialog:', personsError)
+    }
+
+    selectablePersons = (rawPersons ?? [])
+      .filter((p) => p.employments && p.employments.length > 0)
+      .map((p) => ({
+        id: p.id,
+        first_name: p.first_name,
+        last_name: p.last_name,
+        ahv_number: p.ahv_number,
+        employments: (p.employments ?? []).map((e) => ({
+          id: e.id,
+          employer_name: e.employer?.name ?? null,
+          entry_date: e.entry_date,
+          exit_date: e.exit_date,
+        })),
+      }))
+  }
+
   return (
     <div className="min-h-screen bg-muted/30">
       <AppHeader userEmail={user.email} activeRoute="pensioners" />
@@ -182,6 +242,8 @@ export default async function RentnerListPage({ params, searchParams }: Props) {
           pensioners={pensioners}
           totalCount={totalCount}
           searchTerm={searchTerm}
+          canCreate={canCreate}
+          selectablePersons={selectablePersons}
         />
       </main>
     </div>

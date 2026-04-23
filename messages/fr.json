@@ -1452,6 +1452,28 @@
       "filename": "rentiers",
       "sheetName": "Rentiers"
     },
+    "new": {
+      "button": "Nouveau",
+      "buttonAriaLabel": "Créer un nouveau rentier",
+      "title": "Créer un nouveau rentier",
+      "description": "Crée un nouveau compte de rente actif pour une personne assurée existante.",
+      "personLabel": "Personne assurée",
+      "personPlaceholder": "Sélectionner une personne…",
+      "personSearchPlaceholder": "Rechercher par nom ou numéro AVS…",
+      "personNotFound": "Aucune personne trouvée",
+      "employmentLabel": "Emploi",
+      "employmentPlaceholder": "Sélectionner un emploi…",
+      "employerUnknown": "Employeur inconnu",
+      "noEmployments": "Cette personne n'a aucun emploi enregistré.",
+      "retirementDateLabel": "Date de début de rente",
+      "amountLabel": "Montant mensuel de la rente (CHF)",
+      "amountPlaceholder": "ex. 2500.00",
+      "create": "Créer",
+      "successToast": "Compte de rente créé.",
+      "errorInvalidAmount": "Veuillez saisir un montant valide supérieur à 0.",
+      "errorAlreadyHasPension": "Cette personne a déjà un compte de rente actif.",
+      "errorGeneric": "Impossible de créer le compte de rente."
+    },
     "detail": {
       "backToList": "Retour à la liste des rentiers",
       "breadcrumbList": "Rentiers",

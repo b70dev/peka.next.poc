@@ -15,18 +15,30 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Search, X } from 'lucide-react'
+import { Plus, Search, X } from 'lucide-react'
 import { useDebouncedCallback } from 'use-debounce'
 import { RentnerExcelExportButton } from './rentner-excel-export-button'
+import {
+  CreateRentnerDialog,
+  type SelectablePerson,
+} from './create-rentner-dialog'
 import { formatAhvNumber, calculateAge, type PensionerRow } from '@/lib/pensioners'
 
 interface RentnerTableProps {
   pensioners: PensionerRow[]
   totalCount: number
   searchTerm: string
+  canCreate: boolean
+  selectablePersons: SelectablePerson[]
 }
 
-export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTableProps) {
+export function RentnerTable({
+  pensioners,
+  totalCount,
+  searchTerm,
+  canCreate,
+  selectablePersons,
+}: RentnerTableProps) {
   const t = useTranslations('pensioners')
   const format = useFormatter()
   const router = useRouter()
@@ -34,6 +46,8 @@ export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTabl
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
   const [localSearch, setLocalSearch] = useState(searchTerm)
+  const [createOpen, setCreateOpen] = useState(false)
+  const tNew = useTranslations('pensioners.new')
 
   const createQueryString = useCallback(
     (params: Record<string, string | null>) => {
@@ -115,9 +129,28 @@ export function RentnerTable({ pensioners, totalCount, searchTerm }: RentnerTabl
           <p className="text-sm text-muted-foreground" aria-live="polite">
             {t('count', { count: totalCount })}
           </p>
+          {canCreate && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setCreateOpen(true)}
+              aria-label={tNew('buttonAriaLabel')}
+            >
+              <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
+              {tNew('button')}
+            </Button>
+          )}
           <RentnerExcelExportButton pensioners={pensioners} />
         </div>
       </div>
+
+      {canCreate && (
+        <CreateRentnerDialog
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+          persons={selectablePersons}
+        />
+      )}
 
       {/* Table */}
       <div className="border rounded-lg bg-card">

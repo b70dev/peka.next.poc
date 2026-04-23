@@ -1452,6 +1452,28 @@
       "filename": "rentner",
       "sheetName": "Rentner"
     },
+    "new": {
+      "button": "Neu",
+      "buttonAriaLabel": "Neuen Rentner erfassen",
+      "title": "Neuen Rentner erfassen",
+      "description": "Legt ein neues aktives Rentenkonto für eine bestehende versicherte Person an.",
+      "personLabel": "Versicherte Person",
+      "personPlaceholder": "Person auswählen…",
+      "personSearchPlaceholder": "Name oder AHV-Nummer suchen…",
+      "personNotFound": "Keine Person gefunden",
+      "employmentLabel": "Anstellung",
+      "employmentPlaceholder": "Anstellung auswählen…",
+      "employerUnknown": "Unbekannter Arbeitgeber",
+      "noEmployments": "Für diese Person ist keine Anstellung hinterlegt.",
+      "retirementDateLabel": "Rentenbeginn",
+      "amountLabel": "Monatlicher Rentenbetrag (CHF)",
+      "amountPlaceholder": "z.B. 2500.00",
+      "create": "Erfassen",
+      "successToast": "Rentenkonto wurde erfasst.",
+      "errorInvalidAmount": "Bitte einen gültigen Betrag grösser als 0 eingeben.",
+      "errorAlreadyHasPension": "Diese Person hat bereits ein aktives Rentenkonto.",
+      "errorGeneric": "Rentenkonto konnte nicht erfasst werden."
+    },
     "detail": {
       "backToList": "Zurück zur Rentner-Liste",
       "breadcrumbList": "Rentner",

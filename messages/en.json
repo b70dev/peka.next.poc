@@ -1452,6 +1452,28 @@
       "filename": "pensioners",
       "sheetName": "Pensioners"
     },
+    "new": {
+      "button": "New",
+      "buttonAriaLabel": "Create new pensioner",
+      "title": "Create New Pensioner",
+      "description": "Creates a new active pension account for an existing insured person.",
+      "personLabel": "Insured person",
+      "personPlaceholder": "Select person…",
+      "personSearchPlaceholder": "Search by name or SSN…",
+      "personNotFound": "No person found",
+      "employmentLabel": "Employment",
+      "employmentPlaceholder": "Select employment…",
+      "employerUnknown": "Unknown employer",
+      "noEmployments": "This person has no employment record.",
+      "retirementDateLabel": "Retirement date",
+      "amountLabel": "Monthly pension amount (CHF)",
+      "amountPlaceholder": "e.g. 2500.00",
+      "create": "Create",
+      "successToast": "Pension account created.",
+      "errorInvalidAmount": "Please enter a valid amount greater than 0.",
+      "errorAlreadyHasPension": "This person already has an active pension account.",
+      "errorGeneric": "Pension account could not be created."
+    },
     "detail": {
       "backToList": "Back to pensioner list",
       "breadcrumbList": "Pensioners",
