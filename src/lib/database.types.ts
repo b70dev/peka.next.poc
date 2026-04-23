@@ -66,7 +66,9 @@ export type Database = {
           employment_id: string
           id: string
           is_active: boolean
+          monthly_pension_amount: number | null
           name: string | null
+          retirement_date: string | null
           updated_at: string
         }
         Insert: {
@@ -75,7 +77,9 @@ export type Database = {
           employment_id: string
           id?: string
           is_active?: boolean
+          monthly_pension_amount?: number | null
           name?: string | null
+          retirement_date?: string | null
           updated_at?: string
         }
         Update: {
@@ -84,7 +88,9 @@ export type Database = {
           employment_id?: string
           id?: string
           is_active?: boolean
+          monthly_pension_amount?: number | null
           name?: string | null
+          retirement_date?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1549,6 +1555,108 @@ export type Database = {
           },
         ]
       }
+      zas_life_verification_deaths: {
+        Row: {
+          ahv_number: string
+          date_of_death: string | null
+          first_name: string | null
+          id: string
+          insured_person_id: string | null
+          last_name: string | null
+          notes: string | null
+          processed_at: string | null
+          processed_by: string | null
+          run_id: string
+          status: Database["public"]["Enums"]["zas_death_status"]
+        }
+        Insert: {
+          ahv_number: string
+          date_of_death?: string | null
+          first_name?: string | null
+          id?: string
+          insured_person_id?: string | null
+          last_name?: string | null
+          notes?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          run_id: string
+          status?: Database["public"]["Enums"]["zas_death_status"]
+        }
+        Update: {
+          ahv_number?: string
+          date_of_death?: string | null
+          first_name?: string | null
+          id?: string
+          insured_person_id?: string | null
+          last_name?: string | null
+          notes?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          run_id?: string
+          status?: Database["public"]["Enums"]["zas_death_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zas_life_verification_deaths_insured_person_id_fkey"
+            columns: ["insured_person_id"]
+            isOneToOne: false
+            referencedRelation: "insured_persons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "zas_life_verification_deaths_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "zas_life_verification_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      zas_life_verification_runs: {
+        Row: {
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          created_by: string
+          id: string
+          pensioner_count: number
+          request_filename: string | null
+          request_generated_at: string | null
+          request_xml: string | null
+          response_imported_at: string | null
+          response_imported_by: string | null
+          status: Database["public"]["Enums"]["zas_run_status"]
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          pensioner_count?: number
+          request_filename?: string | null
+          request_generated_at?: string | null
+          request_xml?: string | null
+          response_imported_at?: string | null
+          response_imported_by?: string | null
+          status?: Database["public"]["Enums"]["zas_run_status"]
+        }
+        Update: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          pensioner_count?: number
+          request_filename?: string | null
+          request_generated_at?: string | null
+          request_xml?: string | null
+          response_imported_at?: string | null
+          response_imported_by?: string | null
+          status?: Database["public"]["Enums"]["zas_run_status"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       account_balances: {
@@ -1728,6 +1836,12 @@ export type Database = {
         | "exported"
       sort_direction: "asc" | "desc"
       transaction_effect: "credit" | "debit"
+      zas_death_status: "open" | "processed" | "already_known"
+      zas_run_status:
+        | "request_created"
+        | "response_imported"
+        | "completed"
+        | "completed_without_response"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1904,6 +2018,13 @@ export const Constants = {
       ],
       sort_direction: ["asc", "desc"],
       transaction_effect: ["credit", "debit"],
+      zas_death_status: ["open", "processed", "already_known"],
+      zas_run_status: [
+        "request_created",
+        "response_imported",
+        "completed",
+        "completed_without_response",
+      ],
     },
   },
 } as const
