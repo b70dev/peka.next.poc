@@ -1565,7 +1565,7 @@
       "actions": {
         "title": "Actions",
         "downloadAgain": "Télécharger à nouveau le fichier de demande",
-        "downloadNotImplemented": "Pas encore implémenté : le générateur XML eCH-0086 est en attente.",
+        "downloadHint": "La boîte de dialogue suivante vous permet de choisir le répertoire de sortie (p. ex. la Sedex-Outbox).",
         "importResponse": "Téléverser la réponse ZAS",
         "completeWithoutResponse": "Clôturer sans réponse",
         "complete": "Clôturer le cycle",
@@ -1622,7 +1622,9 @@
       "runCreated": "Cycle créé.",
       "completed": "Cycle clôturé.",
       "deathUpdated": "Décès mis à jour.",
-      "downloadNotImplemented": "Téléchargement indisponible : le générateur XML n'est pas encore implémenté.",
+      "downloadSuccess": "Fichier de demande enregistré.",
+      "downloadCancelled": "Enregistrement annulé.",
+      "downloadError": "Échec du téléchargement. Veuillez réessayer.",
       "importNotImplemented": "Import indisponible : le parseur n'est pas encore implémenté."
     }
   }

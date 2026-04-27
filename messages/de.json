@@ -1565,7 +1565,7 @@
       "actions": {
         "title": "Aktionen",
         "downloadAgain": "Anfragedatei erneut herunterladen",
-        "downloadNotImplemented": "Noch nicht implementiert: Der eCH-0086 XML-Generator steht aus.",
+        "downloadHint": "Im folgenden Dialog wählen Sie das Ausgabeverzeichnis (z. B. die Sedex-Outbox) aus.",
         "importResponse": "ZAS-Rückmeldung hochladen",
         "completeWithoutResponse": "Abschliessen ohne Rückmeldung",
         "complete": "Lauf abschliessen",
@@ -1622,7 +1622,9 @@
       "runCreated": "Lauf erstellt.",
       "completed": "Lauf abgeschlossen.",
       "deathUpdated": "Todesfall aktualisiert.",
-      "downloadNotImplemented": "Download nicht verfügbar: XML-Generator noch nicht implementiert.",
+      "downloadSuccess": "Anfragedatei gespeichert.",
+      "downloadCancelled": "Speichern abgebrochen.",
+      "downloadError": "Download fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "importNotImplemented": "Import nicht verfügbar: Parser noch nicht implementiert."
     }
   }

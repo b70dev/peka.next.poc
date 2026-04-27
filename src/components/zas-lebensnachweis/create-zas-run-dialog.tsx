@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { saveFileWithPicker } from '@/lib/save-file-with-picker'
 
 interface CreateZasRunDialogProps {
   open: boolean
@@ -40,6 +41,7 @@ export function CreateZasRunDialog({ open, onOpenChange }: CreateZasRunDialogPro
       const data = (await response.json().catch(() => ({}))) as {
         error?: string
         id?: string
+        request_filename?: string | null
       }
 
       if (!response.ok) {
@@ -55,7 +57,36 @@ export function CreateZasRunDialog({ open, onOpenChange }: CreateZasRunDialogPro
       onOpenChange(false)
       toast.success(t('toasts.runCreated'))
 
+      // Fetch the generated XML and let the user choose where to save it
+      // (ideally directly into the Sedex outbox). We do not block the
+      // redirect on a download failure — the file can always be re-saved
+      // from the detail page.
       if (newId) {
+        try {
+          const downloadRes = await fetch(`/api/zas-runs/${newId}/download`)
+          if (downloadRes.ok) {
+            const blob = await downloadRes.blob()
+            const headerName = downloadRes.headers
+              .get('Content-Disposition')
+              ?.match(/filename="([^"]+)"/)?.[1]
+            const suggestedName =
+              headerName ??
+              data.request_filename ??
+              `zas-lebensnachweis_${newId.slice(0, 8)}.xml`
+            const result = await saveFileWithPicker(blob, suggestedName)
+            if (result.outcome === 'cancelled') {
+              toast.message(t('toasts.downloadCancelled'))
+            } else {
+              toast.success(t('toasts.downloadSuccess'))
+            }
+          } else {
+            toast.error(t('toasts.downloadError'))
+          }
+        } catch (dlErr) {
+          console.error('Post-create download failed:', dlErr)
+          toast.error(t('toasts.downloadError'))
+        }
+
         router.push(`/zas-lebensnachweis/${newId}` as never)
       } else {
         router.refresh()

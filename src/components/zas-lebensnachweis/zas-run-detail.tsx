@@ -15,12 +15,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import {
   ChevronLeft,
   CheckCircle2,
   Download,
@@ -32,6 +26,7 @@ import { ZasStatusBadge } from './zas-status-badge'
 import { ZasDeathsTable } from './zas-deaths-table'
 import { ImportResponseDialog } from './import-response-dialog'
 import { ConfirmActionDialog } from '@/components/payment-runs/confirm-action-dialog'
+import { saveFileWithPicker } from '@/lib/save-file-with-picker'
 import type { ZasDeath, ZasRun } from '@/lib/zas-runs.types'
 
 interface ZasRunDetailProps {
@@ -56,6 +51,7 @@ export function ZasRunDetail({ run, deaths, createdByName }: ZasRunDetailProps) 
   const [completeWithoutOpen, setCompleteWithoutOpen] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [downloadLoading, setDownloadLoading] = useState(false)
 
   const summary = useMemo(() => {
     const total = deaths.length
@@ -81,6 +77,41 @@ export function ZasRunDetail({ run, deaths, createdByName }: ZasRunDetailProps) 
   const isCompleted =
     run.status === 'completed' || run.status === 'completed_without_response'
   const canComplete = summary.open === 0
+
+  const handleDownload = useCallback(async () => {
+    setDownloadLoading(true)
+    setActionError(null)
+    try {
+      const response = await fetch(`/api/zas-runs/${run.id}/download`)
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}))
+        console.error('Download request failed:', response.status, body)
+        toast.error(t('toasts.downloadError'))
+        return
+      }
+
+      const blob = await response.blob()
+      const headerName = response.headers
+        .get('Content-Disposition')
+        ?.match(/filename="([^"]+)"/)?.[1]
+      const suggestedName =
+        headerName ??
+        run.request_filename ??
+        `zas-lebensnachweis_${run.id.slice(0, 8)}.xml`
+
+      const result = await saveFileWithPicker(blob, suggestedName)
+      if (result.outcome === 'cancelled') {
+        toast.message(t('toasts.downloadCancelled'))
+      } else {
+        toast.success(t('toasts.downloadSuccess'))
+      }
+    } catch (err) {
+      console.error('Download exception:', err)
+      toast.error(t('toasts.downloadError'))
+    } finally {
+      setDownloadLoading(false)
+    }
+  }, [run.id, run.request_filename, t])
 
   const completeRun = useCallback(
     async (mode: 'completed' | 'completed_without_response') => {
@@ -233,33 +264,30 @@ export function ZasRunDetail({ run, deaths, createdByName }: ZasRunDetailProps) 
           <CardContent className="flex flex-wrap gap-2">
             {showRequestStatusActions && (
               <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      {/* span wrapper so the tooltip shows even on disabled button */}
-                      <span tabIndex={0}>
-                        <Button
-                          variant="outline"
-                          disabled
-                          aria-disabled="true"
-                          aria-describedby={`download-not-impl-${run.id}`}
-                        >
-                          <Download
-                            className="h-4 w-4 mr-2"
-                            aria-hidden="true"
-                          />
-                          {t('detail.actions.downloadAgain')}
-                        </Button>
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      id={`download-not-impl-${run.id}`}
-                      role="tooltip"
-                    >
-                      {t('detail.actions.downloadNotImplemented')}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <div className="flex flex-col gap-1">
+                  <Button
+                    variant="outline"
+                    onClick={handleDownload}
+                    disabled={downloadLoading || actionLoading}
+                    aria-describedby={`download-hint-${run.id}`}
+                  >
+                    {downloadLoading ? (
+                      <span
+                        className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" aria-hidden="true" />
+                    )}
+                    {t('detail.actions.downloadAgain')}
+                  </Button>
+                  <p
+                    id={`download-hint-${run.id}`}
+                    className="text-xs text-muted-foreground"
+                  >
+                    {t('detail.actions.downloadHint')}
+                  </p>
+                </div>
 
                 <Button
                   variant="default"

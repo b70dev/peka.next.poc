@@ -1565,7 +1565,7 @@
       "actions": {
         "title": "Actions",
         "downloadAgain": "Re-download request file",
-        "downloadNotImplemented": "Not implemented yet: the eCH-0086 XML generator is still pending.",
+        "downloadHint": "The next dialog lets you choose the output directory (e.g. the Sedex outbox).",
         "importResponse": "Upload ZAS response",
         "completeWithoutResponse": "Close without response",
         "complete": "Complete run",
@@ -1622,7 +1622,9 @@
       "runCreated": "Run created.",
       "completed": "Run completed.",
       "deathUpdated": "Death updated.",
-      "downloadNotImplemented": "Download unavailable: XML generator not implemented yet.",
+      "downloadSuccess": "Request file saved.",
+      "downloadCancelled": "Save cancelled.",
+      "downloadError": "Download failed. Please try again.",
       "importNotImplemented": "Import unavailable: parser not implemented yet."
     }
   }
